@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>Demo</title>
+        <style>
+        </style>
+    </head>
+    <body>
+    <input type="text" id="demo1" onkeyup="thing()" value="START">
+    <span id="debug"></span>
+    <script>
+    
+    function thing() {
+      document.getElementById("debug").innerHTML='HW';
+      console.log(
+        document.getElementById('demo1').value
+      );
+    }
+    
+    </script>
+    </body>
+</html>

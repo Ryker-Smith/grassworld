@@ -12,37 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
  
-(function() {
-	// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-	// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-	// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
-	// MIT license
-
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
-                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
- 
-    if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-              timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
- 
-    if (!window.cancelAnimationFrame)
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
-}());
-
-(function () {
+ function distance (p1, p2) {
+		var
+      dx = p2.left - p1.left,
+      dy = p2.top - p1.top;
+		return Math.floor(Math.sqrt(dx * dx + dy * dy));
+	}
+	
+function game(game_canvas) {
 			
 	var animal,
       animalImage,
@@ -66,33 +43,31 @@
 
 	}
 	
-	function movelocation(event) {
+	function movelocation(tx, ty) {
     if (thing_selected < 0) return;
-    things[thing_selected].left_destination= event.clientX  - Math.floor(things[thing_selected].sprite_width/2);
+    things[thing_selected].left_destination= tx  - Math.floor(things[thing_selected].sprite_width/2);
     if (things[thing_selected].left_destination < 0) {
       things[thing_selected].left_destination=0;
     }
     else if (things[thing_selected].left_destination > canvas.width) {
       things[thing_selected].left_destination=canvas.width;
     }
-    things[thing_selected].top_destination= event.clientY - Math.floor(things[thing_selected].sprite_height/2);
+    things[thing_selected].top_destination= ty - Math.floor(things[thing_selected].sprite_height/2);
     if (things[thing_selected].top_destination < 0) {
       things[thing_selected].top_destination=0;
     }
     else if (things[thing_selected].top_destination > canvas.height) {
       things[thing_selected].top_destination=canvas.height;
     }
-//     console.log("Going to (",things[thing_selected].left_destination,",",things[thing_selected].top_destination,")");
-  }
-
-  function me_selected(event) {
+    console.log("Going to (",things[thing_selected].left_destination,",",things[thing_selected].top_destination,")");
   }
   
   function locationchange(event) {
     var key_left=37,
         key_up=38,
         key_right=39,
-        key_down=40;
+        key_down=40,
+        ESC=27;
         step=5;
         if (thing_selected < 0) return;
     switch (event.keyCode) {
@@ -116,6 +91,11 @@
           things[thing_selected].top_destination=things[thing_selected].top+step;
         }
         break;
+      case ESC: 
+        if (things[thing_selected].top < (canvas.height-things[thing_selected].sprite_height)) {
+          things[thing_selected].selected=false;
+        }
+        break;
       default: 
           console.log("Unknown: " + event.keyCode);
     }
@@ -127,7 +107,7 @@
                left: element.offsetLeft,
                top: element.offsetTop 
            };
-           
+
        if (element.offsetParent) {
            parentOffset = getElementPosition(element.offsetParent);
            pos.left += parentOffset.left;
@@ -136,14 +116,9 @@
        return pos;
     }
 	
-	function distance (p1, p2) {
-		var
-      dx = p2.left - p1.left,
-      dy = p2.top - p1.top;
-		return Math.floor(Math.sqrt(dx * dx + dy * dy));
-	}
-	
 	function selection (event) {
+    console.log('leftclick');
+    event.preventDefault();
 		var 
       i,
 			location = {},
@@ -156,7 +131,7 @@
 
 		location.left = (tapX - pos.left) * canvasScaleRatio;
 		location.top = (tapY - pos.top) * canvasScaleRatio;
-			
+    console.log("("+location.left+","+location.top+")");	
     var matched=0;
 		for (i = 0; i < things.length; i += 1) {
 			// Distance between user screen tap and thing
@@ -179,11 +154,52 @@
           matched=1;
         }
 			}
-			else {
+		}
+	}
+	
+	function contextselection (event) {
+    console.log('rightclick');
+    event.preventDefault();
+		var 
+      i,
+			location = {},
+			dist;
+			
+    pos = getElementPosition(canvas),
+		tapX = event.targetTouches ? event.targetTouches[0].pageX : event.pageX,
+		tapY = event.targetTouches ? event.targetTouches[0].pageY : event.pageY,
+		canvasScaleRatio = canvas.width / canvas.offsetWidth;
+
+		location.left = (tapX - pos.left) * canvasScaleRatio;
+		location.top = (tapY - pos.top) * canvasScaleRatio;
+		console.log("("+location.left+","+location.top+")");	
+    var matched=0;
+		for (i = 0; i < things.length; i += 1) {
+			// Distance between user screen tap and thing
+			dist = distance({
+          left: (things[i].left + (things[i].sprite_width)/2),
+          top: (things[i].top + (things[i].sprite_height)/2)
+        }, {
+          left: location.left,
+          top: location.top
+        });
+			
+			// Check for tap on the thing
+// 			if (dist < things[i].sprite_width) {
+//         if (thing_selected == i) {
+//           thing_selected=-1;
+//           matched=1;
+//         }
+//         else {
+//           thing_selected=i;
+//           matched=1;
+//         }
+// 			}
+// 			else {
         if ( !(thing_selected < 0)) {
-          movelocation(event);
+          movelocation(location.left,location.top);
         }
-      }
+//       }
 		}
 		
 	}
@@ -275,38 +291,7 @@
 	canvas.height = window.innerHeight;
 	
 	animalImage = new Image();	
-  plantImage = new Image();	
-	
-	// Create sprite
-// 	things[0] = sprite({
-// 		context: canvas.getContext("2d"),
-// 		width: 2122,
-// 		height: 320,
-// 		image: animalImage,
-// 		numberOfFrames: 8,
-// 		ticksPerFrame: 20,
-// 		left: 100,
-//     top: 10,
-//     scale: .25,
-//     usable_width: 0,
-//     name: "BigBlob",
-//     canmove: true
-// 	});
-//   things[1] = sprite({
-// 		context: canvas.getContext("2d"),
-// 		width: 2122,
-// 		height: 320,
-// 		image: animalImage,
-// 		numberOfFrames: 8,
-// 		ticksPerFrame: 15,
-//     left: 500,
-//     top: 250,
-//     scale: .25,
-//     name: "LittlerBlob",
-//     canmove: true
-// 	});
-
-
+  plantImage = new Image();
 
   for (j=0;j<10;j++) {
       things[j] = sprite({
@@ -328,6 +313,7 @@
         context: canvas.getContext("2d"),
         width: 2122,
         height: 320,
+        selected: false,
         image: animalImage,
         numberOfFrames: 8,
         ticksPerFrame: 15,
@@ -338,18 +324,18 @@
         canmove: true
     });
   }
-  // Load sprite sheet
+  // Load sprite sheets
+	animalImage.src = "assets/img/anmhithe02-positioned.png";
+	plantImage.src = "assets/img/plant02.png";
+  // add listeners for events
 	animalImage.addEventListener("load", gameLoop);
-	animalImage.src = "anmhithe02-positioned.png";
   plantImage.addEventListener("load", gameLoop);
-	plantImage.src = "plant02.png";
   document.addEventListener("keydown",locationchange);
-//   canvas.addEventListener("touchstart",selection);
+  // lefgty click
   canvas.addEventListener("mousedown",selection);
+  // right click
+  canvas.addEventListener("contextmenu",contextselection);
 
-  //canvas.addEventListener("contextmenu",selection); //right click
-  
-  
-} ());
+} 
 
 // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/

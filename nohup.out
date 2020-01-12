@@ -160,3 +160,123 @@ Emitted 'error' event at:
 STARTED at 2020-01-06 09:18
 STARTED on port 81
 DBMS Connected OK
+STARTED at 2020-01-09 19:56
+STARTED on port 81
+DBMS Connected OK
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-09 20:21
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-09 20:22
+STARTED at 2020-01-10 14:33
+STARTED on port 81
+2020-01-10 14:36
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:36
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:36
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:36
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:37
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:37
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:37
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:49
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:52
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:52
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:52
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:52
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:53
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:53
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 14:53
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 15:00
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 15:01
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 15:02
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas><!-- <div id="grassworld">Hello <b>grassworld</b>.</div>-->
+2020-01-10 15:07
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-10 15:52
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-10 15:52
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-10 20:11
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-10 20:12
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-10 22:59
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-10 22:59
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-10 23:02
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-10 23:04
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-10 23:04
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-10 23:04
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-10 23:06
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+events.js:174
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: read ECONNRESET
+    at TCP.onStreamRead (internal/stream_base_commons.js:111:27)
+Emitted 'error' event at:
+    at Connection._handleProtocolError (/var/www/html/node_modules/mysql/lib/Connection.js:426:8)
+    at Protocol.emit (events.js:198:13)
+    at Protocol._delegateError (/var/www/html/node_modules/mysql/lib/protocol/Protocol.js:398:10)
+    at Protocol.handleNetworkError (/var/www/html/node_modules/mysql/lib/protocol/Protocol.js:371:10)
+    at Connection._handleNetworkError (/var/www/html/node_modules/mysql/lib/Connection.js:421:18)
+    at Socket.emit (events.js:198:13)
+    at emitErrorNT (internal/streams/destroy.js:91:8)
+    at emitErrorAndCloseNT (internal/streams/destroy.js:59:3)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+STARTED at 2020-01-11 21:19
+STARTED on port 81
+2020-01-11 21:20
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
