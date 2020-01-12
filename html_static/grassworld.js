@@ -38,8 +38,9 @@ grassworld_db="https://grassworld.fachtnaroe.net/db/?";
         function(callback, element) {
             var currTime = new Date().getTime();
             var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-              timeToCall);
+            var id = window.setTimeout(
+                        function() { callback(currTime + timeToCall); }, 
+                        timeToCall);
             lastTime = currTime + timeToCall;
             return id;
         };
@@ -55,9 +56,9 @@ grassworld();
 async function grassworld() {
   field=new World('grassworld-body','grassworld','');
   field.getState();
-  field.getCategory('flora',field);
-  field.getCategory('fauna',field);
-  field.getCategory('object',field);
+  await field.getCategory('flora',field);
+  await field.getCategory('fauna',field);
+//   await field.getCategory('object',field);
 //   console.log('L '+field.fauna.length);
 //   for (var i=0; i<field.fauna.length; i++) {
 //     console.log("THING: "+ field.fauna[i] );

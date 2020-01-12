@@ -17,23 +17,23 @@ function game(game_canvas) {
 	var animal,
       animalImage,
       canvas;
-  var theblob, theblobImage;
   var clickCount=0;
   var thing_selected=-1;
   var things=[];
 
 	function gameLoop () {
 	  window.requestAnimationFrame(gameLoop);
-    // clean up the display 
+    // clear the field 
     ctx=canvas.getContext("2d");
     ctx.fillStyle = "green";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    // now do the characters
+    // display game entities on field
     for (i=0; i< things.length; i++) {
+      // any movement calculations
       things[i].update(i);
+      // display the changed character
       things[i].render(i);
     }
-
 	}
 	
 	function movelocation(tx, ty) {
@@ -52,7 +52,7 @@ function game(game_canvas) {
     else if (things[thing_selected].top_destination > canvas.height) {
       things[thing_selected].top_destination=canvas.height;
     }
-    console.log("Going to (",things[thing_selected].left_destination,",",things[thing_selected].top_destination,")");
+//     console.log("Going to (",things[thing_selected].left_destination,",",things[thing_selected].top_destination,")");
   }
   
   function locationchange(event) {
@@ -87,6 +87,7 @@ function game(game_canvas) {
       case ESC: 
         if (things[thing_selected].top < (canvas.height-things[thing_selected].sprite_height)) {
           things[thing_selected].selected=false;
+          thing_selected=-1;
         }
         break;
       default: 
@@ -94,13 +95,11 @@ function game(game_canvas) {
     }
   }
 		function getElementPosition (element) {
-	
        var parentOffset,
        	   pos = {
                left: element.offsetLeft,
                top: element.offsetTop 
            };
-
        if (element.offsetParent) {
            parentOffset = getElementPosition(element.offsetParent);
            pos.left += parentOffset.left;
@@ -109,15 +108,14 @@ function game(game_canvas) {
        return pos;
     }
 	
-	function selection (event) {
-    console.log('leftclick');
+	function leftclick (event) {
+//     console.log('leftclick');
     event.preventDefault();
-    console.log('L '+field.fauna.length);
+//     console.log('L '+field.fauna.length);
 		var 
       i,
 			location = {},
 			dist;
-			
 			pos = getElementPosition(canvas),
 			tapX = event.targetTouches ? event.targetTouches[0].pageX : event.pageX,
 			tapY = event.targetTouches ? event.targetTouches[0].pageY : event.pageY,
@@ -125,7 +123,7 @@ function game(game_canvas) {
 
 		location.left = (tapX - pos.left) * canvasScaleRatio;
 		location.top = (tapY - pos.top) * canvasScaleRatio;
-    console.log("("+location.left+","+location.top+")");	
+//     console.log("("+location.left+","+location.top+")");	
     var matched=0;
 		for (i = 0; i < things.length; i += 1) {
 			// Distance between user screen tap and thing
@@ -153,7 +151,7 @@ function game(game_canvas) {
 	
 	function extrainfo (event) {
     // intended to provide information about the character when we hover
-    console.log('hover');
+//     console.log('hover');
     event.preventDefault();
 		var 
       i,
@@ -167,7 +165,7 @@ function game(game_canvas) {
 
 		location.left = (hoverX - pos.left) * canvasScaleRatio;
 		location.top = (hoverY - pos.top) * canvasScaleRatio;
-    console.log("HOVER ("+location.left+","+location.top+")");	
+//     console.log("HOVER ("+location.left+","+location.top+")");	
     var matched=0;
 		for (i = 0; i < things.length; i += 1) {
 			// Distance between user screen tap and thing
@@ -193,7 +191,7 @@ function game(game_canvas) {
 	}
 	
 	function contextselection (event) {
-    console.log('rightclick');
+//     console.log('rightclick');
     event.preventDefault();
 		var 
       i,
@@ -207,7 +205,7 @@ function game(game_canvas) {
 
 		location.left = (tapX - pos.left) * canvasScaleRatio;
 		location.top = (tapY - pos.top) * canvasScaleRatio;
-		console.log("("+location.left+","+location.top+")");	
+// 		console.log("("+location.left+","+location.top+")");	
     var matched=0;
 		for (i = 0; i < things.length; i += 1) {
 			// Distance between user screen tap and thing
@@ -231,7 +229,6 @@ function sprite (options) {
 			character.tickCount = 0;
 			character.ticksPerFrame = options.ticksPerFrame || 0;
 			character.numberOfFrames = options.numberOfFrames || 1;
-		
       character.context = options.context;
       character.width = options.width;
       character.height = options.height;
@@ -278,10 +275,10 @@ function sprite (options) {
         };
 		
 		character.render = function (y) {
-		
 		  // Clear the canvas
       // character.context.clearRect(0, 0, character.width, character.height);
 		  // Draw the animation
+      try {
 		  character.context.drawImage(
 		    character.image,
 		    character.frameIndex * character.width / character.numberOfFrames,
@@ -293,6 +290,10 @@ function sprite (options) {
 		    (character.width / character.numberOfFrames)* character.scale,
 		    (character.height)*character.scale
       );
+      }
+      catch (e) {
+        console.log(e);
+      }
       if (thing_selected == y) {
           ctx=canvas.getContext("2d");
           ctx.beginPath();
@@ -310,56 +311,69 @@ function sprite (options) {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 	
-	animalImage = new Image();	
-  plantImage = new Image();
-
+// 	animalImage = new Image();	
+//   plantImage = new Image();
+  // Load sprite sheets
+// 	animalImage.src = "assets/img/anmhithe02-positioned.png";
+// 	plantImage.src = "assets/img/plant02.png";
+  count=0;
   for (j=0;j<field.flora.length;j++) {
-      things[j] = sprite({
+//     console.log(count);
+      things[count] = sprite({
         context: canvas.getContext("2d"),
         width: 27,
         height: 42,
-        image: plantImage,
+        image: new Image(),
+        tID: field.flora[j].Tid,
         numberOfFrames: 1,
         ticksPerFrame: 15,
         left: Math.floor(Math.random() * canvas.width),
         top: Math.floor(Math.random() * canvas.height),
-        scale: 1.9,
-        name: "Plant",
+        scale: 1,
+        name: field.flora[j].Tname,
         canmove: false
       });
+      things[count].image.src="assets/img/"+field.flora[j].Gimage;
+      console.log("IMG: "+things[j].image.src);
+      count++;
   }
-  count=j-1;
-  console.log(count,j,field.fauna.length);
+//   console.log(count,j,field.fauna.length);
   for (j=0;j<field.fauna.length;j++) {
-    console.log(count,j);
-      things[count+j] = sprite({
+//     console.log(count);
+      things[count] = sprite({
         context: canvas.getContext("2d"),
         width: 2122,
         height: 320,
         selected: false,
-        image: animalImage,
+        tID: field.fauna[j].Tid,
+        image: new Image(),
         numberOfFrames: 8,
-        ticksPerFrame: 15,
+        ticksPerFrame: 20,
         left: Math.floor(Math.random() * canvas.width),
         top: Math.floor(Math.random() * canvas.height),
         scale: .25,
-        name: "Blob",
+        name: field.fauna[j].Tname,
         canmove: true
     });
+    things[count].image.src="assets/img/"+field.fauna[j].Gimage;
+//     console.log("IMG: "+things[j].image.src);
+    count++;
   }
-  // Load sprite sheets
-	animalImage.src = "assets/img/anmhithe02-positioned.png";
-	plantImage.src = "assets/img/plant02.png";
+
   // add listeners for events
-	animalImage.addEventListener("load", gameLoop);
-  plantImage.addEventListener("load", gameLoop);
+// 	animalImage.addEventListener("load", gameLoop);
+//   plantImage.addEventListener("load", gameLoop);
+  for (d=0; d<things.length; d++) {
+    things[d].image.addEventListener("load",gameLoop);
+  }
+  // key press
   document.addEventListener("keydown",locationchange);
-  // lefgty click
-  canvas.addEventListener("mousedown",selection);
+  // left click
+  canvas.addEventListener("mousedown",leftclick);
   // right click
   canvas.addEventListener("contextmenu",contextselection);
+  // hover
   canvas.addEventListener("mouseover",extrainfo);
-
 } 
 
 // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/
