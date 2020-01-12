@@ -280,3 +280,40 @@ STARTED on port 81
 2020-01-11 21:20
 CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
 RESPONSE -> <canvas id="grassworld"></canvas>
+STARTED at 2020-01-12 15:17
+STARTED on port 81
+2020-01-12 15:17
+CONNECT -> DB -> GET /db/?name=editorselection&tk=a1b2c3d4
+2020-01-12 15:17
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> error
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-12 15:21
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-12 15:21
+CONNECT -> DB -> GET /db/?name=editorselection&tk=a1b2c3d4
+RESPONSE -> error
+2020-01-12 15:21
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-12 15:21
+CONNECT -> DB -> GET /db/?name=editorselection&tk=a1b2c3d4
+RESPONSE -> error
+2020-01-12 15:21
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-12 15:21
+CONNECT -> DB -> GET /db/?name=editorselection&tk=a1b2c3d4
+RESPONSE -> error
+2020-01-12 16:39
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-12 16:39
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+RESPONSE -> <canvas id="grassworld"></canvas>
+2020-01-12 16:39
+CONNECT -> DB -> GET /db/?name=editorselection&tk=a1b2c3d4
+RESPONSE -> error
+RESPONSE -> error
+STARTED at 2020-01-12 20:41
+STARTED on port 81

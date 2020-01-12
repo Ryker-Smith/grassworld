@@ -12,13 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
  
- function distance (p1, p2) {
-		var
-      dx = p2.left - p1.left,
-      dy = p2.top - p1.top;
-		return Math.floor(Math.sqrt(dx * dx + dy * dy));
-	}
-	
 function game(game_canvas) {
 			
 	var animal,
@@ -119,6 +112,7 @@ function game(game_canvas) {
 	function selection (event) {
     console.log('leftclick');
     event.preventDefault();
+    console.log('L '+field.fauna.length);
 		var 
       i,
 			location = {},
@@ -144,6 +138,47 @@ function game(game_canvas) {
         });
 			
 			// Check for tap on the thing
+			if (dist < things[i].sprite_width) {
+        if (thing_selected == i) {
+          thing_selected=-1;
+          matched=1;
+        }
+        else {
+          thing_selected=i;
+          matched=1;
+        }
+			}
+		}
+	}
+	
+	function extrainfo (event) {
+    // intended to provide information about the character when we hover
+    console.log('hover');
+    event.preventDefault();
+		var 
+      i,
+			location = {},
+			dist;
+			
+			pos = getElementPosition(canvas),
+			hoverX = event.targetTouches ? event.targetTouches[0].pageX : event.pageX,
+			hoverY = event.targetTouches ? event.targetTouches[0].pageY : event.pageY,
+			canvasScaleRatio = canvas.width / canvas.offsetWidth;
+
+		location.left = (hoverX - pos.left) * canvasScaleRatio;
+		location.top = (hoverY - pos.top) * canvasScaleRatio;
+    console.log("HOVER ("+location.left+","+location.top+")");	
+    var matched=0;
+		for (i = 0; i < things.length; i += 1) {
+			// Distance between user screen tap and thing
+			dist = distance({
+          left: (things[i].left + (things[i].sprite_width)/2),
+          top: (things[i].top + (things[i].sprite_height)/2)
+        }, {
+          left: location.left,
+          top: location.top
+        });
+			
 			if (dist < things[i].sprite_width) {
         if (thing_selected == i) {
           thing_selected=-1;
@@ -183,95 +218,80 @@ function game(game_canvas) {
           left: location.left,
           top: location.top
         });
-			
-			// Check for tap on the thing
-// 			if (dist < things[i].sprite_width) {
-//         if (thing_selected == i) {
-//           thing_selected=-1;
-//           matched=1;
-//         }
-//         else {
-//           thing_selected=i;
-//           matched=1;
-//         }
-// 			}
-// 			else {
         if ( !(thing_selected < 0)) {
           movelocation(location.left,location.top);
         }
-//       }
 		}
-		
 	}
 
-	function sprite (options) {
+function sprite (options) {
 	
-		var that = {};
-			that.frameIndex = 0;
-			that.tickCount = 0;
-			that.ticksPerFrame = options.ticksPerFrame || 0;
-			that.numberOfFrames = options.numberOfFrames || 1;
+      var character = {};
+			character.frameIndex = 0;
+			character.tickCount = 0;
+			character.ticksPerFrame = options.ticksPerFrame || 0;
+			character.numberOfFrames = options.numberOfFrames || 1;
 		
-      that.context = options.context;
-      that.width = options.width;
-      that.height = options.height;
-      that.image = options.image;
-      that.name = options.name;
-      that.scale=options.scale;
-      that.left=options.left;
-      that.left_destination = that.left;
-      that.top=options.top;
-      that.top_destination=that.top;
-      that.canmove=options.canmove;
-      that.sprite_width=Math.floor((that.width/that.numberOfFrames)* that.scale);
-      that.sprite_height=Math.floor(that.height*that.scale);
-		
-      that.update = function () {
-            if (!that.canmove) return;
-            if (that.left != that.left_destination) {
-                if (that.left < that.left_destination) {
-                  that.left++;
+      character.context = options.context;
+      character.width = options.width;
+      character.height = options.height;
+      character.image = options.image;
+      character.name = options.name;
+      character.scale=options.scale;
+      character.left=options.left;
+      character.left_destination = character.left;
+      character.top=options.top;
+      character.top_destination=character.top;
+      character.canmove=options.canmove;
+      character.sprite_width=Math.floor((character.width/character.numberOfFrames)* character.scale);
+      character.sprite_height=Math.floor(character.height*character.scale);
+      
+      character.update = function () {
+            if (!character.canmove) return;
+            if (character.left != character.left_destination) {
+                if (character.left < character.left_destination) {
+                  character.left++;
                 }
                 else {
-                  that.left--;
+                  character.left--;
                 }
             }
-            if (that.top != that.top_destination) {
-                if (that.top < that.top_destination) {
-                  that.top++;
+            if (character.top != character.top_destination) {
+                if (character.top < character.top_destination) {
+                  character.top++;
                 }
                 else {
-                  that.top--;
+                  character.top--;
                 }
             }
-            that.tickCount += 1;
-            if (that.tickCount > that.ticksPerFrame) {
-                that.tickCount = 0;
+            character.tickCount += 1;
+            if (character.tickCount > character.ticksPerFrame) {
+                character.tickCount = 0;
                 // If the current frame index is in range
-                if (that.frameIndex < that.numberOfFrames - 1) {	
+                if (character.frameIndex < character.numberOfFrames - 1) {	
                     // Go to the next frame
-                    that.frameIndex += 1;
+                    character.frameIndex += 1;
                 } else {
-                    that.frameIndex = 0;
+                    character.frameIndex = 0;
                 }
             }
         };
 		
-		that.render = function (y) {
+		character.render = function (y) {
 		
 		  // Clear the canvas
-      // that.context.clearRect(0, 0, that.width, that.height);
+      // character.context.clearRect(0, 0, character.width, character.height);
 		  // Draw the animation
-		  that.context.drawImage(
-		    that.image,
-		    that.frameIndex * that.width / that.numberOfFrames,
+		  character.context.drawImage(
+		    character.image,
+		    character.frameIndex * character.width / character.numberOfFrames,
 		    0,
-		    that.width / that.numberOfFrames,
-		    that.height,
-		    that.left,
-		    that.top,
-		    (that.width / that.numberOfFrames)* that.scale,
-		    (that.height)*that.scale
+		    character.width / character.numberOfFrames,
+		    character.height,
+		    character.left,
+		    character.top,
+		    (character.width / character.numberOfFrames)* character.scale,
+		    (character.height)*character.scale
       );
       if (thing_selected == y) {
           ctx=canvas.getContext("2d");
@@ -282,18 +302,18 @@ function game(game_canvas) {
           ctx.stroke(); 
       }
 		};
-		return that;
+		return character;
 	}
 	
 	// Get canvas
-	canvas = document.getElementById("grassworld");
+	canvas = document.getElementById(game_canvas);
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 	
 	animalImage = new Image();	
   plantImage = new Image();
 
-  for (j=0;j<10;j++) {
+  for (j=0;j<field.flora.length;j++) {
       things[j] = sprite({
         context: canvas.getContext("2d"),
         width: 27,
@@ -308,8 +328,11 @@ function game(game_canvas) {
         canmove: false
       });
   }
-  for (j=10;j<15;j++) {
-      things[j] = sprite({
+  count=j-1;
+  console.log(count,j,field.fauna.length);
+  for (j=0;j<field.fauna.length;j++) {
+    console.log(count,j);
+      things[count+j] = sprite({
         context: canvas.getContext("2d"),
         width: 2122,
         height: 320,
@@ -335,6 +358,7 @@ function game(game_canvas) {
   canvas.addEventListener("mousedown",selection);
   // right click
   canvas.addEventListener("contextmenu",contextselection);
+  canvas.addEventListener("mouseover",extrainfo);
 
 } 
 

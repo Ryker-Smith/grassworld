@@ -13,3 +13,17 @@ exports.ul = function(style, content) {
 exports.li = function(style, content) {
 	return "<li class='" + style + "'>" + content + "</li>";
 }
+exports.isdefined=function (thing){
+  var r = true;
+  if (typeof thing === 'undefined') {
+    r=false;
+  }
+  return r;
+}
+exports.isundefined=function (thing){
+  var r = false;
+  if (typeof thing === 'undefined') {
+    r=true;
+  }
+  return r;
+}

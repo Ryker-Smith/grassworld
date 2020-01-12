@@ -14,13 +14,11 @@
 
 <body>
 
-  
-
   <!-- Title and subtitle -->
   <style> .row{ width: 100%;}</style>
   <div class="row">
     <div class="twelve columns">
-       <h5 class="subheader">You are using <strong>Esprima</strong> to check for syntax errors</h5><input type="text" id="fn"><input type="button" value="load" onclick='includefile(document.getElementById("fn").value,"editor")'></input>
+       <h5 class="subheader">You are using <strong>Esprima</strong> to check for syntax errors</h5><input type="text" id="fn"><input type="button" value="load" onclick="getnewfile()"></input>
     </div>
   </div>
 
@@ -32,10 +30,9 @@
 
     <div id="info" class="alert-box success">No result yet.</div>
     </div>
-
     <div class="twelve columns">
       <div class="panel">
-        <p>Unlike a typical code linter, this syntax validator does <strong>not</strong> care about coding styles and formatting.</p>
+        <p>This syntax validator does <strong>not</strong> care about coding styles and formatting.</p>
         <p>If there is a syntax error, the sign <img src="data:image/gif;base64,R0lGODlhEAAQANUAAP7bc//egf/ij/7ijv/jl/7kl//mnv7lnv/uwf7CTP7DTf7DT/7IW//Na/7Na//NbP7QdP/dmbltAIJNAF03AMSAJMSCLKqASa2DS6uBSquCSrGHTq6ETbCHT7WKUrKIUcCVXL+UXMOYX8GWXsSZYMiib6+ETbOIUcOXX86uhd3Muf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACsALAAAAAAQABAAAAZowJVwSCwaj0ihikRSJYcoBEL0XKlGkcjImQQhJBREKFnyICoThKeE/AAW6AXgdPyUAgrLJBEo0YsbAQyDhAEdRRwDDw8OaA4NDQImRBgFEJdglxAEGEQZKQcHBqOkKRpFF6mqq1WtrUEAOw=="> will be shown in the left-side gutter. Placing the mouse cursor over that sign will reveal the complete error description.</p>
       </div>
     </div>
@@ -51,6 +48,11 @@
       </ul>
     </div>
   </div>
+
+<script src="esprima.js"></script>
+<script src="built-editor.min.js"></script>
+<script src="customeditor.js"></script>
+<script src="validate.js"></script>
 <script>
 function includefile(f,w) {
       let url=f;
@@ -62,20 +64,30 @@ function includefile(f,w) {
           console.log("Feck");
         }
         else { 
+          // display response in the editor
           document.getElementById(w).innerHTML=xhr.response; 
+          // save the filename
           document.getElementById('fn').value=f;
+          // now must re-init the editor
+          try {
+                require(['custom/editor'], function (editor) {
+                    window.editor = editor({ parent: 'editor', lang: 'js' });
+                    window.editor.getTextView().getModel().addEventListener("Changed", function () { validate(); });
+                });
+                validate();
+          } catch (e) {}
         }
       };
       xhr.onerror = function() {
         parentUpdate(myparent, "error");
       };
-    }
+}
+
+function getnewfile() {
+  includefile(document.getElementById("fn").value,"editor");
+}
+
 includefile("../grassworld.js","editor");
 </script>
-<script src="esprima.js"></script>
-<script src="built-editor.min.js"></script>
-<script src="customeditor.js"></script>
-<script src="validate.js"></script>
-
 </body>
 </html>

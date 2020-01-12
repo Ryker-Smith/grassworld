@@ -11,7 +11,16 @@
 function token() {
   return '&tk=a1b2c3d4';
 }
-
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+function distance (p1, p2) {
+	var
+      dx = p2.left - p1.left,
+      dy = p2.top - p1.top;
+  return Math.floor(Math.sqrt(dx * dx + dy * dy));
+}
+var field;
 grassworld_db="https://grassworld.fachtnaroe.net/db/?";
 
 (function() {
@@ -43,9 +52,23 @@ grassworld_db="https://grassworld.fachtnaroe.net/db/?";
 
 grassworld();
 
-function grassworld() {
-  let field=new Thing('grassworld-body','grassworld','');
+async function grassworld() {
+  field=new World('grassworld-body','grassworld','');
   field.getState();
+  field.getCategory('flora',field);
+  field.getCategory('fauna',field);
+  field.getCategory('object',field);
+//   console.log('L '+field.fauna.length);
+//   for (var i=0; i<field.fauna.length; i++) {
+//     console.log("THING: "+ field.fauna[i] );
+//   }
+  
+  // this is a kludge to give time for the obkjects to travel across the network:
+  await sleep(2000); 
+  document.getElementById("loaderanimation").style.display="none";
+  // not working yet:
+//   let editorselection=new Thing('editorselection-body','editorselection','');
+//   editorselection.getState();
   game('grassworld');
 }
 
