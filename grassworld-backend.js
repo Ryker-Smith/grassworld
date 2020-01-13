@@ -57,11 +57,12 @@ console.log("STARTED at " + nowIs());
 var lib = require('./grassworld-library.js');
 var pending=0;
 
-app.use(express.static('/var/www/html/html_static/'));
-app.get("/db/",(request, response) => db(request, response));
+app.use(express.static('/var/www/grassworld/html/'));
+app.get("/db/",(request, response) => db_get(request, response));
+app.put("/db/",(request, response) => db_put(request, response));
 app.listen(port, () => console.log(`STARTED on port ${port}`));
 
-async function db(request, response) {
+async function db_get(request, response) {
     var reply='';
     
     async function get_by_name(name) {
@@ -121,7 +122,7 @@ async function db(request, response) {
   response.writeHead(200, {'Content-Type': 'text/html'});
 //   response.write("<!DOCTYPE html><html><head>" );
 //   response.write("</head><body>");
-  if (request.method || 'GET') {
+  if (request.method || 'GET') { // unnecessary
     var cgi = url.parse(request.url, true).query;
     if (lib.isdefined(cgi.name)) {
 //       console.log(cgi.name);
@@ -152,6 +153,58 @@ async function db(request, response) {
     response.end();
   }
   
+}
+
+async function db_put(request, response) {
+    var reply='';
+    
+    async function saveLocation(Tid, x, y, z) {
+        var r;
+        await dbms.query(
+            "UPDATE things SET Tx=" +dbms.escape(x)+ ", Ty="+dbms.escape(y)+", Tz="+dbms.escape(z)+"WHERE Tid=" + dbms.escape(Tid))
+          .then( results => {
+            r=JSON.stringify(results);
+            console.log(r.warningCount);
+            return r;
+//           if(results.length != 1){
+//             r='error b167'+String(results);
+//           }
+//           else {
+//             if ( results[0].Tid > 0 ) {
+//               r=results[0].Tcontent;
+//             }
+//             else {
+//               r='error b174';
+//             }
+//           }
+//           return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+
+  console.log( nowIs());
+  console.log('CONNECT -> DB -> '+request.method + ' ' + String(request.url));
+  fs.appendFile(debugfile, 'CONNECT\n', () => {});
+  fs.appendFile(debugfile, nowIs() + "\n", () => {});
+  fs.appendFile(debugfile, 'Method: ' + request.method + '\n', () => {});
+  for (var key in request.headers) {
+      fs.appendFile(debugfile,key + " -> " + request.headers[key] + "\n", () => {});
+  }
+  response.writeHead(200, {'Content-Type': 'text/html'});
+    var cgi = url.parse(request.url, true).query;
+    if (lib.isdefined(cgi.a)) {
+//       console.log(cgi.name);
+      if(cgi.a == 'sl') {
+        reply=await saveLocation(cgi.tid, cgi.X, cgi.Y, cgi.Z);
+      }
+    }
+    console.log('RESPONSE -> ' + reply);
+    response.write(String(reply));
+    response.end();
 }
 /*
 MariaDB [grassworld_001]> SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0;

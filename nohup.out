@@ -1377,3 +1377,361 @@ SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
 2020-01-13 10:10
 CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
 SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 10:18
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 10:18
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 10:18
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 10:31
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 10:31
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 10:31
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 10:35
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 10:35
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 10:35
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 12:51
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 12:51
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 12:51
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 12:51
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 13:15
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 13:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 13:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 13:15
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 13:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 13:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 13:16
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 13:16
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 13:16
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 13:33
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 13:33
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 13:33
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 13:34
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 13:34
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 13:34
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 13:36
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 13:36
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 13:36
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+internal/modules/cjs/loader.js:638
+    throw err;
+    ^
+
+Error: Cannot find module '/var/www/html/chess-backend.js'
+    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:636:15)
+    at Function.Module._load (internal/modules/cjs/loader.js:562:25)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:831:12)
+    at startup (internal/bootstrap/node.js:283:19)
+    at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3)
+2020-01-13 14:13
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 14:13
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 14:13
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+internal/modules/cjs/loader.js:638
+    throw err;
+    ^
+
+Error: Cannot find module '/var/www/html/chess-backend.js'
+    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:636:15)
+    at Function.Module._load (internal/modules/cjs/loader.js:562:25)
+    at Function.Module.runMain (internal/modules/cjs/loader.js:831:12)
+    at startup (internal/bootstrap/node.js:283:19)
+    at bootstrapNodeJSCore (internal/bootstrap/node.js:622:3)
+2020-01-13 14:35
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 14:35
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 14:35
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 15:27
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 15:27
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 15:27
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 15:41
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 15:41
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 15:41
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 15:52
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 15:52
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 15:52
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 16:45
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 16:45
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 16:45
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 16:48
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 16:48
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 16:48
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 20:00
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 20:00
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 20:00
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 20:00
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-13 20:00
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 20:00
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 20:00
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+STARTED at 2020-01-13 20:15
+STARTED on port 81
+2020-01-13 20:18
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 20:18
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 20:18
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+STARTED at 2020-01-13 20:23
+STARTED on port 81
+2020-01-13 20:23
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 20:23
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 20:23
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 20:31
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 20:31
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 20:31
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:15
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:16
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:16
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:16
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:17
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:17
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:17
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:17
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:17
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:17
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:18
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:18
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:18
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:19
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:19
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:19
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:20
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:20
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:20
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:21
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:21
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:21
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:21
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:21
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:21
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:22
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:22
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:22
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:25
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:25
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:25
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:28
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:28
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:28
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:30
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:30
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:30
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:30
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:30
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:30
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:31
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:31
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:31
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:34
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:34
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:34
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:37
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:37
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:37
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:38
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:38
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:38
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-13 21:39
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 21:39
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 21:39
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+STARTED at 2020-01-13 23:09
+STARTED on port 81
