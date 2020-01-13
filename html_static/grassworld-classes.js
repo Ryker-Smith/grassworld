@@ -37,7 +37,14 @@ class Yoke {
       };
     };
     saveLocation() {
-      let url=grassworld_db+'tid='+this.Tid + token();
+      let url=grassworld_db+'tid='+this.Tid;
+      for (var c in [this.X, this.Y, this.Z]) {
+        if (c == undefined) {
+          c=0;
+        }
+      }
+      url += '&X='+this.X + '&Y='+this.Y + '&Z='+this.Z;
+      url += token();
       let xhr = new XMLHttpRequest();
       let myparent=this.parent;
       xhr.open('PUT', url);

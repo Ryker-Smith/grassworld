@@ -55,7 +55,8 @@ function game(game_canvas) {
 //     console.log("Going to (",things[thing_selected].left_destination,",",things[thing_selected].top_destination,")");
   }
   
-  function locationchange(event) {
+  function keypress(event) {
+    console.log(arguments.callee.name);
     var key_left=37,
         key_up=38,
         key_right=39,
@@ -109,9 +110,10 @@ function game(game_canvas) {
     }
 	
 	function leftclick (event) {
-//     console.log('leftclick');
+    if(event.which != 1) return;
+//     console.log(event.which);
+    console.log(arguments.callee.name);
     event.preventDefault();
-//     console.log('L '+field.fauna.length);
 		var 
       i,
 			location = {},
@@ -149,9 +151,9 @@ function game(game_canvas) {
 		}
 	}
 	
-	function extrainfo (event) {
+	function hoverinfo (event) {
     // intended to provide information about the character when we hover
-//     console.log('hover');
+    console.log(arguments.callee.name);
     event.preventDefault();
 		var 
       i,
@@ -190,8 +192,8 @@ function game(game_canvas) {
 		}
 	}
 	
-	function contextselection (event) {
-//     console.log('rightclick');
+	function rightclick (event) {
+    console.log(arguments.callee.name);
     event.preventDefault();
 		var 
       i,
@@ -221,6 +223,20 @@ function game(game_canvas) {
         }
 		}
 	}
+	
+  function wheel (event) {
+    console.log(arguments.callee.name);
+    delta = event.wheelDelta / 60;
+//     console.log(delta);
+    if (delta > 0) {
+      // up
+      console.log('up');
+    }
+    else if (delta < 0) {
+      // down
+      console.log('down');
+    }
+  }
 
 function sprite (options) {
 	
@@ -272,6 +288,10 @@ function sprite (options) {
                     character.frameIndex = 0;
                 }
             }
+            // We've arrived
+             if ((character.left == character.left_destination) && (character.top == character.top_destination)) {
+//                console.log('arrival');
+             }
         };
 		
 		character.render = function (y) {
@@ -367,13 +387,14 @@ function sprite (options) {
     things[d].image.addEventListener("load",gameLoop);
   }
   // key press
-  document.addEventListener("keydown",locationchange);
+  document.addEventListener("keydown",keypress);
   // left click
   canvas.addEventListener("mousedown",leftclick);
   // right click
-  canvas.addEventListener("contextmenu",contextselection);
+  canvas.addEventListener("contextmenu",rightclick);
   // hover
-  canvas.addEventListener("mouseover",extrainfo);
+  canvas.addEventListener("mouseover",hoverinfo);
+  canvas.addEventListener("wheel",wheel);
 } 
 
 // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/
