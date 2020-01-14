@@ -1,3 +1,4 @@
+// 
 // Copyright 2013 William Malone (www.williammalone.com)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,30 +12,32 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
- 
-function game(game_canvas) {
-			
-	var animal,
+
+  var animal,
       animalImage,
       canvas;
   var clickCount=0;
   var thing_selected=-1;
   var things=[];
 
+function game(game_canvas) {
+			
+
+
 	function gameLoop () {
 	  
-    // clear the field 
-    ctx=canvas.getContext("2d");
-    ctx.fillStyle = "green";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    // display game entities on field
-    for (i=0; i< things.length; i++) {
-      // any movement calculations
-      things[i].update(i);
-      // display the changed character
-      things[i].render(i);
-    }
-    window.requestAnimationFrame(gameLoop);
+      // clear the field 
+      ctx=canvas.getContext("2d");
+      ctx.fillStyle = "green";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // display game entities on field
+      for (i=0; i< things.length; i++) {
+        // any movement calculations
+        things[i].update(i);
+        // display the changed character
+        things[i].render(i);
+      }
+      window.requestAnimationFrame(gameLoop);
 	}
 	
 	function setdestination(tx, ty) {
@@ -97,7 +100,7 @@ function game(game_canvas) {
           console.log("Unknown: " + event.keyCode);
     }
   }
-		function getElementPosition (element) {
+	function getElementPosition (element) {
        var parentOffset,
        	   pos = {
                left: element.offsetLeft,
@@ -113,7 +116,6 @@ function game(game_canvas) {
 	
 	function leftclick (event) {
     if(event.which != 1) return;
-//     console.log(event.which);
     console.log(arguments.callee.name);
     event.preventDefault();
 		var 
@@ -127,8 +129,7 @@ function game(game_canvas) {
 
 		location.left = (tapX - pos.left) * canvasScaleRatio;
 		location.top = (tapY - pos.top) * canvasScaleRatio;
-//     console.log("("+location.left+","+location.top+")");	
-    var matched=0;
+    var clickedonsprite=0;
 		for (i = 0; i < things.length; i += 1) {
 			// Distance between user screen tap and thing
 			dist = distance({
@@ -138,20 +139,22 @@ function game(game_canvas) {
           left: location.left,
           top: location.top
         });
-			
 			// Check for tap on the thing
 			if (dist < things[i].sprite_width) {
         if (thing_selected == i) {
           thing_selected=-1;
-          matched=1;
+          clickedonsprite=1;
         }
         else {
           thing_selected=i;
           console.log("Thing "+thing_selected+" selected");
-          matched=1;
+          clickedonsprite=1;
         }
 			}
 		}
+		if (clickedonsprite==0) {
+        thing_selected=-1;
+    }
 	}
 	
 	function hoverinfo (event) {
@@ -171,7 +174,7 @@ function game(game_canvas) {
 		location.left = (hoverX - pos.left) * canvasScaleRatio;
 		location.top = (hoverY - pos.top) * canvasScaleRatio;
 //     console.log("HOVER ("+location.left+","+location.top+")");	
-    var matched=0;
+    var clickedonsprite=0;
 		for (i = 0; i < things.length; i += 1) {
 			// Distance between user screen tap and thing
 			dist = distance({
@@ -185,11 +188,11 @@ function game(game_canvas) {
 			if (dist < things[i].sprite_width) {
         if (thing_selected == i) {
           thing_selected=-1;
-          matched=1;
+          clickedonsprite=1;
         }
         else {
           thing_selected=i;
-          matched=1;
+          clickedonsprite=1;
         }
 			}
 		}
@@ -211,7 +214,7 @@ function game(game_canvas) {
 		location.left = (tapX - pos.left) * canvasScaleRatio;
 		location.top = (tapY - pos.top) * canvasScaleRatio;
 // 		console.log("("+location.left+","+location.top+")");	
-    var matched=0;
+    var clickedonsprite=0;
 		for (i = 0; i < things.length; i += 1) {
 			// Distance between user screen tap and thing
 			dist = distance({
@@ -230,7 +233,6 @@ function game(game_canvas) {
   function wheel (event) {
     console.log(arguments.callee.name);
     delta = event.wheelDelta / 60;
-//     console.log(delta);
     if (delta > 0) {
       // up
       console.log('up');
@@ -281,6 +283,8 @@ function sprite (options) {
       character.image = options.image;
       character.name = options.name;
       character.scale=options.scale;
+      character.tID=options.tID;
+      character.thingnum=options.thingnum;
       character.left=options.left;
       character.left_destination = character.left;
       character.top=options.top;
@@ -292,6 +296,7 @@ function sprite (options) {
       
       character.update = function () {
             if (!character.canmove) return;
+            
             if (character.left != character.left_destination) {
                 if (character.left < character.left_destination) {
                   character.left++;
@@ -319,15 +324,15 @@ function sprite (options) {
                     character.frameIndex = 0;
                 }
             }
+//             things[thing_selected].o.saveLocation();
             // We've arrived
              if ((character.ismoving==1) && (character.left == character.left_destination) && (character.top == character.top_destination)) {
-               console.log('Arrival of thing '+thing_selected+" (aka "+ things[thing_selected].name+")");
-               things[thing_selected].o.X=character.left;
-               things[thing_selected].o.Y=character.top;
-               things[thing_selected].o.Z=0;
-               things[thing_selected].o.saveLocation();
+               console.log('Arrival of thing '+character.thingnum+" (aka "+ things[character.thingnum].name+")");
+               things[character.thingnum].o.X=character.left;
+               things[character.thingnum].o.Y=character.top;
+               things[character.thingnum].o.Z=0;
+               things[character.thingnum].o.saveLocation();
                character.ismoving=0;
-               
              }
         };
 		
@@ -368,19 +373,15 @@ function sprite (options) {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 	
-// 	animalImage = new Image();	
-//   plantImage = new Image();
-  // Load sprite sheets
-// 	animalImage.src = "assets/img/anmhithe02-positioned.png";
-// 	plantImage.src = "assets/img/plant02.png";
   count=0;
   for (j=0;j<field.flora.length;j++) {
-//     console.log(count);
-      things[count] = sprite({
+      var currentitem=things.push( sprite({
         context: canvas.getContext("2d"),
+        thingnum: count,
         width: 27,
         height: 42,
-        image: new Image(),
+        selected: false,
+        image: undefined,
         tID: field.flora[j].Tid,
         numberOfFrames: 1,
         ticksPerFrame: 15,
@@ -388,44 +389,45 @@ function sprite (options) {
         top: Math.floor(Math.random() * canvas.height),
         scale: 1,
         name: field.flora[j].Tname,
+        genus: field.flora[j].Tgenus,
         canmove: false
-      });
-      things[count].image.src="assets/img/"+field.flora[j].Gimage;
-      console.log("IMG: "+things[j].image.src);
+      }));
+      currentitem--;
+      things[currentitem].image=new Image();
+      things[currentitem].image.src="assets/img/"+field.flora[j].Gimage;
       count++;
   }
-//   console.log(count,j,field.fauna.length);
   for (j=0;j<field.fauna.length;j++) {
-//     console.log(count);
-      things[count] = sprite({
+      var currentitem=things.push( sprite({
         context: canvas.getContext("2d"),
+        thingnum: count,
         width: 2122,
         height: 320,
         selected: false,
         tID: field.fauna[j].Tid,
-        image: new Image(),
+        image: undefined,
         numberOfFrames: 8,
         ticksPerFrame: 20,
         left: field.fauna[j].Tx,
         top: field.fauna[j].Ty,
         scale: .25,
         name: field.fauna[j].Tname,
+        genus: field.fauna[j].Tgenus,
         canmove: true
-    });
-    things[count].image.src="assets/img/"+field.fauna[j].Gimage;
-    things[count].o=new MovingThing(null,things[count].name,'',0);
-    things[count].o.Tid=field.fauna[j].Tid;
-    console.log("ID: "+things[count].o.Tid);
+    }));
+    currentitem--;
+    things[currentitem].image=new Image();
+    things[currentitem].image.src="assets/img/"+field.fauna[j].Gimage;
+    things[currentitem].o=new MovingThing(null,things[currentitem].name,'',0);
+    things[currentitem].o.Tid=field.fauna[j].Tid;
     count++;
+    var lm= new Schplágen();
   }
 
   // add listeners for events
-// 	animalImage.addEventListener("load", gameLoop);
-//   plantImage.addEventListener("load", gameLoop);
   for (d=0; d<things.length; d++) {
     things[d].image.addEventListener("load",gameLoop);
   }
-  // key press
   document.addEventListener("keydown",eventDispatcher);
   document.addEventListener("keyup",eventDispatcher);
   canvas.addEventListener("mousedown",eventDispatcher);

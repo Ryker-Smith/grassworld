@@ -9,5 +9,5 @@ window.onload=(function(){
   onload_b1();
   onload_b2();
   onload_b3();
-
+  onload_f0();
 });
