@@ -1735,3 +1735,27 @@ CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
 SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
 STARTED at 2020-01-13 23:09
 STARTED on port 81
+2020-01-13 23:10
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-13 23:10
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-13 23:10
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-14 02:13
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-14 02:13
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-14 02:13
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-14 02:13
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-14 02:13
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-14 02:13
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
