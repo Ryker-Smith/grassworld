@@ -70,7 +70,7 @@ class Thing extends Yoke {
     this.Y=undefined;
     this.Z=undefined;
   }
-  tcreate(postload) {
+  tcreate(postloadfunc) {
       let url=grassworld_db+'t=thing&a=mk&name='+this.name + '&g='+this.genus + token();
       let xhr = new XMLHttpRequest();
       let dt=this.data;
@@ -82,9 +82,11 @@ class Thing extends Yoke {
           postload('Error 64');
         }
         else { 
-          postload(xhr.response);
+          postloadfunc(xhr.response);
         }
       };
+    }
+    tchangegenus(postloadfunc) {
     }
 }
 
@@ -114,7 +116,7 @@ class MovingThing extends LivingThing {
           console.log("Error 78");
         }
         else { 
-          console.log("Location update: "+ xhr.response); 
+//           console.log("Location update: "+ xhr.response); 
         }
       };
     }

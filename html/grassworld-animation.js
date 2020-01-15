@@ -23,6 +23,7 @@
   var animal,
       animalImage,
       canvas;
+  var notclevercount=0;    
   var thing_selected=-1;
 	// Get canvas
 	canvas = document.getElementById('grassworld');
@@ -54,6 +55,25 @@
       character.sprite_width=Math.floor((character.width/character.numberOfFrames)* character.scale);
       character.sprite_height=Math.floor(character.height*character.scale);
       
+//       character.countnearby=function() {
+//         var nearby=0;
+//         for (i = 0; i < things.length; i += 1) {
+//           Distance between us (and others of same genus)
+//           if (things[i].thingnum != character.thingnum) {
+//             dist = distance({
+//                 left: (character.left + (things[i].sprite_width)/2),
+//                 top: (character.top + (things[i].sprite_height)/2)
+//               }, {
+//                 left: location.left,
+//                 top: location.top
+//             });
+//             if (dist < things[i].sprite_width) {
+//               nearby++;
+//             }
+//             console.log('Nearby ' + nearby);
+//           }
+//         } 
+//       };
       character.update = function () {
             if (!character.canmove) return;
             
@@ -77,16 +97,37 @@
             if (character.tickCount > character.ticksPerFrame) {
                 character.tickCount = 0;
                 // If the current frame index is in range
-                if (character.frameIndex < character.numberOfFrames - 1) {	
+                if (character.frameIndex < character.numberOfFrames - 1) {
                     // Go to the next frame
+                  if (oneinNchance(3)) {
                     character.frameIndex += 1;
-                } else {
-                    character.frameIndex = 0;
+                  }
+                }
+                else {
+                character.frameIndex = 0;
+                if (oneinNchance(100)) {
+                  character.image.src="assets/img/plant02.png";
+                  character.canmove=false;
+                  character.scale=1;
+                  var audio = new Audio('/assets/audio/termites_and_ants-mike-koenig.wav');
+                  audio.play();
+                }
+                else {
+                  if(oneinNchance(10)) {
+                    if (oneinNchance(2)) {
+                      character.ticksPerFrame=character.ticksPerFrame/2;
+                      setdestination(character.thingnum, character.left + grandom(screen.width), character.top + grandom(screen.height));
+                    }
+                    else {
+                      setdestination(character.thingnum, character.left - grandom(screen.width), character.top - grandom(screen.height));
+                    }
+                  }
+                }
                 }
             }
-//             things[thing_selected].o.saveLocation();
             // We've arrived
-             if ((character.ismoving==1) && (character.left == character.left_destination) && (character.top == character.top_destination)) {
+            try {
+             if ((character.canmove) &&(character.ismoving==1) && (character.left == character.left_destination) && (character.top == character.top_destination)) {
                console.log('Arrival of thing '+character.thingnum+" (aka "+ things[character.thingnum].name+")");
                things[character.thingnum].o.X=character.left;
                things[character.thingnum].o.Y=character.top;
@@ -94,6 +135,8 @@
                things[character.thingnum].o.saveLocation();
                character.ismoving=0;
              }
+            }
+            catch (e) {}
         };
 		
 		character.render = function (y) {
@@ -128,6 +171,27 @@
 		return character;
 	}
 	
+	function setdestination(t, tx, ty) {
+//     if (thing_selected < 0) return;
+    if (!things[t].canmove) return;
+    things[t].ismoving=1;
+    things[t].left_destination= tx  - Math.floor(things[t].sprite_width/2);
+    if (things[t].left_destination < 0) {
+      things[t].left_destination=0;
+    }
+    else if (things[t].left_destination > canvas.width) {
+      things[t].left_destination=canvas.width;
+    }
+    things[t].top_destination= ty - Math.floor(things[t].sprite_height/2);
+    if (things[t].top_destination < 0) {
+      things[t].top_destination=0;
+    }
+    else if (things[t].top_destination > canvas.height) {
+      things[t].top_destination=canvas.height;
+    }
+    console.log("Thing "+t+ " going to ("+things[t].left_destination+","+things[t].top_destination+")");
+  }
+  
 function game(game_canvas) {
 
 	function gameLoop () {
@@ -142,32 +206,19 @@ function game(game_canvas) {
         things[i].update(i);
         // display the changed character
         things[i].render(i);
+//         things[i].countnearby(i);
       }
-
+      var ctx2 = canvas.getContext("2d");
+      ctx2.font = "40px Verdana bold";
+      ctx2.strokeStyle="white";
+      ctx2.background="black";
+      ctx2.strokeText(things.length+ " things",10,50);
   }
 	
-	function setdestination(tx, ty) {
-    if (thing_selected < 0) return;
-    things[thing_selected].ismoving=1;
-    things[thing_selected].left_destination= tx  - Math.floor(things[thing_selected].sprite_width/2);
-    if (things[thing_selected].left_destination < 0) {
-      things[thing_selected].left_destination=0;
-    }
-    else if (things[thing_selected].left_destination > canvas.width) {
-      things[thing_selected].left_destination=canvas.width;
-    }
-    things[thing_selected].top_destination= ty - Math.floor(things[thing_selected].sprite_height/2);
-    if (things[thing_selected].top_destination < 0) {
-      things[thing_selected].top_destination=0;
-    }
-    else if (things[thing_selected].top_destination > canvas.height) {
-      things[thing_selected].top_destination=canvas.height;
-    }
-    console.log("Thing "+thing_selected + " going to (",things[thing_selected].left_destination,",",things[thing_selected].top_destination,")");
-  }
+
   
   function keypress(event) {
-    console.log(arguments.callee.name);
+//     console.log(arguments.callee.name);
     var key_left=37,
         key_up=38,
         key_right=39,
@@ -222,7 +273,7 @@ function game(game_canvas) {
 	
 	function leftclick (event) {
     if(event.which != 1) return;
-    console.log(arguments.callee.name);
+//     console.log(arguments.callee.name);
     event.preventDefault();
 		var 
       i,
@@ -253,7 +304,7 @@ function game(game_canvas) {
         }
         else {
           thing_selected=i;
-          console.log("Thing "+thing_selected+" selected");
+          console.log("Thing "+things[thing_selected].thingnum+" (aka "+things[thing_selected].name+") selected");
           clickedonsprite=1;
         }
 			}
@@ -265,7 +316,7 @@ function game(game_canvas) {
 	
 	function hoverinfo (event) {
     // intended to provide information about the character when we hover
-    console.log(arguments.callee.name);
+//     console.log(arguments.callee.name);
     event.preventDefault();
 		var 
       i,
@@ -305,7 +356,7 @@ function game(game_canvas) {
 	}
 	
 	function rightclick (event) {
-    console.log(arguments.callee.name);
+//     console.log(arguments.callee.name);
     event.preventDefault();
 		var 
       i,
@@ -331,13 +382,13 @@ function game(game_canvas) {
           top: location.top
         });
         if ( !(thing_selected < 0) && (things[thing_selected].canmove==1)) {
-          setdestination(location.left,location.top);
+          setdestination(thing_selected, location.left,location.top);
         }
 		}
 	}
 	
   function wheel (event) {
-    console.log(arguments.callee.name);
+//     console.log(arguments.callee.name);
     delta = event.wheelDelta / 60;
     if (delta > 0) {
       // up
@@ -349,7 +400,7 @@ function game(game_canvas) {
     }
   }
   
-function eventDispatcher(event) {
+function eventDispatcher(event,d) {
   /*   this is an unnecessary layer between the EventListener and the EventHandler.
    *  It is used to provide similarity of construct with the AppInventor JavaLibrary
    *  used for Android app development in Android Studio.
@@ -358,6 +409,14 @@ function eventDispatcher(event) {
   switch (event.type) {
     case 'load' :
           gameLoop(event);
+//           notclevercount--;
+//           if (notclevercount == 1) {
+//             for (d=0; d<things.length; d++) {
+//               things[d].image.removeEventListener("load", eventDispatcher);
+//             }
+//             console.log('removed');
+//           }
+//           console.log(notclevercount);
           break;
     case 'mousedown' :
           leftclick(event);
@@ -379,8 +438,6 @@ function eventDispatcher(event) {
           break;
   }
 }
-
-
   count=0;
   for (j=0;j<field.flora.length;j++) {
       var currentitemnum=things.push( sprite({
@@ -391,7 +448,7 @@ function eventDispatcher(event) {
         selected: false,
         image: undefined,
         tID: field.flora[j].Tid,
-        numberOfFrames: 1,
+        numberOfFrames: field.flora[j].Gframes,
         ticksPerFrame: 15,
         left: Math.floor(Math.random() * canvas.width),
         top: Math.floor(Math.random() * canvas.height),
@@ -406,6 +463,7 @@ function eventDispatcher(event) {
       count++;
   }
   for (j=0;j<field.fauna.length;j++) {
+//     console.log(field.fauna[j]);
       var currentitemnum=things.push( sprite({
         context: canvas.getContext("2d"),
         thingnum: count,
@@ -414,11 +472,11 @@ function eventDispatcher(event) {
         selected: false,
         tID: field.fauna[j].Tid,
         image: undefined,
-        numberOfFrames: 8,
-        ticksPerFrame: 20,
+        numberOfFrames: field.fauna[j].Gframes,
+        ticksPerFrame: field.fauna[j].Gticks,
         left: field.fauna[j].Tx,
         top: field.fauna[j].Ty,
-        scale: .25,
+        scale: field.fauna[j].Gscale,
         name: field.fauna[j].Tname,
         genus: field.fauna[j].Tgenus,
         canmove: true
@@ -434,8 +492,11 @@ function eventDispatcher(event) {
 
   // add listeners for events
   for (d=0; d<things.length; d++) {
-    things[d].image.addEventListener("load",eventDispatcher);
+    if (oneinNchance(15)) {
+      things[d].image.addEventListener("load",eventDispatcher);
+    }
   }
+  notclevercount=d;
   document.addEventListener("keydown",eventDispatcher);
   document.addEventListener("keyup",eventDispatcher);
   document.addEventListener("mousedown",eventDispatcher);
