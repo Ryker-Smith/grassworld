@@ -60,6 +60,7 @@ var pending=0;
 app.use(express.static('/var/www/grassworld/html/'));
 app.get("/db/",(request, response) => db_get(request, response));
 app.put("/db/",(request, response) => db_put(request, response));
+app.post("/db/",(request, response) => db_post(request, response));
 app.listen(port, () => console.log(`STARTED on port ${port}`));
 
 async function db_get(request, response) {
@@ -200,6 +201,51 @@ async function db_put(request, response) {
 //       console.log(cgi.name);
       if(cgi.a == 'sl') {
         reply=await saveLocation(cgi.tid, cgi.X, cgi.Y, cgi.Z);
+      }
+    }
+    console.log('RESPONSE -> ' + reply);
+    response.write(String(reply));
+    response.end();
+}
+async function db_post(request, response) {
+    var reply='';
+    
+    async function conceive(Tname, Tgenus) {
+        var r;
+        var x=0,y=0,z=0;
+        await dbms.query(
+            "INSERT INTO things (Tname, Tgenus) VALUES ("+dbms.escape(Tname)+","+dbms.escape(Tgenus)+")")
+          .then( results => {
+            r=JSON.stringify(results);
+            console.log(r.warningCount);
+            if (r.insertId > 0) {
+                r=r.insertId;
+            }
+            return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+
+  console.log( nowIs());
+  console.log('CONNECT -> DB -> '+request.method + ' ' + String(request.url));
+  fs.appendFile(debugfile, 'CONNECT\n', () => {});
+  fs.appendFile(debugfile, nowIs() + "\n", () => {});
+  fs.appendFile(debugfile, 'Method: ' + request.method + '\n', () => {});
+  for (var key in request.headers) {
+      fs.appendFile(debugfile,key + " -> " + request.headers[key] + "\n", () => {});
+  }
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  var cgi = url.parse(request.url, true).query;
+  if (lib.isdefined(cgi.a)) {
+//       console.log(cgi.name);
+      if(cgi.a == 'mk') {
+        if (cgi.t == 'thing') {
+          reply=await conceive(cgi.name, cgi.g);
+        }
       }
     }
     console.log('RESPONSE -> ' + reply);

@@ -4089,3 +4089,515 @@ SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
 2020-01-14 22:23
 CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
 SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-14 23:22
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-14 23:22
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-14 23:22
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-14 23:40
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-14 23:40
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-14 23:40
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 00:04
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 00:04
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 00:04
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 02:46
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 02:46
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 02:46
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:29
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:29
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:29
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:30
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=715&Y=206&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:32
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:32
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:32
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:32
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=124&Y=693&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:32
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=358&Y=547&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:33
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:33
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:33
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:33
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=869&Y=336&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:33
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=515&Y=508&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:33
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=765&Y=230&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:33
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=908&Y=700&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:33
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=975&Y=292&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:33
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=835&Y=303&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:33
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=212&Y=1000&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:34
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:34
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:34
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:34
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:34
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:34
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:35
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:35
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:35
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:35
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:35
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:35
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:35
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=880&Y=240&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:35
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=539&Y=562&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:36
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=955&Y=65&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:36
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:36
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:36
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:36
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=665&Y=482&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:36
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=1164&Y=612&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:36
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=639&Y=387&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:36
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:36
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:36
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:36
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=15&Y=127&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:36
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=143&Y=8&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:38
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:38
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:38
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:38
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=782&Y=387&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:38
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=145&Y=0&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:43
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:43
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:43
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:43
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=295&Y=103&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 09:48
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 09:48
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 09:48
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 09:48
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 12:03
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 12:03
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 12:03
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 12:09
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 12:09
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 12:09
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 12:09
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 12:13
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 12:13
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 12:13
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 12:13
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 12:13
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=550&Y=43&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 12:13
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=13&Y=256&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 12:13
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=486&Y=333&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 12:14
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=18&Y=102&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 12:14
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=6&Y=153&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 12:14
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=18&Y=211&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 12:14
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 12:14
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 12:14
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 12:14
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 16:38
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 16:38
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 16:38
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 16:38
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 17:21
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 17:21
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 17:21
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 17:27
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 17:27
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 17:27
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 17:27
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 17:28
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 17:28
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 17:28
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 17:28
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 17:34
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 17:34
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 17:34
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 17:34
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 17:39
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 17:39
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 17:39
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 17:39
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 17:55
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 17:55
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 17:55
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 17:55
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 17:55
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=18&X=913&Y=140&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 17:55
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=17&X=428&Y=183&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 17:55
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=314&Y=466&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 17:55
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=16&X=618&Y=47&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 17:55
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=15&X=628&Y=375&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 17:55
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=4&X=707&Y=205&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 17:55
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=107&Y=462&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 17:56
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 17:56
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 17:56
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 17:56
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 17:56
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=20&X=1070&Y=651&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 17:57
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 17:57
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 17:57
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 17:57
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 17:57
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=14&X=918&Y=435&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:14
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 18:14
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 18:14
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 18:14
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 18:14
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 18:14
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 18:14
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 18:14
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 18:15
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 18:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 18:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 18:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 18:15
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 18:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 18:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 18:15
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 18:16
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 18:16
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 18:16
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 18:16
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=22&Y=2&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=17&X=1308&Y=6&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=17&X=468&Y=600&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=333&Y=598&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=15&X=463&Y=477&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=3&X=339&Y=475&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=4&X=600&Y=483&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=14&X=600&Y=615&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=20&X=599&Y=373&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=16&X=468&Y=372&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=18&X=342&Y=360&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=337&Y=647&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:16
+CONNECT -> DB -> PUT /db/?t=thing&a=sl&tid=2&X=340&Y=578&Z=0&tk=a1b2c3d4
+undefined
+RESPONSE -> {"fieldCount":0,"affectedRows":1,"insertId":0,"serverStatus":2,"warningCount":0,"message":"(Rows matched: 1  Changed: 1  Warnings: 0","protocol41":true,"changedRows":1}
+2020-01-15 18:17
+CONNECT -> DB -> GET /db/?name=grassworld&tk=a1b2c3d4
+2020-01-15 18:17
+CONNECT -> DB -> GET /db/?world=grassworld&cat=flora&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0
+2020-01-15 18:17
+CONNECT -> DB -> GET /db/?world=grassworld&cat=fauna&tk=a1b2c3d4
+SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1
+2020-01-15 18:17
+CONNECT -> DB -> GET /db/?world=grassworld&cat=object&tk=a1b2c3d4

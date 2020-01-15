@@ -1,7 +1,7 @@
 /* Based on ideas, research, code samples, etc from (among others):
  * William Malone (www.williammalone.com)
  * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
- *	http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+ * http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
  * requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
  * MIT
  * http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/
@@ -24,7 +24,7 @@ var field;
 grassworld_db="https://grassworld.fachtnaroe.net/db/?";
 
 (function() {
-
+    // This function (c) 2013 William Malone (www.williammalone.com)
     var lastTime = 0;
     var vendors = ['ms', 'moz', 'webkit', 'o'];
     for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
@@ -58,11 +58,7 @@ async function grassworld() {
   field.getState();
   await field.getCategory('flora',field);
   await field.getCategory('fauna',field);
-//   await field.getCategory('object',field);
-//   console.log('L '+field.fauna.length);
-//   for (var i=0; i<field.fauna.length; i++) {
-//     console.log("THING: "+ field.fauna[i] );
-//   }
+  await field.getCategory('object',field);
   
   // this is a kludge to give time for the obkjects to travel across the network:
   await sleep(2000); 

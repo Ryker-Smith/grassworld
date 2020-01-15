@@ -1,10 +1,28 @@
 class Yoke {
-    constructor(parent, name){
+    constructor(parent, name, genus){
       this.parent=parent;
       this.name=name;
       this.Tid=undefined;
       this.Tstatus=undefined;
     }
+    ycreate() {
+      let url=grassworld_db+'a=mk&t=yoke&name='+this.name + token();
+      let xhr = new XMLHttpRequest();
+      let myparent=this.parent;
+      xhr.open('POST', url);
+      xhr.send();
+      this.Tid=xhr.onload = function() {
+          if (xhr.status != 200) { // OK?
+            return 'Error 16';
+          }
+          else { 
+            return xhr.response;
+          }
+      }
+      this.Tid=xhr.onerror = function() {
+        return 'error 23';
+      };
+    };
     static parentUpdate(p, h) {
       document.getElementById(p).text=h;
     }
@@ -52,25 +70,20 @@ class Thing extends Yoke {
     this.Y=undefined;
     this.Z=undefined;
   }
-  static channel(c,d){
-  }
-  conceive() {
-      let url=grassworld_db+'t=thing&a=mk&name='+this.name + token();
+  tcreate(postload) {
+      let url=grassworld_db+'t=thing&a=mk&name='+this.name + '&g='+this.genus + token();
       let xhr = new XMLHttpRequest();
-      let myparent=this.parent;
-      // nextfunction should be for: ('POST',url)
+      let dt=this.data;
+      // the next function to develop should be for: ('POST',url)
       xhr.open('POST', url);
       xhr.send();
       xhr.onload = function() {
         if (xhr.status != 200) { // OK?
-          Thing.channel(myparent, 'Error 64');
+          postload('Error 64');
         }
         else { 
-          Thing.channel(myparent, xhr.response); 
+          postload(xhr.response);
         }
-      };
-      xhr.onerror = function() {
-        Thing.channel(myparent, "error");
       };
     }
 }
@@ -107,8 +120,7 @@ class MovingThing extends LivingThing {
     }
 }
 
-class Schplágen extends MovingThing {
-  
+class Schplágen extends MovingThing {  
 }
 
 class World extends Thing {

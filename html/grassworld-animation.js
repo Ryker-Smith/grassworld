@@ -1,31 +1,137 @@
-// 
-// Copyright 2013 William Malone (www.williammalone.com)
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//   http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/* 
+  
+  Grassworld is evolved from ideas (eg treebeard.ie) that sample code from
+  William Malone (www.williammalone.com) and many others helped to 
+  show how to carry in to a Javascript implementation.
 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  
+  No commercial re-use is permitted.
+*/
+
+  var things=[];
   var animal,
       animalImage,
       canvas;
-  var clickCount=0;
   var thing_selected=-1;
-  var things=[];
+	// Get canvas
+	canvas = document.getElementById('grassworld');
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
 
+  function sprite (options) {
+	
+      var character = {};
+			character.frameIndex = 0;
+			character.tickCount = 0;
+			character.ticksPerFrame = options.ticksPerFrame || 0;
+			character.numberOfFrames = options.numberOfFrames || 1;
+//       character.context = options.context;
+      character.context = canvas.getContext("2d");
+      character.width = options.width;
+      character.height = options.height;
+      character.image = options.image;
+      character.name = options.name;
+      character.scale=options.scale;
+      character.tID=options.tID;
+      character.thingnum=options.thingnum;
+      character.left=options.left;
+      character.left_destination = options.left_destination || character.left;
+      character.top=options.top;
+      character.top_destination=options.top_destination || character.top;
+      character.canmove=options.canmove;
+      character.ismoving=0;
+      character.sprite_width=Math.floor((character.width/character.numberOfFrames)* character.scale);
+      character.sprite_height=Math.floor(character.height*character.scale);
+      
+      character.update = function () {
+            if (!character.canmove) return;
+            
+            if (character.left != character.left_destination) {
+                if (character.left < character.left_destination) {
+                  character.left++;
+                }
+                else {
+                  character.left--;
+                }
+            }
+            if (character.top != character.top_destination) {
+                if (character.top < character.top_destination) {
+                  character.top++;
+                }
+                else {
+                  character.top--;
+                }
+            }
+            character.tickCount += 1;
+            if (character.tickCount > character.ticksPerFrame) {
+                character.tickCount = 0;
+                // If the current frame index is in range
+                if (character.frameIndex < character.numberOfFrames - 1) {	
+                    // Go to the next frame
+                    character.frameIndex += 1;
+                } else {
+                    character.frameIndex = 0;
+                }
+            }
+//             things[thing_selected].o.saveLocation();
+            // We've arrived
+             if ((character.ismoving==1) && (character.left == character.left_destination) && (character.top == character.top_destination)) {
+               console.log('Arrival of thing '+character.thingnum+" (aka "+ things[character.thingnum].name+")");
+               things[character.thingnum].o.X=character.left;
+               things[character.thingnum].o.Y=character.top;
+               things[character.thingnum].o.Z=0;
+               things[character.thingnum].o.saveLocation();
+               character.ismoving=0;
+             }
+        };
+		
+		character.render = function (y) {
+		  // Clear the canvas
+      // character.context.clearRect(0, 0, character.width, character.height);
+		  // Draw the animation
+      try {
+		  character.context.drawImage(
+		    character.image,
+		    character.frameIndex * character.width / character.numberOfFrames,
+		    0,
+		    character.width / character.numberOfFrames,
+		    character.height,
+		    character.left,
+		    character.top,
+		    (character.width / character.numberOfFrames)* character.scale,
+		    (character.height)*character.scale
+      );
+      }
+      catch (e) {
+        console.log(e);
+      }
+      if (thing_selected == y) {
+          ctx=canvas.getContext("2d");
+          ctx.beginPath();
+          ctx.lineWidth = "1";
+          ctx.strokeStyle = "red";
+          ctx.rect(things[i].left,things[i].top,things[i].sprite_width,things[i].sprite_height);
+          ctx.stroke(); 
+      }
+		};
+		return character;
+	}
+	
 function game(game_canvas) {
-			
-
 
 	function gameLoop () {
-	  
+      window.requestAnimationFrame(gameLoop);
       // clear the field 
       ctx=canvas.getContext("2d");
       ctx.fillStyle = "green";
@@ -37,8 +143,8 @@ function game(game_canvas) {
         // display the changed character
         things[i].render(i);
       }
-      window.requestAnimationFrame(gameLoop);
-	}
+
+  }
 	
 	function setdestination(tx, ty) {
     if (thing_selected < 0) return;
@@ -248,7 +354,11 @@ function eventDispatcher(event) {
    *  It is used to provide similarity of construct with the AppInventor JavaLibrary
    *  used for Android app development in Android Studio.
   */
+  console.log(event.type);
   switch (event.type) {
+    case 'load' :
+          gameLoop(event);
+          break;
     case 'mousedown' :
           leftclick(event);
           break;
@@ -270,112 +380,10 @@ function eventDispatcher(event) {
   }
 }
 
-function sprite (options) {
-	
-      var character = {};
-			character.frameIndex = 0;
-			character.tickCount = 0;
-			character.ticksPerFrame = options.ticksPerFrame || 0;
-			character.numberOfFrames = options.numberOfFrames || 1;
-      character.context = options.context;
-      character.width = options.width;
-      character.height = options.height;
-      character.image = options.image;
-      character.name = options.name;
-      character.scale=options.scale;
-      character.tID=options.tID;
-      character.thingnum=options.thingnum;
-      character.left=options.left;
-      character.left_destination = character.left;
-      character.top=options.top;
-      character.top_destination=character.top;
-      character.canmove=options.canmove;
-      character.ismoving=0;
-      character.sprite_width=Math.floor((character.width/character.numberOfFrames)* character.scale);
-      character.sprite_height=Math.floor(character.height*character.scale);
-      
-      character.update = function () {
-            if (!character.canmove) return;
-            
-            if (character.left != character.left_destination) {
-                if (character.left < character.left_destination) {
-                  character.left++;
-                }
-                else {
-                  character.left--;
-                }
-            }
-            if (character.top != character.top_destination) {
-                if (character.top < character.top_destination) {
-                  character.top++;
-                }
-                else {
-                  character.top--;
-                }
-            }
-            character.tickCount += 1;
-            if (character.tickCount > character.ticksPerFrame) {
-                character.tickCount = 0;
-                // If the current frame index is in range
-                if (character.frameIndex < character.numberOfFrames - 1) {	
-                    // Go to the next frame
-                    character.frameIndex += 1;
-                } else {
-                    character.frameIndex = 0;
-                }
-            }
-//             things[thing_selected].o.saveLocation();
-            // We've arrived
-             if ((character.ismoving==1) && (character.left == character.left_destination) && (character.top == character.top_destination)) {
-               console.log('Arrival of thing '+character.thingnum+" (aka "+ things[character.thingnum].name+")");
-               things[character.thingnum].o.X=character.left;
-               things[character.thingnum].o.Y=character.top;
-               things[character.thingnum].o.Z=0;
-               things[character.thingnum].o.saveLocation();
-               character.ismoving=0;
-             }
-        };
-		
-		character.render = function (y) {
-		  // Clear the canvas
-      // character.context.clearRect(0, 0, character.width, character.height);
-		  // Draw the animation
-      try {
-		  character.context.drawImage(
-		    character.image,
-		    character.frameIndex * character.width / character.numberOfFrames,
-		    0,
-		    character.width / character.numberOfFrames,
-		    character.height,
-		    character.left,
-		    character.top,
-		    (character.width / character.numberOfFrames)* character.scale,
-		    (character.height)*character.scale
-      );
-      }
-      catch (e) {
-        console.log(e);
-      }
-      if (thing_selected == y) {
-          ctx=canvas.getContext("2d");
-          ctx.beginPath();
-          ctx.lineWidth = "1";
-          ctx.strokeStyle = "red";
-          ctx.rect(things[i].left,things[i].top,things[i].sprite_width,things[i].sprite_height);
-          ctx.stroke(); 
-      }
-		};
-		return character;
-	}
-	
-	// Get canvas
-	canvas = document.getElementById(game_canvas);
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-	
+
   count=0;
   for (j=0;j<field.flora.length;j++) {
-      var currentitem=things.push( sprite({
+      var currentitemnum=things.push( sprite({
         context: canvas.getContext("2d"),
         thingnum: count,
         width: 27,
@@ -392,13 +400,13 @@ function sprite (options) {
         genus: field.flora[j].Tgenus,
         canmove: false
       }));
-      currentitem--;
-      things[currentitem].image=new Image();
-      things[currentitem].image.src="assets/img/"+field.flora[j].Gimage;
+      currentitemnum--;
+      things[currentitemnum].image=new Image();
+      things[currentitemnum].image.src="assets/img/"+field.flora[j].Gimage;
       count++;
   }
   for (j=0;j<field.fauna.length;j++) {
-      var currentitem=things.push( sprite({
+      var currentitemnum=things.push( sprite({
         context: canvas.getContext("2d"),
         thingnum: count,
         width: 2122,
@@ -415,25 +423,25 @@ function sprite (options) {
         genus: field.fauna[j].Tgenus,
         canmove: true
     }));
-    currentitem--;
-    things[currentitem].image=new Image();
-    things[currentitem].image.src="assets/img/"+field.fauna[j].Gimage;
-    things[currentitem].o=new MovingThing(null,things[currentitem].name,'',0);
-    things[currentitem].o.Tid=field.fauna[j].Tid;
+    currentitemnum--;
+    things[currentitemnum].image=new Image();
+    things[currentitemnum].image.src="assets/img/"+field.fauna[j].Gimage;
+    things[currentitemnum].o=new MovingThing(null,things[currentitemnum].name,'',0);
+    things[currentitemnum].o.Tid=field.fauna[j].Tid;
     count++;
     var lm= new Schplágen();
   }
 
   // add listeners for events
   for (d=0; d<things.length; d++) {
-    things[d].image.addEventListener("load",gameLoop);
+    things[d].image.addEventListener("load",eventDispatcher);
   }
   document.addEventListener("keydown",eventDispatcher);
   document.addEventListener("keyup",eventDispatcher);
-  canvas.addEventListener("mousedown",eventDispatcher);
-  canvas.addEventListener("contextmenu",eventDispatcher);
-  canvas.addEventListener("mouseover",eventDispatcher);
-  canvas.addEventListener("wheel",eventDispatcher);
+  document.addEventListener("mousedown",eventDispatcher);
+  document.addEventListener("contextmenu",eventDispatcher);
+  document.addEventListener("mouseover",eventDispatcher);
+  document.addEventListener("wheel",eventDispatcher);
 } 
 
 // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/
