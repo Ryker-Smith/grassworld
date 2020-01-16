@@ -1,3 +1,6 @@
+let genus_Schplágen = 1;
+let genus_Twig=2;
+
 class Yoke {
     constructor(parent, name, genus){
       this.parent=parent;
@@ -28,6 +31,7 @@ class Yoke {
     }
     getState(){
       let url=grassworld_db+'name='+this.name + token();
+      console.log(url);
       let xhr = new XMLHttpRequest();
       let myparent=this.parent;
       xhr.open('GET', url);
@@ -70,8 +74,11 @@ class Thing extends Yoke {
     this.Y=undefined;
     this.Z=undefined;
   }
+  tgenuschange(postloadfunc) {
+  }
   tcreate(postloadfunc) {
       let url=grassworld_db+'t=thing&a=mk&name='+this.name + '&g='+this.genus + token();
+//       console.log(url);
       let xhr = new XMLHttpRequest();
       let dt=this.data;
       // the next function to develop should be for: ('POST',url)
@@ -85,8 +92,6 @@ class Thing extends Yoke {
           postloadfunc(xhr.response);
         }
       };
-    }
-    tchangegenus(postloadfunc) {
     }
 }
 
@@ -179,7 +184,10 @@ class World extends Thing {
 
 
 class charactersprite {
-	constructor (options) {
+  //
+  // This isn't in use yet
+  //
+  	constructor (options) {
       //super (null, options.name, null, options.genus);
       var character = {};
 			character.frameIndex = 0;

@@ -19,25 +19,57 @@
   No commercial re-use is permitted.
 */
 
-  var things=[];
-  var animal,
-      animalImage,
-      canvas;
-  var notclevercount=0;    
-  var thing_selected=-1;
+var things=[];
+var animal,
+    animalImage,
+    canvas;
+var notclevercount=0;    
+var thing_selected=-1;
+var audioenabled=false;
 	// Get canvas
 	canvas = document.getElementById('grassworld');
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 
+  function sleepnow(thisguy) {
+    thisguy.image.src="assets/img/plant02.png";
+    thisguy.canmove=false;
+    thisguy.scale=1;
+    thisguy.isasleep=1;
+    if (audioenabled) {
+      try {
+        var audio = new Audio('/assets/audio/termites_and_ants-mike-koenig.wav');
+        audio.play();
+      }
+      catch(e) {}
+    }
+    return thisguy;
+  }
+  function isasleep(thisguy) {
+    return (thisguy.isasleep == 1);
+  }
+  function wakenow(thisguy) {
+    thisguy.image.src="assets/img/anmhithe02-positioned.png";
+    thisguy.canmove=true;
+    thisguy.scale=0.17;
+    thisguy.isasleep=0;
+    console.log('qWAKING');
+    if(audioenabled) {
+      try{
+        var audio = new Audio('/assets/audio/schplágen-wakeup.wav');
+        audio.play();
+      }
+      catch(e) {}
+    }
+    return thisguy;
+  }
   function sprite (options) {
 	
       var character = {};
-			character.frameIndex = 0;
-			character.tickCount = 0;
-			character.ticksPerFrame = options.ticksPerFrame || 0;
-			character.numberOfFrames = options.numberOfFrames || 1;
-//       character.context = options.context;
+      character.frameIndex = 0;
+      character.tickCount = 0;
+      character.ticksPerFrame = options.ticksPerFrame || 0;
+      character.numberOfFrames = options.numberOfFrames || 1;
       character.context = canvas.getContext("2d");
       character.width = options.width;
       character.height = options.height;
@@ -95,43 +127,56 @@
             }
             character.tickCount += 1;
             if (character.tickCount > character.ticksPerFrame) {
+                // reset the TICK counter
                 character.tickCount = 0;
                 // If the current frame index is in range
                 if (character.frameIndex < character.numberOfFrames - 1) {
                     // Go to the next frame
                   if (oneinNchance(3)) {
+                    // increment the frame counter
                     character.frameIndex += 1;
                   }
                 }
                 else {
-                character.frameIndex = 0;
-                if (oneinNchance(100)) {
-                  character.image.src="assets/img/plant02.png";
-                  character.canmove=false;
-                  character.scale=1;
-                  var audio = new Audio('/assets/audio/termites_and_ants-mike-koenig.wav');
-                  audio.play();
-                }
-                else {
-                  if(oneinNchance(10)) {
-                    if (oneinNchance(2)) {
-                      character.ticksPerFrame=character.ticksPerFrame/2;
-                      setdestination(character.thingnum, character.left + grandom(screen.width), character.top + grandom(screen.height));
+                  // rotate the FRAME counter
+                  character.frameIndex = 0;
+                  if (oneinNchance(100)) {
+                    if (isasleep(character)) {
+                      wakenow(character);
                     }
                     else {
-                      setdestination(character.thingnum, character.left - grandom(screen.width), character.top - grandom(screen.height));
+                      character=sleepnow(character);                  
+                    }
+                  }
+                  else {
+                    if(oneinNchance(10)) {
+                      if (oneinNchance(2)) {
+                        character.ticksPerFrame=character.ticksPerFrame/2;
+                        setdestination(character.thingnum, character.left + grandom(screen.width), character.top + grandom(screen.height));
+                      }
+                      else {
+                        setdestination(character.thingnum, character.left - grandom(screen.width), character.top - grandom(screen.height));
+                      }
                     }
                   }
                 }
-                }
             }
-            // We've arrived
             try {
+            // We've arrived
              if ((character.canmove) &&(character.ismoving==1) && (character.left == character.left_destination) && (character.top == character.top_destination)) {
-               console.log('Arrival of thing '+character.thingnum+" (aka "+ things[character.thingnum].name+")");
-               things[character.thingnum].o.X=character.left;
-               things[character.thingnum].o.Y=character.top;
-               things[character.thingnum].o.Z=0;
+//                console.log('Arrival of thing '+character.thingnum+" (aka "+ things[character.thingnum].name+")");
+               character.o.X=character.left;
+               character.o.Y=character.top;
+               character.o.Z=0;
+//                character.image = new Image();
+//                character.image.src="assets/img/"+"anmhithe02.png";
+//                character.width=2122;
+//                character.height= 320;
+//                character.numberOfFrames=8;
+//                character.ticksPerFrame= 200;
+//                character.sprite_width=Math.floor((character.width/character.numberOfFrames)* character.scale);
+//                character.sprite_height=Math.floor(character.height*character.scale);
+//                character.scale=0.17;
                things[character.thingnum].o.saveLocation();
                character.ismoving=0;
              }
@@ -175,6 +220,15 @@
 //     if (thing_selected < 0) return;
     if (!things[t].canmove) return;
     things[t].ismoving=1;
+//     things[t].image=new Image();
+//     things[t].image.src="assets/img/"+"blueToothSchplagen2.png";
+//     things[t].width=773;
+//     things[t].height= 118;
+//     things[t].scale=.8;
+//     things[t].numberOfFrames=8;
+//     things[t].ticksPerFrame=10;
+//     things[t].sprite_width=Math.floor((things[t].width/things[t].numberOfFrames)* things[t].scale);
+//     things[t].sprite_height=Math.floor(things[t].height*things[t].scale);
     things[t].left_destination= tx  - Math.floor(things[t].sprite_width/2);
     if (things[t].left_destination < 0) {
       things[t].left_destination=0;
@@ -189,7 +243,7 @@
     else if (things[t].top_destination > canvas.height) {
       things[t].top_destination=canvas.height;
     }
-    console.log("Thing "+t+ " going to ("+things[t].left_destination+","+things[t].top_destination+")");
+//     console.log("Thing "+t+ " going to ("+things[t].left_destination+","+things[t].top_destination+")");
   }
   
 function game(game_canvas) {
@@ -210,12 +264,10 @@ function game(game_canvas) {
       }
       var ctx2 = canvas.getContext("2d");
       ctx2.font = "40px Verdana bold";
-      ctx2.strokeStyle="white";
+      ctx2.fillStyle="white";
       ctx2.background="black";
-      ctx2.strokeText(things.length+ " things",10,50);
+      ctx2.fillText(things.length+ " things",10,50);
   }
-	
-
   
   function keypress(event) {
 //     console.log(arguments.callee.name);
@@ -304,7 +356,7 @@ function game(game_canvas) {
         }
         else {
           thing_selected=i;
-          console.log("Thing "+things[thing_selected].thingnum+" (aka "+things[thing_selected].name+") selected");
+//           console.log("Thing "+things[thing_selected].thingnum+" (aka "+things[thing_selected].name+") selected");
           clickedonsprite=1;
         }
 			}
@@ -463,7 +515,6 @@ function eventDispatcher(event,d) {
       count++;
   }
   for (j=0;j<field.fauna.length;j++) {
-//     console.log(field.fauna[j]);
       var currentitemnum=things.push( sprite({
         context: canvas.getContext("2d"),
         thingnum: count,
@@ -487,15 +538,15 @@ function eventDispatcher(event,d) {
     things[currentitemnum].o=new MovingThing(null,things[currentitemnum].name,'',0);
     things[currentitemnum].o.Tid=field.fauna[j].Tid;
     count++;
-    var lm= new Schplágen();
   }
 
   // add listeners for events
   for (d=0; d<things.length; d++) {
-    if (oneinNchance(15)) {
+    if (oneinNchance(10)) {
       things[d].image.addEventListener("load",eventDispatcher);
     }
   }
+//   things[1].image.addEventListener("load",eventDispatcher);
   notclevercount=d;
   document.addEventListener("keydown",eventDispatcher);
   document.addEventListener("keyup",eventDispatcher);
@@ -504,5 +555,5 @@ function eventDispatcher(event,d) {
   document.addEventListener("mouseover",eventDispatcher);
   document.addEventListener("wheel",eventDispatcher);
 } 
-
+document.title='grassworld';
 // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/
