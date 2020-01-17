@@ -538,8 +538,29 @@ function eventDispatcher(event,d) {
     things[currentitemnum].o=new MovingThing(null,things[currentitemnum].name,'',0);
     things[currentitemnum].o.Tid=field.fauna[j].Tid;
     count++;
+    
   }
 
+  function future() {
+   for (j=0;j<field.fauna.length;j++) {
+     var options={
+        canvasid: canvas,
+        tID: field.fauna[j].Tid,
+        image: undefined,
+        numberOfFrames: field.fauna[j].Gframes,
+        ticksPerFrame: field.fauna[j].Gticks,
+        left: field.fauna[j].Tx,
+        top: field.fauna[j].Ty,
+        scale: field.fauna[j].Gscale,
+        name: field.fauna[j].Tname,
+        genus: field.fauna[j].Tgenus,
+        canmove: true
+     }
+     var c=new charactersprite(options);
+     c.setimage("assets/img/"+field.fauna[j].Gimage);
+     things.push(c);
+   }
+  }
   // add listeners for events
   for (d=0; d<things.length; d++) {
     if (oneinNchance(10)) {
