@@ -191,7 +191,7 @@ class charactersprite {
   	constructor (options) {
       //super (null, options.name, null, options.genus);
       var thisguy = {};
-      this.canvas=options.canvas;
+      this.canvasid=options.canvasid;
 			thisguy.context = options.canvas.getContext("2d");
       thisguy.tID=options.tID;
       thisguy.thingnum=options.thingnum;

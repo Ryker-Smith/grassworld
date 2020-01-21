@@ -495,8 +495,8 @@ function eventDispatcher(event,d) {
       var currentitemnum=things.push( sprite({
         context: canvas.getContext("2d"),
         thingnum: count,
-        width: 27,
-        height: 42,
+        width: 40,
+        height: 40,
         selected: false,
         image: undefined,
         tID: field.flora[j].Tid,
@@ -518,8 +518,8 @@ function eventDispatcher(event,d) {
       var currentitemnum=things.push( sprite({
         context: canvas.getContext("2d"),
         thingnum: count,
-        width: 2122,
-        height: 320,
+        width: 1600,
+        height: 200,
         selected: false,
         tID: field.fauna[j].Tid,
         image: undefined,

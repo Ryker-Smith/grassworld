@@ -20,8 +20,8 @@ function nowfeckinwhat(r) {
   // there's about 34 million ways trhis can all be improved.
   things.push( sprite({
         thingnum: lastcount+1,
-        width: 773, //2122,
-        height: 118, //320,
+        width: 1600,
+        height: 200,
         selected: false,
         tID: thisTid,
         image: undefined,
@@ -37,7 +37,7 @@ function nowfeckinwhat(r) {
         canmove: true
     }));
   things[lastcount].image=new Image();
-  things[lastcount].image.src="assets/img/"+"blueToothSchplagen2";
+  things[lastcount].image.src="assets/img/"+"Bluetooth8.png";
   things[lastcount].o=new MovingThing(null,things[lastcount].name,'',0);
   things[lastcount].o.Tid=thisTid;
 
