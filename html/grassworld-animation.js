@@ -53,7 +53,7 @@ var audioenabled=false;
     thisguy.canmove=true;
     thisguy.scale=0.17;
     thisguy.isasleep=0;
-    console.log('qWAKING');
+    console.log('WAKING');
     if(audioenabled) {
       try{
         var audio = new Audio('/assets/audio/schplágen-wakeup.wav');
@@ -76,7 +76,7 @@ var audioenabled=false;
       character.image = options.image;
       character.name = options.name;
       character.scale=options.scale;
-      character.tID=options.tID;
+      character.Tid=options.Tid;
       character.thingnum=options.thingnum;
       character.left=options.left;
       character.left_destination = options.left_destination || character.left;
@@ -87,25 +87,6 @@ var audioenabled=false;
       character.sprite_width=Math.floor((character.width/character.numberOfFrames)* character.scale);
       character.sprite_height=Math.floor(character.height*character.scale);
       
-//       character.countnearby=function() {
-//         var nearby=0;
-//         for (i = 0; i < things.length; i += 1) {
-//           Distance between us (and others of same genus)
-//           if (things[i].thingnum != character.thingnum) {
-//             dist = distance({
-//                 left: (character.left + (things[i].sprite_width)/2),
-//                 top: (character.top + (things[i].sprite_height)/2)
-//               }, {
-//                 left: location.left,
-//                 top: location.top
-//             });
-//             if (dist < things[i].sprite_width) {
-//               nearby++;
-//             }
-//             console.log('Nearby ' + nearby);
-//           }
-//         } 
-//       };
       character.update = function () {
             if (!character.canmove) return;
             
@@ -161,23 +142,22 @@ var audioenabled=false;
                   }
                 }
             }
+            if ((character.canmove)&&(character.ismoving==1)) {
+//               things[character.thingnum].o.Tx=character.left;
+//               things[character.thingnum].o.Ty=character.top;
+//               things[character.thingnum].o.Tid=character.Tid;
+            }
             try {
             // We've arrived
              if ((character.canmove) &&(character.ismoving==1) && (character.left == character.left_destination) && (character.top == character.top_destination)) {
 //                console.log('Arrival of thing '+character.thingnum+" (aka "+ things[character.thingnum].name+")");
-               character.o.X=character.left;
-               character.o.Y=character.top;
-               character.o.Z=0;
-//                character.image = new Image();
-//                character.image.src="assets/img/"+"anmhithe02.png";
-//                character.width=2122;
-//                character.height= 320;
-//                character.numberOfFrames=8;
-//                character.ticksPerFrame= 200;
-//                character.sprite_width=Math.floor((character.width/character.numberOfFrames)* character.scale);
-//                character.sprite_height=Math.floor(character.height*character.scale);
-//                character.scale=0.17;
-               things[character.thingnum].o.saveLocation();
+               things[character.thingnum].o.Tx=character.left;
+               things[character.thingnum].o.Ty=character.top;
+               things[character.thingnum].o.Tz=0;
+               things[character.thingnum].o.Tid=character.Tid;
+               if ( (isdefined(things[character.thingnum].o.Tx)) && (isdefined(things[character.thingnum].o.Ty)) ) {
+                  things[character.thingnum].o.saveLocation();
+               }
                character.ismoving=0;
              }
             }
@@ -189,17 +169,17 @@ var audioenabled=false;
       // character.context.clearRect(0, 0, character.width, character.height);
 		  // Draw the animation
       try {
-		  character.context.drawImage(
-		    character.image,
-		    character.frameIndex * character.width / character.numberOfFrames,
-		    0,
-		    character.width / character.numberOfFrames,
-		    character.height,
-		    character.left,
-		    character.top,
-		    (character.width / character.numberOfFrames)* character.scale,
-		    (character.height)*character.scale
-      );
+        character.context.drawImage(
+          character.image,
+          character.frameIndex * character.width / character.numberOfFrames,
+          0,
+          character.width / character.numberOfFrames,
+          character.height,
+          character.left,
+          character.top,
+          (character.width / character.numberOfFrames)* character.scale,
+          (character.height)*character.scale
+        );
       }
       catch (e) {
         console.log(e);
@@ -220,15 +200,6 @@ var audioenabled=false;
 //     if (thing_selected < 0) return;
     if (!things[t].canmove) return;
     things[t].ismoving=1;
-//     things[t].image=new Image();
-//     things[t].image.src="assets/img/"+"blueToothSchplagen2.png";
-//     things[t].width=773;
-//     things[t].height= 118;
-//     things[t].scale=.8;
-//     things[t].numberOfFrames=8;
-//     things[t].ticksPerFrame=10;
-//     things[t].sprite_width=Math.floor((things[t].width/things[t].numberOfFrames)* things[t].scale);
-//     things[t].sprite_height=Math.floor(things[t].height*things[t].scale);
     things[t].left_destination= tx  - Math.floor(things[t].sprite_width/2);
     if (things[t].left_destination < 0) {
       things[t].left_destination=0;
@@ -277,6 +248,7 @@ function game(game_canvas) {
         key_down=40,
         ESC=27;
         step=5;
+        console.log(event.keyCode);
         if (thing_selected < 0) return;
     switch (event.keyCode) {
       case key_left: 
@@ -495,33 +467,34 @@ function eventDispatcher(event,d) {
       var currentitemnum=things.push( sprite({
         context: canvas.getContext("2d"),
         thingnum: count,
-        width: 40,
-        height: 40,
+        width: field.flora[j].GimageW,
+        height: field.flora[j].GimageH,
         selected: false,
         image: undefined,
-        tID: field.flora[j].Tid,
+        Tid: field.flora[j].Tid,
         numberOfFrames: field.flora[j].Gframes,
-        ticksPerFrame: 15,
+        ticksPerFrame: field.flora[j].Gticks,
         left: Math.floor(Math.random() * canvas.width),
         top: Math.floor(Math.random() * canvas.height),
         scale: 1,
         name: field.flora[j].Tname,
-        genus: field.flora[j].Tgenus,
+        Tgenus: field.flora[j].Tgenus,
         canmove: false
       }));
       currentitemnum--;
       things[currentitemnum].image=new Image();
       things[currentitemnum].image.src="assets/img/"+field.flora[j].Gimage;
+      
       count++;
   }
   for (j=0;j<field.fauna.length;j++) {
       var currentitemnum=things.push( sprite({
         context: canvas.getContext("2d"),
         thingnum: count,
-        width: 1600,
-        height: 200,
+        width: field.fauna[j].GimageW,
+        height: field.fauna[j].GimageH,
         selected: false,
-        tID: field.fauna[j].Tid,
+        Tid: field.fauna[j].Tid,
         image: undefined,
         numberOfFrames: field.fauna[j].Gframes,
         ticksPerFrame: field.fauna[j].Gticks,
@@ -529,7 +502,7 @@ function eventDispatcher(event,d) {
         top: field.fauna[j].Ty,
         scale: field.fauna[j].Gscale,
         name: field.fauna[j].Tname,
-        genus: field.fauna[j].Tgenus,
+        Tgenus: field.fauna[j].Tgenus,
         canmove: true
     }));
     currentitemnum--;
@@ -537,6 +510,11 @@ function eventDispatcher(event,d) {
     things[currentitemnum].image.src="assets/img/"+field.fauna[j].Gimage;
     things[currentitemnum].o=new MovingThing(null,things[currentitemnum].name,'',0);
     things[currentitemnum].o.Tid=field.fauna[j].Tid;
+//     console.log("<"+things[currentitemnum].o.Tid+">");
+    things[currentitemnum].o.Tgenus=field.fauna[j].Tgenus;
+//     console.log("["+things[currentitemnum].o.Tgenus+"]["+(things[currentitemnum].o.Tgenus)*2+"]");
+    things[currentitemnum].o.Tgenus=(things[currentitemnum].o.Tgenus)*2;
+    things[currentitemnum].o.tgenuschange(undefined);
     count++;
     
   }
@@ -545,7 +523,7 @@ function eventDispatcher(event,d) {
    for (j=0;j<field.fauna.length;j++) {
      var options={
         canvasid: canvas,
-        tID: field.fauna[j].Tid,
+        Tid: field.fauna[j].Tid,
         image: undefined,
         numberOfFrames: field.fauna[j].Gframes,
         ticksPerFrame: field.fauna[j].Gticks,

@@ -8,6 +8,9 @@
  * https://javascript.info/xmlhttprequest
  */
 
+var field;
+grassworld_db="https://grassworld.fachtnaroe.net/db/?";
+
 function token() {
   return '&tk=a1b2c3d4';
 }
@@ -20,8 +23,20 @@ function distance (p1, p2) {
       dy = p2.top - p1.top;
   return Math.floor(Math.sqrt(dx * dx + dy * dy));
 }
-var field;
-grassworld_db="https://grassworld.fachtnaroe.net/db/?";
+isdefined=function (thing){
+  var r = true;
+  if (typeof thing === 'undefined') {
+    r=false;
+  }
+  return r;
+}
+isundefined=function (thing){
+  var r = false;
+  if (typeof thing === 'undefined') {
+    r=true;
+  }
+  return r;
+}
 
 (function() {
     // This function (c) 2013 William Malone (www.williammalone.com)
@@ -51,8 +66,6 @@ grassworld_db="https://grassworld.fachtnaroe.net/db/?";
         };
 }()); 
 
-grassworld();
-
 async function grassworld() {
   field=new World('grassworld-body','grassworld','');
   field.getState();
@@ -69,3 +82,4 @@ async function grassworld() {
   game('grassworld');
 }
 
+grassworld();

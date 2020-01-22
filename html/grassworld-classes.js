@@ -1,6 +1,15 @@
 let genus_Schplágen = 1;
 let genus_Twig=2;
 let genus_SchplágenAlso = 3;
+let genus_Schplágen_r1 = 8;
+let genus_Schplágen_r2 = 5;
+let genus_Schplágen_g1 = 7;
+let genus_Schplágen_g2 = 6;
+let genus_Schplágen_g3 = 11;
+let genus_Schplágen_b1 = 10;
+let genus_Schplágen_b2 = 12;
+let genus_Schplágen_b3 = 9;
+let genus_Schplágen_f0 = 0;
 
 class Yoke {
     constructor(parent, name, genus){
@@ -68,20 +77,36 @@ class Yoke {
 class Thing extends Yoke {
   constructor(parent, name, content, genus) {
     super(parent, name);
-    this.content=content;
-    this.genus=genus;
-    this.data=undefined;
-    this.X=undefined;
-    this.Y=undefined;
-    this.Z=undefined;
+    this.Tcreator=0; // 'TáSéMarTáSé'
+    this.Tstatus=undefined;
+    this.Tcontent=content;
+    this.Tgenus=genus;
+    this.Tx=undefined;
+    this.Ty=undefined;
+    this.Tz=0;
+    this.Tteam=undefined;
   }
-  tgenuschange(postloadfunc) {
+  tgenuschange(plf) {
+      // should change the genus in the instantiated object first, then call this function
+    // otherwise the genuschange is not saved
+      let url=grassworld_db+'t=thing&a=gc&Tid='+this.Tid + '&ng='+this.Tgenus + token();
+      let xhr = new XMLHttpRequest();
+      xhr.open('PUT', url);
+      xhr.send();
+      xhr.onload = function() {
+        if (!(undefined == plf)) {
+          if (xhr.status != 200) { // OK?
+            plf('Error 64');
+          }
+          else { 
+            plf(xhr.response);
+          }
+        }
+      };
   }
   tcreate(postloadfunc) {
       let url=grassworld_db+'t=thing&a=mk&name='+this.name + '&g='+this.genus + token();
-//       console.log(url);
       let xhr = new XMLHttpRequest();
-      let dt=this.data;
       // the next function to develop should be for: ('POST',url)
       xhr.open('POST', url);
       xhr.send();
@@ -94,26 +119,75 @@ class Thing extends Yoke {
         }
       };
     }
+    tgetimages(plf) {
+      let url=grassworld_db+'t=thing&a=gij&Tid='+this.Tid + token();
+      let xhr = new XMLHttpRequest();
+      // the next function to develop should be for: ('POST',url)
+      xhr.open('GET', url);
+      xhr.send();
+      xhr.onload = function() {
+        if (xhr.status != 200) { // OK?
+          plf('Error 64');
+        }
+        else { 
+          plf(xhr.response);
+        }
+      };
+    }
+    tsetimages(plf, imagesJSON) {
+      let url=grassworld_db+'t=thing&a=sij&Tid='+this.Tid + '&j='+ imagesJSON + token();
+      let xhr = new XMLHttpRequest();
+      // the next function to develop should be for: ('POST',url)
+      xhr.open('GET', url);
+      xhr.send();
+      xhr.onload = function() {
+        if (xhr.status != 200) { // OK?
+          plf('Error 64');
+        }
+        else { 
+          plf(xhr.response);
+        }
+      };
+    }
 }
 
 class LivingThing extends Thing {
     constructor (parent, name, content) {
       super (parent, name, content);
       this.living=true;
+      this.currentState='';
     }
 }
 
 class MovingThing extends LivingThing {
-  constructor (parent, name, content, legs) {
-    super (parent, name, content);
+  constructor (parent, name, content, genus, legs) {
+    super (parent, name, content, genus);
     this.legs=legs;
     this.canmove=true;
   }
   saveLocation() {
-      let url=grassworld_db+'t=thing&a=sl&tid='+this.Tid;
-      for (var c in [this.X, this.Y, this.Z]) {
+      let url=grassworld_db+'t=thing&a=sl&Tid='+this.Tid;
+      for (var c in [this.Tx, this.Ty, this.Tz]) {
       }
-      url += '&X='+this.X + '&Y='+this.Y + '&Z='+this.Z;
+      url += '&Tx='+this.Tx + '&Ty='+this.Ty + '&Tz='+this.Tz;
+      url += token();
+      let xhr = new XMLHttpRequest();
+      xhr.open('PUT', url);
+      xhr.send();
+      xhr.onload = function() {
+        if (xhr.status != 200) { // OK?
+          console.log("Error 78");
+        }
+        else { 
+//           console.log("Location update OK"); 
+        }
+      };
+    }
+  savecanmove() {
+      let url=grassworld_db+'t=thing&a=cm&tid='+this.Tid;
+      for (var c in [this.Tx, this.Ty, this.Tz]) {
+      }
+      url += '&Tx='+this.Tx + '&Ty='+this.Ty + '&Tz='+this.Tz;
       url += token();
       let xhr = new XMLHttpRequest();
       xhr.open('PUT', url);
@@ -127,6 +201,8 @@ class MovingThing extends LivingThing {
         }
       };
     }
+  changespritebasedondestination() {
+  }
 }
 
 class Schplágen extends MovingThing {  

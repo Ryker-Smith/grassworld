@@ -63,6 +63,7 @@ app.put("/db/",(request, response) => db_put(request, response));
 app.post("/db/",(request, response) => db_post(request, response));
 app.listen(port, () => console.log(`STARTED on port ${port}`));
 
+//========================================================================================
 async function db_get(request, response) {
     var reply='';
     
@@ -112,6 +113,27 @@ async function db_get(request, response) {
       return r;
     }
 	
+    async function tgetimages(Tid) {
+        var r;
+        
+        await dbms.query(
+            "SELECT GimagesJSON FROM genus JOIN things ON Tgenus=Gid WHERE Tid="+ (dbms.escape(Tid)))
+          .then( results => {
+          if(results.length < 1){
+            r='error b122';
+          }
+          else {
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+	
   console.log( nowIs());
   console.log('CONNECT -> DB -> '+request.method + ' ' + String(request.url));
   fs.appendFile(debugfile, 'CONNECT\n', () => {});
@@ -143,6 +165,14 @@ async function db_get(request, response) {
         reply='error b160';
       }
     }
+    else if (lib.isdefined(cgi.a)) {
+      if(cgi.a == 'gij') {
+        if (cgi.t == 'thing') {
+          reply=await tgetimages(cgi.Tid);
+        }
+      }
+    }
+    
 //     console.log('RESPONSE -> ' + reply);
     response.write(String(reply));
     response.end();
@@ -155,30 +185,18 @@ async function db_get(request, response) {
   }
   
 }
-
+//========================================================================================
 async function db_put(request, response) {
     var reply='';
     
-    async function saveLocation(Tid, x, y, z) {
+    async function saveLocation(Tid, Tx, Ty, Tz) {
         var r;
+        console.log("UPDATE things SET Tx=" +Tx+ ", Ty="+Ty+", Tz="+Tz+" WHERE Tid="+Tid);
         await dbms.query(
-            "UPDATE things SET Tx=" +dbms.escape(x)+ ", Ty="+dbms.escape(y)+", Tz="+dbms.escape(z)+"WHERE Tid=" + dbms.escape(Tid))
+            "UPDATE things SET Tx=" +dbms.escape(Tx)+ ", Ty="+dbms.escape(Ty)+", Tz="+dbms.escape(Tz)+" WHERE Tid=" + dbms.escape(Tid))
           .then( results => {
             r=JSON.stringify(results);
-            console.log(r.warningCount);
             return r;
-//           if(results.length != 1){
-//             r='error b167'+String(results);
-//           }
-//           else {
-//             if ( results[0].Tid > 0 ) {
-//               r=results[0].Tcontent;
-//             }
-//             else {
-//               r='error b174';
-//             }
-//           }
-//           return r;
         }
       )
       .catch( err => {
@@ -186,6 +204,28 @@ async function db_put(request, response) {
       });
       return r;
     }
+    
+    async function tsetimages(Tid, imagesJSON) {
+        var r;
+        
+        await dbms.query(
+            "UPDATE genus SET GimagesJSON="+(dbms.escape(imagesJSON))+" WHERE Gid=(SELECT Tgenus FROM genus WHERE Tid="+ (dbms.escape(Tid)))
+          .then( results => {
+          if(results.length < 1){
+            r='error b226';
+          }
+          else {
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+
 
   console.log( nowIs());
   console.log('CONNECT -> DB -> '+request.method + ' ' + String(request.url));
@@ -200,13 +240,17 @@ async function db_put(request, response) {
     if (lib.isdefined(cgi.a)) {
 //       console.log(cgi.name);
       if(cgi.a == 'sl') {
-        reply=await saveLocation(cgi.tid, cgi.X, cgi.Y, cgi.Z);
+        reply=await saveLocation(cgi.Tid, cgi.Tx, cgi.Ty, cgi.Tz);
+      }
+      else if (cgi.a == 'sij'){
+        reply=await tsetimages(cgi.Tid,cgi.j);
       }
     }
-    console.log('RESPONSE -> ' + reply);
+//     console.log('PUT RESPONSE -> ' + reply);
     response.write(String(reply));
     response.end();
 }
+//========================================================================================
 async function db_post(request, response) {
     var reply='';
     
@@ -248,24 +292,7 @@ async function db_post(request, response) {
         }
       }
     }
-    console.log('RESPONSE -> ' + reply);
+    console.log('POST RESPONSE -> ' + reply);
     response.write(String(reply));
     response.end();
 }
-/*
-MariaDB [grassworld_001]> SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=0;
-+-----+-------+---------+----------+--------+------+------+------+---------------------+-----+-------+---------+-----------+--------------+-------------+
-| Tid | Tname | Tstatus | Tcontent | Tgenus | Tx   | Ty   | Tz   | ts                  | Gid | Gname | Gmobile | Gpriority | Gdescription | Gimage      |
-+-----+-------+---------+----------+--------+------+------+------+---------------------+-----+-------+---------+-----------+--------------+-------------+
-|   5 | Twig  | dead    |          |      2 |    4 |    1 |    0 | 2020-01-12 14:24:14 |   2 | twig  |       0 |      NULL | NULL         | plant02.png |
-|  11 | Twig  | dead    | NULL     |      2 |    9 |    4 |    0 | 2020-01-12 14:24:14 |   2 | twig  |       0 |      NULL | NULL         | plant02.png |
-+-----+-------+---------+----------+--------+------+------+------+---------------------+-----+-------+---------+-----------+--------------+-------------+
-
-MariaDB [grassworld_001]> SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile=1;
-+-----+---------+---------+----------+--------+------+------+------+---------------------+-----+------------+---------+-----------+--------------+---------------------------+
-| Tid | Tname   | Tstatus | Tcontent | Tgenus | Tx   | Ty   | Tz   | ts                  | Gid | Gname      | Gmobile | Gpriority | Gdescription | Gimage                    |
-+-----+---------+---------+----------+--------+------+------+------+---------------------+-----+------------+---------+-----------+--------------+---------------------------+
-|   2 | Bob     | live    |          |      1 |    0 |    0 |    0 | 2020-01-12 14:24:14 |   1 | schplágen  |       1 |      NULL |              | anmhithe02-positioned.png |
-|   3 | Síofra  | live    |          |      1 |    1 |    1 |    0 | 2020-01-12 14:24:14 |   1 | schplágen  |       1 |      NULL |              | anmhithe02-positioned.png |
-|   4 | Paul    | live    |          |      1 |    2 |    1 |    0 | 2020-01-12 14:24:14 |   1 | schplágen  |       1 |      NULL |              | anmhithe02-positioned.png |
-+-----+---------+---------+----------+--------+------+------+------+---------------------+-----+------------+---------+-----------+--------------+---------------------------+*/
