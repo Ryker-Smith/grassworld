@@ -61,16 +61,17 @@ app.use(express.static('/var/www/grassworld/html/'));
 app.get("/db/",(request, response) => db_get(request, response));
 app.put("/db/",(request, response) => db_put(request, response));
 app.post("/db/",(request, response) => db_post(request, response));
+app.get("/debug/",(request, response) => db_dbg(request, response));
 app.listen(port, () => console.log(`STARTED on port ${port}`));
 
 //========================================================================================
 async function db_get(request, response) {
     var reply='';
     
-    async function get_by_name(name) {
+    async function get_by_name(name, Tz) {
         var r;
         await dbms.query(
-            "SELECT * FROM things WHERE Tname LIKE " + dbms.escape(name))
+            "SELECT * FROM things WHERE Tname LIKE " + dbms.escape(name) + " AND Tz="+(dbms.escape(Tz)))
           .then( results => {
           if(results.length != 1){
             r='error b90';
@@ -92,11 +93,11 @@ async function db_get(request, response) {
       return r;
     }
 
-    async function get_things(mobile) {
+    async function get_things(mobile, Tz) {
         var r;
         console.log("SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile="+ mobile);
         await dbms.query(
-            "SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile="+ (dbms.escape(mobile)))
+            "SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile="+ (dbms.escape(mobile)) + " AND Tz="+(dbms.escape(Tz)))
           .then( results => {
           if(results.length < 1){
             r='error b115';
@@ -120,10 +121,14 @@ async function db_get(request, response) {
             "SELECT GimagesJSON FROM genus JOIN things ON Tgenus=Gid WHERE Tid="+ (dbms.escape(Tid)))
           .then( results => {
           if(results.length < 1){
-            r='error b122';
+            r=results;
+            console.log('E '+r);
           }
           else {
             r=JSON.stringify(results);
+//             console.log('O '+results.toString());
+//             console.log('N '+r);
+//             console.log('M '+JSON.parse(r).GimagesJSON.default);
           }
           return r;
         }
@@ -139,24 +144,24 @@ async function db_get(request, response) {
   fs.appendFile(debugfile, 'CONNECT\n', () => {});
   fs.appendFile(debugfile, nowIs() + "\n", () => {});
   fs.appendFile(debugfile, 'Method: ' + request.method + '\n', () => {});
-  for (var key in request.headers) {
-      fs.appendFile(debugfile,key + " -> " + request.headers[key] + "\n", () => {});
-  }
   response.writeHead(200, {'Content-Type': 'text/html'});
 //   response.write("<!DOCTYPE html><html><head>" );
 //   response.write("</head><body>");
   if (request.method || 'GET') { // unnecessary
     var cgi = url.parse(request.url, true).query;
+    if (lib.isundefined(cgi.Tz)) {
+        cgi.Tz=0;
+    }
     if (lib.isdefined(cgi.name)) {
 //       console.log(cgi.name);
       reply=await get_by_name(cgi.name);
     }
     else if (lib.isdefined(cgi.cat)) {
       if (cgi.cat == 'fauna') {
-        reply=await get_things(1);
+        reply=await get_things(1,cgi.Tz);
       }
       else if (cgi.cat == 'flora') {
-        reply=await get_things(0);
+        reply=await get_things(0,cgi.Tz);
       }
       else if (cgi.cat == 'object') {
         reply='{}';
@@ -173,7 +178,7 @@ async function db_get(request, response) {
       }
     }
     
-//     console.log('RESPONSE -> ' + reply);
+    console.log('RESPONSE -> ' + reply);
     response.write(String(reply));
     response.end();
   }
@@ -226,6 +231,25 @@ async function db_put(request, response) {
       return r;
     }
 
+    async function tgenuschange(Tid, newGenus) {
+        var r;
+        await dbms.query(
+            "UPDATE things SET Tgenus="+(dbms.escape(newGenus))+" WHERE Tid="+ (dbms.escape(Tid)))
+          .then( results => {
+          if(results.length < 1){
+            r='error b236';
+          }
+          else {
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
 
   console.log( nowIs());
   console.log('CONNECT -> DB -> '+request.method + ' ' + String(request.url));
@@ -244,6 +268,9 @@ async function db_put(request, response) {
       }
       else if (cgi.a == 'sij'){
         reply=await tsetimages(cgi.Tid,cgi.j);
+      }
+      else if (cgi.a == 'gc'){
+        reply=await tgenuschange(cgi.Tid,cgi.ng);
       }
     }
 //     console.log('PUT RESPONSE -> ' + reply);
@@ -295,4 +322,28 @@ async function db_post(request, response) {
     console.log('POST RESPONSE -> ' + reply);
     response.write(String(reply));
     response.end();
+}
+
+//========================================================================================
+async function db_dbg(request, response) {
+    var reply='';
+
+  console.log( nowIs());
+  console.log('CONNECT -> DBG -> '+request.method + ' ' + String(request.url));
+
+  for (var key in request.headers) {
+      fs.appendFile(debugfile,key + " -> " + request.headers[key] + "\n", () => {});
+  }
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  response.write("<!DOCTYPE html><html><head>" );
+  response.write("</head><body>");
+ 
+    
+//     console.log('RESPONSE -> ' + reply);
+    response.write(String('-not implemented-'));
+    response.end();
+
+    response.write(String(reply));
+    response.end();
+  
 }

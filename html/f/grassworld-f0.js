@@ -13,9 +13,12 @@ function oneinNchance(N){
     return false; 
   }
 }
+
 function nowfeckinwhat(r) {
 //   console.log(r);
   var thisTid=r.insertId;
+  console.log('INS1 '+r);
+  console.log('new ID '+thisTid);
   lastcount=things.length;
   // there's about 34 million ways trhis can all be improved.
   things.push( sprite({
@@ -23,7 +26,7 @@ function nowfeckinwhat(r) {
         width: 2122,
         height: 320,
         selected: false,
-        tID: thisTid,
+        Tid: thisTid,
         image: undefined,
         numberOfFrames: 8,
         ticksPerFrame: 200,
@@ -31,15 +34,18 @@ function nowfeckinwhat(r) {
         left_destination: Math.floor(Math.random() * screen.width),
         top: Math.floor(Math.random() * screen.height),
         top: 0,
-        scale: .17,
-        name: newname,
-        genus: genus_Schplágen,
-        canmove: true
+        Gscale: .17,
+        Tname: newname,
+        Tgenus: genus_Schplágen,
+        Gcanmove: true,
+        Ganimated: true,
+        Ginteracts: false
     }));
   things[lastcount].image=new Image();
   things[lastcount].image.src="assets/img/"+"anmhithe02-positioned.png";
-  things[lastcount].o=new MovingThing(null,things[lastcount].name,'',0);
+  things[lastcount].o=new MovingThing(null,things[lastcount].Tname,'',genus_Schplágen,1);
   things[lastcount].o.Tid=thisTid;
+  things[lastcount].o.tgetimages(things[lastcount]);
 
 }
 function onload_f0() {

@@ -10,7 +10,16 @@ let genus_Schplágen_b1 = 10;
 let genus_Schplágen_b2 = 12;
 let genus_Schplágen_b3 = 9;
 let genus_Schplágen_f0 = 0;
-
+let genus_teleport = 16;
+let emptyimage={
+        "spritesheet" : "",
+        "framecount" : 0,
+        "rowcount" : 0,
+        "w" : 0,
+        "h" : 0,
+        "ticks" : 0,
+        "scale" : 0
+      };
 class Yoke {
     constructor(parent, name, genus){
       this.parent=parent;
@@ -25,11 +34,11 @@ class Yoke {
       xhr.open('POST', url);
       xhr.send();
       this.Tid=xhr.onload = function() {
-          if (xhr.status != 200) { // OK?
-            return 'Error 16';
+          if (xhr.status == 200) {
+            return xhr.response;
           }
           else { 
-            return xhr.response;
+            return 'Error 16';
           }
       }
       this.Tid=xhr.onerror = function() {
@@ -47,19 +56,11 @@ class Yoke {
       xhr.open('GET', url);
       xhr.send();
       xhr.onload = function() {
-        if (xhr.status != 200) { // OK?
-          Yoke.parentUpdate(myparent, 'Error 60');
-        }
-        else { 
+        if (xhr.status == 200) { // OK?
           Yoke.parentUpdate(myparent, xhr.response); 
         }
-      };
-      xhr.onprogress = function(event) {
-        if (event.lengthComputable) {
-          Yoke.parentUpdate(myparent, 'Error 68');
-        }
-        else {
-          Yoke.parentUpdate(myparent, xhr.response);
+        else { 
+          Yoke.parentUpdate(myparent, 'Error 60');
         }
       };
       xhr.onerror = function() {
@@ -85,75 +86,137 @@ class Thing extends Yoke {
     this.Ty=undefined;
     this.Tz=0;
     this.Tteam=undefined;
+    this.images={
+      'default':emptyimage,
+      'left':emptyimage,
+      'right':emptyimage,
+      'up':emptyimage,
+      'down':emptyimage,
+      'hover':emptyimage
+    };
+//     this.images.default=emptyimage;
+//     this.images.left={};
+//     this.images.right={};
+//     this.images.up={};
+//     this.images.down={};
+//         "spritesheet" : "",
+//         "framecount" : 0,
+//         "rowcount" : 0,
+//         "w" : 0,
+//         "h" : 0,
+//         "ticks" : 0,
+//         "scale" : 0
+//       };
+    this.heading=0; // default
   }
   tgenuschange(plf) {
-      // should change the genus in the instantiated object first, then call this function
+    // should change the genus in the instantiated object first, then call this function
     // otherwise the genuschange is not saved
       let url=grassworld_db+'t=thing&a=gc&Tid='+this.Tid + '&ng='+this.Tgenus + token();
+      console.log(url)
       let xhr = new XMLHttpRequest();
       xhr.open('PUT', url);
       xhr.send();
       xhr.onload = function() {
         if (!(undefined == plf)) {
-          if (xhr.status != 200) { // OK?
-            plf('Error 64');
+          if (xhr.status == 200) {
+            plf(JSON.parse(xhr.response));
           }
           else { 
-            plf(xhr.response);
+            plf('Error 64');
           }
         }
       };
   }
   tcreate(postloadfunc) {
-      let url=grassworld_db+'t=thing&a=mk&name='+this.name + '&g='+this.genus + token();
+      let url=grassworld_db+'t=thing&a=mk&name='+this.name + '&g='+this.Tgenus + token();
       let xhr = new XMLHttpRequest();
       // the next function to develop should be for: ('POST',url)
+      console.log(url);
       xhr.open('POST', url);
       xhr.send();
       xhr.onload = function() {
-        if (xhr.status != 200) { // OK?
-          postload('Error 64');
+        if (xhr.status == 200) { // OK?
+          postloadfunc(JSON.parse(xhr.response));          
         }
         else { 
-          postloadfunc(xhr.response);
+          postloadfunc('Error 64');
         }
       };
     }
-    tgetimages(plf) {
+  static tplfimages(response, thething){
+    console.log('>> TPLF images '+response);
+//     console.log('E '+typeof(response));
+//     console.log('F '+Object.keys(response));
+//     console.log('G '+Object.entries(response));
+//     response=response.replace(/\\"/g,'"');
+//     response=response.replace(/\[/g,'');
+//     response=response.replace(/\]/g,'');
+//     response=response.replace(/\"{/g,'{');
+//     console.log('H '+response);
+//     ;
+//     for (var j in [i]){
+//       console.log(i);
+//     }
+//     for (const key of Object.keys(response)) {
+//       console.log('K: '+key)
+//     }
+    const keys = Object.keys(emptyimage);
+    for (const key of keys) {
+      console.log('K2: '+key)
+      console.log(`${emptyimage.key}`);
+    }
+    response=JSON.parse(response.GimagesJSON);
+    console.log('CC: '+response.default.spritesheet);
+    thething.default=response.default;
+    thething.left=response.feck;
+    thething.hover=response.hover;
+//     response=response.toString()
+    console.log('DD: '+thething.Tid+' '+thething.default.spritesheet);
+    //GimagesJSON
+  };
+  tgetimages(thething) {
       let url=grassworld_db+'t=thing&a=gij&Tid='+this.Tid + token();
+      console.log('GETIMAGES '+url);
       let xhr = new XMLHttpRequest();
       // the next function to develop should be for: ('POST',url)
       xhr.open('GET', url);
       xhr.send();
+      console.log('B: '+thething.o.Tid);
       xhr.onload = function() {
-        if (xhr.status != 200) { // OK?
-          plf('Error 64');
+        if (xhr.status == 200) {
+          let r=xhr.response;
+          // there's probably a very good reason (that I don't know about)
+          // why node is adding [ ... ] to the response, but I don't wan't them
+          // so I'm getting rid of [ ]
+          r=r.replace(/\[/g,'');
+          r=r.replace(/\]/g,'');
+          Thing.tplfimages(JSON.parse(r), thething);
         }
         else { 
-          plf(xhr.response);
         }
       };
     }
-    tsetimages(plf, imagesJSON) {
+  tsetimages(plf, imagesJSON) {
       let url=grassworld_db+'t=thing&a=sij&Tid='+this.Tid + '&j='+ imagesJSON + token();
       let xhr = new XMLHttpRequest();
       // the next function to develop should be for: ('POST',url)
       xhr.open('GET', url);
       xhr.send();
       xhr.onload = function() {
-        if (xhr.status != 200) { // OK?
-          plf('Error 64');
+        if (xhr.status == 200) { // OK?
+          plf(JSON.parse(xhr.response));
         }
         else { 
-          plf(xhr.response);
+          plf('Error 64');
         }
       };
     }
 }
 
 class LivingThing extends Thing {
-    constructor (parent, name, content) {
-      super (parent, name, content);
+    constructor (parent, name, content, genus) {
+      super (parent, name, content, genus);
       this.living=true;
       this.currentState='';
     }
@@ -175,14 +238,13 @@ class MovingThing extends LivingThing {
       xhr.open('PUT', url);
       xhr.send();
       xhr.onload = function() {
-        if (xhr.status != 200) { // OK?
-          console.log("Error 78");
+        if (xhr.status == 200) {
         }
         else { 
-//           console.log("Location update OK"); 
+          console.log("Error 78");
         }
       };
-    }
+  }
   savecanmove() {
       let url=grassworld_db+'t=thing&a=cm&tid='+this.Tid;
       for (var c in [this.Tx, this.Ty, this.Tz]) {
@@ -193,11 +255,11 @@ class MovingThing extends LivingThing {
       xhr.open('PUT', url);
       xhr.send();
       xhr.onload = function() {
-        if (xhr.status != 200) { // OK?
-          console.log("Error 78");
+        if (xhr.status == 200) { 
+          console.log("Location update OK"); 
         }
         else { 
-          console.log("Location update OK"); 
+          console.log("Error 78");
         }
       };
     }
@@ -249,12 +311,12 @@ class World extends Thing {
       xhr.open('GET', url);
       xhr.send();
       xhr.onload = function() {
-        if (xhr.status != 200) { // OK?
-          Yoke.parentUpdate(myparent, 'Error 79');
+        if (xhr.status == 200) {
+          data=JSON.parse(xhr.response);
+          self.populateArray(cat, data);          
         }
         else { 
-          data=JSON.parse(xhr.response);
-          self.populateArray(cat, data);
+          Yoke.parentUpdate(myparent, 'Error 79');
         }
       };
     };
@@ -267,97 +329,10 @@ class charactersprite {
   	constructor (options) {
       //super (null, options.name, null, options.genus);
       var thisguy = {};
-      this.canvasid=options.canvasid;
-			thisguy.context = options.canvas.getContext("2d");
-      thisguy.tID=options.tID;
-      thisguy.thingnum=options.thingnum;
-      thisguy.name = options.name;
-      thisguy.frameIndex = 0;
-			thisguy.tickCount = 0;
-			thisguy.ticksPerFrame = options.ticksPerFrame || 0;
-			thisguy.numberOfFrames = options.numberOfFrames || 1;
-      thisguy.image = undefined; // allocate value later; must fix this
-      thisguy.scale=options.scale;
-      thisguy.left=options.left;
-      thisguy.left_destination = thisguy.left;
-      thisguy.top=options.top;
-      thisguy.top_destination=thisguy.top;
-      thisguy.canmove=options.canmove;
-      thisguy.ismoving=0;
-      thisguy.selected=false;
+      
       this.character=thisguy;
     }
-    setImage(imagename) {
-      thisguy.width = options.width;
-      thisguy.height = options.height;
-      this.character.sprite_width=Math.floor((thisguy.width/thisguy.numberOfFrames)* thisguy.scale);
-      this.character.sprite_height=Math.floor(thisguy.height*thisguy.scale);
-    }
-    update(){
-            if (!thisguy.canmove) return;
-            if (thisguy.left != thisguy.left_destination) {
-                if (thisguy.left < thisguy.left_destination) {
-                  thisguy.left++;
-                }
-                else {
-                  thisguy.left--;
-                }
-            }
-            if (thisguy.top != thisguy.top_destination) {
-                if (thisguy.top < thisguy.top_destination) {
-                  thisguy.top++;
-                }
-                else {
-                  thisguy.top--;
-                }
-            }
-            thisguy.tickCount += 1;
-            if (thisguy.tickCount > thisguy.ticksPerFrame) {
-                thisguy.tickCount = 0;
-                // If the current frame index is in range
-                if (thisguy.frameIndex < thisguy.numberOfFrames - 1) {	
-                    // Go to the next frame
-                    thisguy.frameIndex += 1;
-                } else {
-                    thisguy.frameIndex = 0;
-                }
-            }
-//             We've arrived
-//              if ((thisguy.ismoving==1) && (thisguy.left == thisguy.left_destination) && (thisguy.top == thisguy.top_destination)) {
-//                console.log('Arrival of thing '+thisguy.thingnum+" (aka "+ things[thisguy.thingnum].name+")");
-//                things[thisguy.thingnum].o.X=thisguy.left;
-//                things[thisguy.thingnum].o.Y=thisguy.top;
-//                things[thisguy.thingnum].o.Z=0;
-//                things[thisguy.thingnum].o.saveLocation();
-//                thisguy.ismoving=0;
-//              }
-             
-    };
-		
-		render() {
-      try {
-          this.character.context.drawImage(
-          this.character.image,
-          this.character.frameIndex * this.character.width / this.character.numberOfFrames,
-          0,
-          this.character.width / this.character.numberOfFrames,
-          this.character.height,
-          this.character.left,
-          this.character.top,
-          (this.character.width / this.character.numberOfFrames)* this.character.scale,
-          (this.character.height)*this.character.scale
-        );
-      }
-      catch (e) {
-        console.log(e);
-      }
-      if (this.character.selected) {
-          ctx=this.canvas.getContext("2d");// ??? use thisguy's own context?
-          ctx.beginPath();
-          ctx.lineWidth = "1";
-          ctx.strokeStyle = "red";
-          ctx.rect(this.character.left, this.character.top, this.character.sprite_width, this.character.sprite_height);
-          ctx.stroke(); 
-      }
-		}
+
 }
+
+// [{"GimagesJSON":"'{\"spriteset\": {\"default\" : {\"spritesheet\":\"teleport01.png\", \"framecount\":\"9\", \"rowcount\":\"1\", \"w\":\"1800\",\"h\":\"200\",\"ticks\":\"20\",\"scale\":\"0.3\"},\"move_left\" : {\"spritesheet\":\"\", \"framecount\":\"\", \"rowcount\":\"1\", \"w\":\"\",\"h\":\"\",\"ticks\":\"\",\"scale\":\"\"},\"move_right\": {\"spritesheet\":\"\", \"framecount\":\"\", \"rowcount\":\"1\", \"w\":\"\",\"h\":\"\",\"ticks\":\"\",\"scale\":\"\"},\"move_up\": {\"spritesheet\":\"\", \"framecount\":\"\", \"rowcount\":\"1\", \"w\":\"\",\"h\":\"\",\"ticks\":\"\",\"scale\":\"\"},\"move_down\":{ \"spritesheet\":\"\", \"framecount\":\"\", \"rowcount\":\"1\", \"w\":\"\",\"h\":\"\",\"ticks\":\"\",\"scale\":\"\"},\"move_hover\" : {\"spritesheet\":\"someanimal_hovering.png\",\"framecount\":\"8\", \"rowcount\":\"1\", \"w\":\"1600\",\"h\":\"200\",\"ticks\":\"25\",\"scale\":\".2\"}}}'"}]
