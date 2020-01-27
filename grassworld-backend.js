@@ -1,4 +1,4 @@
-// var http = require('http');
+
 var url = require('url');
 var fs = require('fs');
 var mysql = require('mysql');
@@ -9,9 +9,9 @@ const port = 81;
 
 var events = require('events');
 var eventEmitter = new events.EventEmitter();
+var config = require('./grassworld-pw.js');
+var debugfile=config.debugfile;
 
-var debugfile="/home/public/grassworld-debug.dat";
-var pw = require('./grassworld-pw.js');
 class Database {
     constructor( config ) {
         this.connection = mysql.createConnection( config );
@@ -40,10 +40,10 @@ class Database {
 }
 
 var dbms=new Database({
-  host: "127.0.0.1",
-  user: pw.user,
-  password: pw.pass,
-  database: "grassworld_001"
+  host: config.dbhost,
+  user: config.user,
+  password: config.pass,
+  database: config.dbname
 });
 
 function nowIs() { 
@@ -116,7 +116,6 @@ async function db_get(request, response) {
 	
     async function tgetimages(Tid) {
         var r;
-        
         await dbms.query(
             "SELECT GimagesJSON FROM genus JOIN things ON Tgenus=Gid WHERE Tid="+ (dbms.escape(Tid)))
           .then( results => {
@@ -126,9 +125,6 @@ async function db_get(request, response) {
           }
           else {
             r=JSON.stringify(results);
-//             console.log('O '+results.toString());
-//             console.log('N '+r);
-//             console.log('M '+JSON.parse(r).GimagesJSON.default);
           }
           return r;
         }
@@ -145,15 +141,12 @@ async function db_get(request, response) {
   fs.appendFile(debugfile, nowIs() + "\n", () => {});
   fs.appendFile(debugfile, 'Method: ' + request.method + '\n', () => {});
   response.writeHead(200, {'Content-Type': 'text/html'});
-//   response.write("<!DOCTYPE html><html><head>" );
-//   response.write("</head><body>");
   if (request.method || 'GET') { // unnecessary
     var cgi = url.parse(request.url, true).query;
     if (lib.isundefined(cgi.Tz)) {
         cgi.Tz=0;
     }
     if (lib.isdefined(cgi.name)) {
-//       console.log(cgi.name);
       reply=await get_by_name(cgi.name);
     }
     else if (lib.isdefined(cgi.cat)) {
@@ -177,18 +170,14 @@ async function db_get(request, response) {
         }
       }
     }
-    
-    console.log('RESPONSE -> ' + reply);
     response.write(String(reply));
     response.end();
   }
   else {
     reply='DB: Not Found';
-//     console.log('RESPONSE -> ' + reply);
     response.write(String(reply));
     response.end();
   }
-  
 }
 //========================================================================================
 async function db_put(request, response) {
@@ -262,7 +251,6 @@ async function db_put(request, response) {
   response.writeHead(200, {'Content-Type': 'text/html'});
     var cgi = url.parse(request.url, true).query;
     if (lib.isdefined(cgi.a)) {
-//       console.log(cgi.name);
       if(cgi.a == 'sl') {
         reply=await saveLocation(cgi.Tid, cgi.Tx, cgi.Ty, cgi.Tz);
       }
@@ -273,7 +261,6 @@ async function db_put(request, response) {
         reply=await tgenuschange(cgi.Tid,cgi.ng);
       }
     }
-//     console.log('PUT RESPONSE -> ' + reply);
     response.write(String(reply));
     response.end();
 }
@@ -312,7 +299,6 @@ async function db_post(request, response) {
   response.writeHead(200, {'Content-Type': 'text/html'});
   var cgi = url.parse(request.url, true).query;
   if (lib.isdefined(cgi.a)) {
-//       console.log(cgi.name);
       if(cgi.a == 'mk') {
         if (cgi.t == 'thing') {
           reply=await conceive(cgi.name, cgi.g);
@@ -338,12 +324,8 @@ async function db_dbg(request, response) {
   response.write("<!DOCTYPE html><html><head>" );
   response.write("</head><body>");
  
-    
-//     console.log('RESPONSE -> ' + reply);
-    response.write(String('-not implemented-'));
-    response.end();
-
-    response.write(String(reply));
-    response.end();
-  
+  response.write(String('-not implemented-'));
+  response.end();
+  response.write(String(reply));
+  response.end();
 }

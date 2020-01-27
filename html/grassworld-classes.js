@@ -1,3 +1,4 @@
+let genus_Schplágen_f0 = 0;
 let genus_Schplágen = 1;
 let genus_Twig=2;
 let genus_SchplágenAlso = 3;
@@ -9,7 +10,6 @@ let genus_Schplágen_g3 = 11;
 let genus_Schplágen_b1 = 10;
 let genus_Schplágen_b2 = 12;
 let genus_Schplágen_b3 = 9;
-let genus_Schplágen_f0 = 0;
 let genus_teleport = 16;
 let emptyimage={
         "spritesheet" : "",
@@ -35,9 +35,11 @@ class Yoke {
       xhr.send();
       this.Tid=xhr.onload = function() {
           if (xhr.status == 200) {
+            console.log(xhr.response);
             return xhr.response;
           }
           else { 
+            console.log(xhr.response);
             return 'Error 16';
           }
       }
@@ -57,13 +59,16 @@ class Yoke {
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) { // OK?
+          console.log(xhr.response);
           Yoke.parentUpdate(myparent, xhr.response); 
         }
         else { 
+          console.log(xhr.response);
           Yoke.parentUpdate(myparent, 'Error 60');
         }
       };
       xhr.onerror = function() {
+        console.log(xhr.response);
         Yoke.parentUpdate(myparent, "error");
       };
     };
@@ -94,20 +99,18 @@ class Thing extends Yoke {
       'down':emptyimage,
       'hover':emptyimage
     };
-//     this.images.default=emptyimage;
-//     this.images.left={};
-//     this.images.right={};
-//     this.images.up={};
-//     this.images.down={};
-//         "spritesheet" : "",
-//         "framecount" : 0,
-//         "rowcount" : 0,
-//         "w" : 0,
-//         "h" : 0,
-//         "ticks" : 0,
-//         "scale" : 0
-//       };
+    this.images.default.spritesheet=new Image();
+    this.images.left.spritesheet=new Image();
+    this.images.right.spritesheet=new Image();
+    this.images.up.spritesheet=new Image();
+    this.images.down.spritesheet=new Image();
+    this.images.hover.spritesheet=new Image();
     this.heading=0; // default
+    this.spriteW=0;
+    this.spriteH=0;
+    this.spriteFrames=1;
+    this.spriteTicksPerFrame=100;
+    this.spriteScale=1;
   }
   tgenuschange(plf) {
     // should change the genus in the instantiated object first, then call this function
@@ -123,6 +126,7 @@ class Thing extends Yoke {
             plf(JSON.parse(xhr.response));
           }
           else { 
+            console.log(xhr.response);
             plf('Error 64');
           }
         }
@@ -132,7 +136,7 @@ class Thing extends Yoke {
       let url=grassworld_db+'t=thing&a=mk&name='+this.name + '&g='+this.Tgenus + token();
       let xhr = new XMLHttpRequest();
       // the next function to develop should be for: ('POST',url)
-      console.log(url);
+//       console.log(url);
       xhr.open('POST', url);
       xhr.send();
       xhr.onload = function() {
@@ -140,60 +144,57 @@ class Thing extends Yoke {
           postloadfunc(JSON.parse(xhr.response));          
         }
         else { 
+          console.log(xhr.response);
           postloadfunc('Error 64');
         }
       };
     }
   static tplfimages(response, thething){
-    console.log('>> TPLF images '+response);
-//     console.log('E '+typeof(response));
-//     console.log('F '+Object.keys(response));
-//     console.log('G '+Object.entries(response));
-//     response=response.replace(/\\"/g,'"');
-//     response=response.replace(/\[/g,'');
-//     response=response.replace(/\]/g,'');
-//     response=response.replace(/\"{/g,'{');
-//     console.log('H '+response);
-//     ;
-//     for (var j in [i]){
-//       console.log(i);
-//     }
-//     for (const key of Object.keys(response)) {
-//       console.log('K: '+key)
-//     }
-    const keys = Object.keys(emptyimage);
-    for (const key of keys) {
-      console.log('K2: '+key)
-      console.log(`${emptyimage.key}`);
+    // DO NOT CHANGE THIS, OR ANYTHING LEADING TO OR FROM THIS
+    // I made very heavy going of this, so it's best to NOT NOT NOT
+    // change anything here until 
+    thething.images=JSON.parse(response.GimagesJSON);
+    var directions=Object.keys(thething.images);
+    for (let i =0; i<directions.length; i++) {
+//       console.log('DIR '+`thething.images.${directions[i]}.spritesheet` );
+      let path=grassworld_url+"assets/img/";
+      let lhs = `thething.images.${directions[i]}.spritesheet`;
+      eval( lhs + "=" + "'" + path + "' + " + lhs );
     }
-    response=JSON.parse(response.GimagesJSON);
-    console.log('CC: '+response.default.spritesheet);
-    thething.default=response.default;
-    thething.left=response.feck;
-    thething.hover=response.hover;
-//     response=response.toString()
-    console.log('DD: '+thething.Tid+' '+thething.default.spritesheet);
-    //GimagesJSON
+    thething.images.default.spritesheet=new Image();
+    thething.images.default.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response.GimagesJSON).default.spritesheet;
+    thething.spriteW= Math.floor(thething.images.default.w / thething.images.default.framecount);
+    thething.spriteH= Math.floor(thething.images.default.h / thething.images.default.rowcount);
+    thething.spriteFrames=thething.images.default.framecount;
+    thething.spriteTicksPerFrame=thething.images.default.ticks;
+    thething.spriteScale=thething.images.default.scale;
+//     console.log('T '+thething.images.default.spritesheet.src);
+//     console.log('default of: '+thething.Tid+' is: '+thething.images.default.spritesheet);
+//     console.log('go left of: '+thething.Tid+' is: '+thething.images.left.spritesheet);
   };
   tgetimages(thething) {
       let url=grassworld_db+'t=thing&a=gij&Tid='+this.Tid + token();
-      console.log('GETIMAGES '+url);
+//       console.log('GETIMAGES '+url);
       let xhr = new XMLHttpRequest();
       // the next function to develop should be for: ('POST',url)
       xhr.open('GET', url);
       xhr.send();
-      console.log('B: '+thething.o.Tid);
+//       console.log('B: '+thething.o.Tid);
       xhr.onload = function() {
         if (xhr.status == 200) {
           let r=xhr.response;
           // there's probably a very good reason (that I don't know about)
           // why node is adding [ ... ] to the response, but I don't wan't them
           // so I'm getting rid of [ ]
+          // the replace MUST be done here as that works on a string, and the string ...
           r=r.replace(/\[/g,'');
           r=r.replace(/\]/g,'');
+          // ... is about to be turned into a JSON object for the next stage
           Thing.tplfimages(JSON.parse(r), thething);
         }
         else { 
+          console.log(xhr.response);
+          consoel.log('error 187');
         }
       };
     }
@@ -208,6 +209,7 @@ class Thing extends Yoke {
           plf(JSON.parse(xhr.response));
         }
         else { 
+          console.log(xhr.response);
           plf('Error 64');
         }
       };
@@ -256,7 +258,7 @@ class MovingThing extends LivingThing {
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) { 
-          console.log("Location update OK"); 
+//           console.log("Location update OK"); 
         }
         else { 
           console.log("Error 78");
@@ -277,6 +279,7 @@ class World extends Thing {
     this.fauna=[];
     this.objects=[];
     this.grid=[];
+    this.all=[];
   }
   populateArray(cat, data) {
     switch (cat) {
@@ -285,18 +288,21 @@ class World extends Thing {
             this.flora=[];
             for (var m=0; m<data.length;m++) {
               this.flora.push(data[m]);
+              this.all.push(data[m]);
             }
             break;
       case 'fauna': 
             this.fauna=[];
             for (var m=0; m<data.length;m++) {
               this.fauna.push(data[m]);
+              this.all.push(data[m]);
             }
             break;
       case 'objects': 
             this.objects=[];
             for (var m=0; m<data.length;m++) {
               this.objects.push(data[m]);
+              this.all.push(data[m]);
             }
             break;
       default: break;
@@ -316,6 +322,7 @@ class World extends Thing {
           self.populateArray(cat, data);          
         }
         else { 
+          console.log(xhr.response);
           Yoke.parentUpdate(myparent, 'Error 79');
         }
       };

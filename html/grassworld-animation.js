@@ -20,8 +20,7 @@
 */
 
 var things = [];
-var animal, animalImage, canvas;
-var notclevercount = 0;
+var canvas;
 var thing_selected = -1;
 var audioenabled = false;
 // Get canvas
@@ -67,49 +66,59 @@ function wakenow(thisguy) {
 }
 function sprite(options) {
   var character = {};
-  
+  console.log('K');
   character.Tid = options.Tid;
   character.Tgenus = options.Tgenus;
   character.Tname = options.Tname;
   
   character.Ganimated = options.Ganimated;
-  character.Gscale = options.Gscale;
-  character.Ginteracts
+//   character.Gscale = options.Gscale;
+//   character.Ginteracts
   character.Gcanmove = options.Gcanmove;
   
   character.thingnum = options.thingnum;
   character.left = options.left;
-  character.left_destination = options.left_destination || character.left;
+//   character.left_destination = options.left_destination || character.left;
   character.top = options.top;
-  character.top_destination = options.top_destination || character.top;
+//   character.top_destination = options.top_destination || character.top;
   character.frameIndex = 0;
   character.tickCount = 0;
   character.ticksPerFrame = options.ticksPerFrame || 0;
   character.numberOfFrames = options.numberOfFrames || 1;
   character.context = canvas.getContext('2d');
-  character.width = options.width;
-  character.height = options.height;
+//   character.width = options.width;
+//   character.height = options.height;
   character.image = options.image;  
   character.ismoving = 0;
-  character.sprite_width = Math.floor(
-    (character.width / character.numberOfFrames) * character.Gscale
-  );
-  character.sprite_height = Math.floor(character.height * character.Gscale);
-  character.interact = function() {
-    console.log('*****Interact '+character.Tgenus);
-    if (character.Ginteracts) {
-      switch (character.Tgenus) {
-        case 16 : {
-          console.log('TELEPORT DEVICE');
-          break;
-        }
-        default : {
-          break;
-        }
-      }
-    }
-  };
+  console.log('L');
+//   character.sprite_width = Math.floor(
+//     (things[character.thingnum].o.images.default.w / things[character.thingnum].o.numberOfFrames) * things[character.thingnum].o.images.default.scale
+//   );
+//   character.sprite_height = Math.floor(character.height * character.Gscale);
+//   character.interact = function() {
+//     console.log('*****Interact '+character.Tgenus);
+//     if (character.Ginteracts) {
+//       switch (character.Tgenus) {
+//         case 16 : {
+//           console.log('TELEPORT DEVICE');
+//           break;
+//         }
+//         default : {
+//           break;
+//         }
+//       }
+//     }
+//   };
+  character.directionChange=function(d) {
+    console.log('DC');
+    // must change this to respond to parameter d
+    character.sprite_width = Math.floor(
+        (things[character.thingnum].o.images.default.w / things[character.thingnum].o.numberOfFrames) * things[character.thingnum].o.images.default.scale
+    );
+    character.sprite_height = Math.floor(things[character.thingnum].o.images.default.height * things[character.thingnum].o.images.default.scale);
+  }
   character.update = function() {
+//     console.log('UPD');
     if (!character.Ganimated) {
       //               console.log('returning genus: '+character.Tgenus);
       return;
@@ -191,20 +200,29 @@ function sprite(options) {
   };
 
   character.render = function(y) {
+    console.log('RND');
+//     console.log(things[y].Tid);
     // Draw the animation
+    direction='default';
+
+    let spritedata=things[y].o.images.default;
+
     try {
-      character.context.drawImage(
-        character.image,
-        (character.frameIndex * character.width) / character.numberOfFrames,
+        character.context.drawImage(
+        spritedata.spritesheet,
+        (character.frameIndex * spritedata.w) / spritedata.framecount,
         0,
-        character.width / character.numberOfFrames,
-        character.height,
+        spritedata.w / spritedata.framecount,
+        spritedata.h,
         character.left,
         character.top,
-        (character.width / character.numberOfFrames) * character.Gscale,
-        character.height * character.Gscale
+        (spritedata.w / spritedata.framecount) * spritedata.scale,
+        spritedata.h * spritedata.scale
       );
-    } catch (e) {}
+
+    } catch (e) {
+      console.log('error a231\n'+e);
+    }
     if (thing_selected == y) {
       ctx = canvas.getContext('2d');
       ctx.beginPath();
@@ -213,8 +231,8 @@ function sprite(options) {
       ctx.rect(
         things[i].left,
         things[i].top,
-        things[i].sprite_width,
-        things[i].sprite_height
+        things[i].spriteW,
+        things[i].spriteH
       );
       ctx.stroke();
     }
@@ -224,11 +242,15 @@ function sprite(options) {
 }
 
 function setdestination(t, tx, ty) {
-  return;
+  
   //     if (thing_selected < 0) return;
-//   console.log('SETTING');
+  console.log('SETTING');
 //   console.log('G '+things[t].Tgenus+' M '+things[t].Gcanmove);
   if (!things[t].Gcanmove) return;
+  if ( (isNaN(things[t].left_destination)) || (isNaN(things[t].top_destination))) {
+    console.log('RETURNING') ;
+    return;
+  }
   things[t].ismoving = 1;
   things[t].left_destination = tx - Math.floor(things[t].sprite_width / 2);
   if (things[t].left_destination < 0) {
@@ -242,12 +264,13 @@ function setdestination(t, tx, ty) {
   } else if (things[t].top_destination > canvas.height) {
     things[t].top_destination = canvas.height;
   }
-//   console.log("Thing "+t+ " going to ("+things[t].left_destination+","+things[t].top_destination+")");
+  console.log("Thing "+t+ " going to ("+things[t].left_destination+","+things[t].top_destination+")");
 }
 
 function game(game_canvas) {
   function gameLoop() {
     window.requestAnimationFrame(gameLoop);
+//     console.log('GL1');
     // clear the field
     ctx = canvas.getContext('2d');
     ctx.fillStyle = 'green';
@@ -258,9 +281,11 @@ function game(game_canvas) {
       things[i].update(i);
       // display the changed character
       things[i].render(i);
-      if (things[i].Ginteracts) {
-          things[i].interact();
-      }
+//       if (things[i].Ginteracts) {
+//           things[i].interact();
+//       }
+//       console.log('GL');
+      sleep(500);
     }
     var ctx2 = canvas.getContext('2d');
     ctx2.font = '40px Courier';
@@ -487,7 +512,8 @@ function game(game_canvas) {
   function eventDispatcher(event, d) {
     /*   this is an unnecessary layer between the EventListener and the EventHandler.
      *  It is used to provide similarity of construct with the AppInventor JavaLibrary
-     *  used for Android app development in Android Studio.
+     *  used for Android app development in Android Studio, which in turn is used to provide
+     *  continuity from the AppInventor web methodology.
      */
     console.log(event.type);
     switch (event.type) {
@@ -515,6 +541,59 @@ function game(game_canvas) {
     }
   }
   count = 0;
+  console.log('G');
+  // being worked on as replacement for current:
+    for (j = 0; j < field.all.length; j++) {
+      var fting={};
+      fting.thingnum= count;
+      fting.Gcanmove= (field.all[j].Gmobile == 1);
+      fting.Ganimated= (field.all[j].Ganimated == 1);
+      fting.Ginteracts= (field.all[j].Ginteracts == 1);
+      fting.Tid=field.all[j].Tid;
+      fting.Tname= field.all[j].Tname;
+      fting.Tgenus= field.all[j].Tgenus;
+      fting.spriteScale= 1;
+      fting.spriteW=1;
+      fting.spriteH=1;
+      fting.selected=false;
+      fting.spriteFrames=1;
+      fting.spriteTicksPerFrame=100;
+//image: undefined,
+      if (fting.GcanMove) {
+        console.log('Adding animal '+fting.Tid+' '+fting.Tname);
+        fting.o = new MovingThing(
+          null,
+          fting.Tname,
+          '',
+          0,
+          1 // legs
+        );
+        MovingThing.tplfimages(field.all[j],things[currentitemnum].o);
+      }
+      else {
+        console.log('Adding plant '+fting.Tid+' '+fting.Tname);
+        fting.o = new Thing(
+          null,
+          fting.Tname,
+          '',
+          0
+        );
+        Thing.tplfimages(field.all[j],fting.o);
+      }
+      fting.sprite = new charactersprite();
+      
+//     var currentitemnum = things.push(
+//       sprite({
+//         left: Math.floor(Math.random() * canvas.width),
+//         top: Math.floor(Math.random() * canvas.height),
+//       })
+//     );
+//     currentitemnum--;
+//     things[currentitemnum].image = new Image();
+//     count++;
+  }
+  
+  // in effect at present:
   for (j = 0; j < field.flora.length; j++) {
     var currentitemnum = things.push(
       sprite({
@@ -522,28 +601,37 @@ function game(game_canvas) {
         Tname: field.flora[j].Tname,
         Tgenus: field.flora[j].Tgenus,
 
-        Gscale: field.flora[j].Gscale,
+        spriteScale: 1,
         Gcanmove: (field.flora[j].Gmobile == 1),
         Ganimated: (field.flora[j].Ganimated == 1),
         Ginteracts: (field.flora[j].Ginteracts == 1),
 
         thingnum: count,
-        width: field.flora[j].GimageW,
-        height: field.flora[j].GimageH,
+        spriteW: 1,
+        spriteH: 1,
         selected: false,
         image: undefined,
-        numberOfFrames: field.flora[j].Gframes,
-        ticksPerFrame: field.flora[j].Gticks,
+        spriteFrames: 1,
+        spriteTicksPerFrame: 100,
         left: Math.floor(Math.random() * canvas.width),
         top: Math.floor(Math.random() * canvas.height),
       })
     );
     currentitemnum--;
     things[currentitemnum].image = new Image();
-    things[currentitemnum].image.src = 'assets/img/' + field.flora[j].Gimage;
-
+    things[currentitemnum].o = new Thing(
+      null,
+      things[currentitemnum].name,
+      '',
+      0
+    );
+    things[currentitemnum].o.Tid = field.flora[j].Tid;
+    things[currentitemnum].o.Tgenus = field.flora[j].Tgenus;
+    Thing.tplfimages(field.flora[j],things[currentitemnum].o);
+//     console.log('Adding plant '+field.flora[j].Tid+' '+field.flora[j].Gimage);
     count++;
   }
+  console.log('H');
   for (j = 0; j < field.fauna.length; j++) {
     var currentitemnum = things.push(
       sprite({
@@ -551,7 +639,7 @@ function game(game_canvas) {
         Tname: field.fauna[j].Tname,
         Tgenus: field.fauna[j].Tgenus,
 
-        Gscale: field.fauna[j].Gscale,
+//         Gscale: field.fauna[j].Gscale,
         Gcanmove: (field.fauna[j].Gmobile == 1),
         Ganimated: (field.fauna[j].Ganimated == 1),
         Ginteracts: (field.fauna[j].Ginteracts == 1),
@@ -561,60 +649,50 @@ function game(game_canvas) {
         height: field.fauna[j].GimageH,
         selected: false,
         image: undefined,
-        numberOfFrames: field.fauna[j].Gframes,
-        ticksPerFrame: field.fauna[j].Gticks,
+//         numberOfFrames: field.fauna[j].Gframes,
+//         ticksPerFrame: field.fauna[j].Gticks,
         left: field.fauna[j].Tx,
         top: field.fauna[j].Ty,
       })
     );
     currentitemnum--;
     things[currentitemnum].image = new Image();
-    things[currentitemnum].image.src = 'assets/img/' + field.fauna[j].Gimage;
+//     console.log('Adding animal '+field.fauna[j].Tid+' '+field.fauna[j].Gimage);
+//     things[currentitemnum].image.src = 'assets/img/' + field.fauna[j].Gimage;
     things[currentitemnum].o = new MovingThing(
       null,
       things[currentitemnum].name,
       '',
-      0
+      0,
+      1 // legs
     );
     things[currentitemnum].o.Tid = field.fauna[j].Tid;
     things[currentitemnum].o.Tgenus = field.fauna[j].Tgenus;
+    // because tplfimages is declared as 'static' it must be called using 
+    // the class name, rather than the instantiated object name
+    // tplfimages is aka: t-postloadfunction-images
+    MovingThing.tplfimages(field.fauna[j],things[currentitemnum].o);
     count++;
+    console.log('I');
   }
+  
+  console.log('JK');
 
-  function future() {
-    for (j = 0; j < field.fauna.length; j++) {
-      var options = {
-//         canvasid: canvas,
-//         Tid: field.fauna[j].Tid,
-//         image: undefined,
-//         numberOfFrames: field.fauna[j].Gframes,
-//         ticksPerFrame: field.fauna[j].Gticks,
-//         left: field.fauna[j].Tx,
-//         top: field.fauna[j].Ty,
-//         scale: field.fauna[j].Gscale,
-//         Tname: field.fauna[j].Tname,
-//         genus: field.fauna[j].Tgenus,
-//         canmove: true
-      };
-      var c = new charactersprite(options);
-      c.setimage('assets/img/' + field.fauna[j].Gimage);
-      things.push(c);
-    }
-  }
   // add listeners for events
-  for (d = 0; d < things.length; d++) {
+  for (var d = 0; d < things.length; d++) {
     if (oneinNchance(10)) {
       things[d].image.addEventListener('load', eventDispatcher);
     }
   }
-  //   things[1].image.addEventListener("load",eventDispatcher);
-  notclevercount = d;
+
   document.addEventListener('keydown', eventDispatcher);
   document.addEventListener('keyup', eventDispatcher);
   document.addEventListener('mousedown', eventDispatcher);
   document.addEventListener('contextmenu', eventDispatcher);
   document.addEventListener('mouseover', eventDispatcher);
   document.addEventListener('wheel', eventDispatcher);
+  
+  gameLoop();
 }
 document.title = 'grassworld';
 // http://www.williammalone.com/articles/create-html5-canvas-javascript-sprite-animation/
