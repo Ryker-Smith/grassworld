@@ -11,6 +11,7 @@
 var field;
 grassworld_url="https://grassworld.fachtnaroe.net/";
 grassworld_db=grassworld_url+"db/?";
+let thingmap= new Map();
 
 function token() {
   return '&tk=a1b2c3d4';
@@ -68,23 +69,20 @@ isundefined=function (thing){
 }()); 
 
 async function grassworld() {
-  console.log('C');
+
   field=new World('grassworld-body','grassworld','');
   field.getState();
   await field.getCategory('flora',field);
   await field.getCategory('fauna',field);
   await field.getCategory('object',field);
-  console.log('D');
   // this is a kludge to give time for the obkjects to travel across the network:
-  await sleep(2000); 
+  await sleep(2500); 
   document.getElementById("loaderanimation").style.display="none";
   // not working yet:
 //   let editorselection=new Thing('editorselection-body','editorselection','');
 //   editorselection.getState();
-  console.log('E');
   game('grassworld');
-  console.log('F');
 }
-console.log('A');
+
 grassworld();
-console.log('B');
+

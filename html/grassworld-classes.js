@@ -20,6 +20,11 @@ let emptyimage={
         "ticks" : 0,
         "scale" : 0
       };
+var canvas;
+var thing_selected = -1;
+var audioenabled = false;
+var thingstep = 2;
+
 class Yoke {
     constructor(parent, name, genus){
       this.parent=parent;
@@ -35,16 +40,15 @@ class Yoke {
       xhr.send();
       this.Tid=xhr.onload = function() {
           if (xhr.status == 200) {
-            console.log(xhr.response);
             return xhr.response;
           }
           else { 
             console.log(xhr.response);
-            return 'Error 16';
+            return 'Error c16';
           }
       }
       this.Tid=xhr.onerror = function() {
-        return 'error 23';
+        return 'Error c23';
       };
     };
     static parentUpdate(p, h) {
@@ -52,32 +56,40 @@ class Yoke {
     }
     getState(){
       let url=grassworld_db+'name='+this.name + token();
-      console.log(url);
       let xhr = new XMLHttpRequest();
       let myparent=this.parent;
       xhr.open('GET', url);
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) { // OK?
-          console.log(xhr.response);
           Yoke.parentUpdate(myparent, xhr.response); 
         }
         else { 
-          console.log(xhr.response);
-          Yoke.parentUpdate(myparent, 'Error 60');
+          Yoke.parentUpdate(myparent, 'Error c60');
         }
       };
       xhr.onerror = function() {
-        console.log(xhr.response);
-        Yoke.parentUpdate(myparent, "error");
+        Yoke.parentUpdate(myparent, "Error c71");
       };
     };
-    enumerateProperties() {
-      for(var propertyName in this) {
-        // propertyName is what you want
-        // you can get the value like this: myObject[propertyName]
-      }
-    }
+    saveState(){
+      let url=grassworld_db+'name='+this.name + '&a+ token();
+      let xhr = new XMLHttpRequest();
+      let myparent=this.parent;
+      xhr.open('PUT', url);
+      xhr.send();
+      xhr.onload = function() {
+        if (xhr.status == 200) { // OK?
+          Yoke.parentUpdate(myparent, xhr.response); 
+        }
+        else { 
+          Yoke.parentUpdate(myparent, 'Error c60');
+        }
+      };
+      xhr.onerror = function() {
+        Yoke.parentUpdate(myparent, "Error c71");
+      };
+    };
 }
 
 class Thing extends Yoke {
@@ -106,17 +118,11 @@ class Thing extends Yoke {
     this.images.down.spritesheet=new Image();
     this.images.hover.spritesheet=new Image();
     this.heading=0; // default
-    this.spriteW=0;
-    this.spriteH=0;
-    this.spriteFrames=1;
-    this.spriteTicksPerFrame=100;
-    this.spriteScale=1;
   }
   tgenuschange(plf) {
     // should change the genus in the instantiated object first, then call this function
     // otherwise the genuschange is not saved
       let url=grassworld_db+'t=thing&a=gc&Tid='+this.Tid + '&ng='+this.Tgenus + token();
-      console.log(url)
       let xhr = new XMLHttpRequest();
       xhr.open('PUT', url);
       xhr.send();
@@ -127,7 +133,7 @@ class Thing extends Yoke {
           }
           else { 
             console.log(xhr.response);
-            plf('Error 64');
+            plf('Error c128');
           }
         }
       };
@@ -136,7 +142,6 @@ class Thing extends Yoke {
       let url=grassworld_db+'t=thing&a=mk&name='+this.name + '&g='+this.Tgenus + token();
       let xhr = new XMLHttpRequest();
       // the next function to develop should be for: ('POST',url)
-//       console.log(url);
       xhr.open('POST', url);
       xhr.send();
       xhr.onload = function() {
@@ -145,7 +150,7 @@ class Thing extends Yoke {
         }
         else { 
           console.log(xhr.response);
-          postloadfunc('Error 64');
+          postloadfunc('Error c64');
         }
       };
     }
@@ -154,32 +159,21 @@ class Thing extends Yoke {
     // I made very heavy going of this, so it's best to NOT NOT NOT
     // change anything here until 
     thething.images=JSON.parse(response.GimagesJSON);
-    var directions=Object.keys(thething.images);
-    for (let i =0; i<directions.length; i++) {
-//       console.log('DIR '+`thething.images.${directions[i]}.spritesheet` );
-      let path=grassworld_url+"assets/img/";
-      let lhs = `thething.images.${directions[i]}.spritesheet`;
-      eval( lhs + "=" + "'" + path + "' + " + lhs );
-    }
-    thething.images.default.spritesheet=new Image();
-    thething.images.default.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response.GimagesJSON).default.spritesheet;
-    thething.spriteW= Math.floor(thething.images.default.w / thething.images.default.framecount);
-    thething.spriteH= Math.floor(thething.images.default.h / thething.images.default.rowcount);
-    thething.spriteFrames=thething.images.default.framecount;
-    thething.spriteTicksPerFrame=thething.images.default.ticks;
-    thething.spriteScale=thething.images.default.scale;
-//     console.log('T '+thething.images.default.spritesheet.src);
-//     console.log('default of: '+thething.Tid+' is: '+thething.images.default.spritesheet);
-//     console.log('go left of: '+thething.Tid+' is: '+thething.images.left.spritesheet);
+    thething.sprite.spritesheet=new Image();
+    thething.sprite.spritesheet.src=grassworld_url+"assets/img/"+thething.images.default.spritesheet;
+    thething.sprite.framecount=thething.images.default.framecount;
+    thething.sprite.rowcount=thething.images.default.rowcount;
+    thething.sprite.w=thething.images.default.w;
+    thething.sprite.h=thething.images.default.h;
+    thething.sprite.scale=thething.images.default.scale;
+    thething.sprite.ticks=thething.images.default.ticks;
   };
   tgetimages(thething) {
       let url=grassworld_db+'t=thing&a=gij&Tid='+this.Tid + token();
-//       console.log('GETIMAGES '+url);
       let xhr = new XMLHttpRequest();
       // the next function to develop should be for: ('POST',url)
       xhr.open('GET', url);
       xhr.send();
-//       console.log('B: '+thething.o.Tid);
       xhr.onload = function() {
         if (xhr.status == 200) {
           let r=xhr.response;
@@ -194,7 +188,7 @@ class Thing extends Yoke {
         }
         else { 
           console.log(xhr.response);
-          consoel.log('error 187');
+          consoel.log('Error c187');
         }
       };
     }
@@ -210,7 +204,7 @@ class Thing extends Yoke {
         }
         else { 
           console.log(xhr.response);
-          plf('Error 64');
+          plf('Error c64');
         }
       };
     }
@@ -232,8 +226,6 @@ class MovingThing extends LivingThing {
   }
   saveLocation() {
       let url=grassworld_db+'t=thing&a=sl&Tid='+this.Tid;
-      for (var c in [this.Tx, this.Ty, this.Tz]) {
-      }
       url += '&Tx='+this.Tx + '&Ty='+this.Ty + '&Tz='+this.Tz;
       url += token();
       let xhr = new XMLHttpRequest();
@@ -243,7 +235,7 @@ class MovingThing extends LivingThing {
         if (xhr.status == 200) {
         }
         else { 
-          console.log("Error 78");
+          console.log("Error c232");
         }
       };
   }
@@ -258,10 +250,10 @@ class MovingThing extends LivingThing {
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) { 
-//           console.log("Location update OK"); 
+
         }
         else { 
-          console.log("Error 78");
+          console.log("Error c78");
         }
       };
     }
@@ -323,23 +315,190 @@ class World extends Thing {
         }
         else { 
           console.log(xhr.response);
-          Yoke.parentUpdate(myparent, 'Error 79');
+          Yoke.parentUpdate(myparent, 'Error c312');
         }
       };
     };
 }
 
 class charactersprite {
-  //
-  // This isn't in use yet
-  //
+
   	constructor (options) {
       //super (null, options.name, null, options.genus);
-      var thisguy = {};
-      
-      this.character=thisguy;
+      this.Tid=options.Tid;
+      this.Ganimated=options.Ganimated;
+      // 'canvas' must be changed to a parameter
+      this.context = canvas.getContext('2d');
+      // per-sprite
+      this.spritesheet= options.spritesheet;
+      this.framecount= options.framecount;
+      this.rowcount= options.rowcount; // not presently used
+      this.w= options.w;
+      this.h= options.h;
+      this.ticks= options.ticks;
+      this.scale= options.scale;
+      // this instance
+      this.left= options.left;
+      this.left_destination= options.left;
+      this.top_destination= options.top;
+      this.top= options.top;
+      this.frameIndex=0;
+      this.tickCount=0;
     }
+    get sprite_width(){
+      return (this.w / this.framecount)*this.scale;
+    }
+    get sprite_height(){
+      return (this.h / this.rowcount)*this.scale;
+    }
+    setdestination(t, dx, dy) { // make this static?
+      if (!thingmap.get(t).Gcanmove) return;
+      if ( (isNaN(thingmap.get(t).sprite.left_destination)) 
+        || (isNaN(thingmap.get(t).sprite.top_destination))) {
+            console.log('RETURNING') ;
+        return;
+      }
+      thingmap.get(t).ismoving = 1;
+      this.left_destination = Math.floor(dx - (this.sprite_width/2));
+      if (thingmap.get(t).sprite.left_destination < 0) {
+        thingmap.get(t).sprite.left_destination = 0;
+      }
+      else if (thingmap.get(t).sprite.left_destination > canvas.width) {
+        thingmap.get(t).sprite.left_destination = canvas.width;
+      }
+      thingmap.get(t).sprite.top_destination = Math.floor(dy - (thingmap.get(t).sprite.sprite_height/2));
+      if (thingmap.get(t).sprite.top_destination < 0) {
+        thingmap.get(t).sprite.top_destination = 0;
+      }
+      else if (thingmap.get(t).sprite.top_destination > canvas.height) {
+        thingmap.get(t).sprite.top_destination = canvas.height;
+      }
+      console.log("Thing "+t+ " going to ("+thingmap.get(t).sprite.left_destination+","+thingmap.get(t).sprite.top_destination+")");
+    }
+    interact(){
+      if (thingmap.get(t).Ginteracts) {
+        switch (thingmap.get(t).Tgenus) {
+          case 16 : {
+            console.log('TELEPORT DEVICE');
+            break;
+          }
+          default : {
+            break;
+          }
+        }
+      }
+    }
+    directionChange() {
+//       character.sprite_width = Math.floor(
+//           (things[character.thingnum].o.images.default.w / things[character.thingnum].o.numberOfFrames) * things[character.thingnum].o.images.default.scale
+//       );
+//       character.sprite_height = Math.floor(things[character.thingnum].o.images.default.height * things[character.thingnum].o.images.default.scale);
+    }
+    update (){
+      if (!this.Ganimated) {
+        return;
+      }
+      if (this.left != this.left_destination) {
+        if (this.left < this.left_destination) {
+          this.left+=thingstep;
+        }
+        else {
+          this.left-=thingstep;
+        }
+      }
+      if (this.top != this.top_destination) {
+        if (this.top < this.top_destination) {
+          this.top+=thingstep;
+        }
+        else {
+          this.top-=thingstep;
+        }
+      }
+      this.tickCount += 1;
+      if (this.tickCount > this.ticks) {
+        this.tickCount = 0;
+        if (this.frameIndex < this.framecount - 1) {
+          this.frameIndex += 1;
+        } 
+        else {
+          this.frameIndex = 0;
+        }
+//         if (oneinNchance(10)) {
+//           if (isasleep(character)) {
+//             wakenow(character);
+//           }
+//           else {
+//             character=sleepnow(character);
+//           }
+//         } 
+//         else {
+//           if (oneinNchance(10)) {
+//             if (oneinNchance(2)) {
+//                                       character.ticksPerFrame=character.ticksPerFrame/2;
+//               setdestination(
+//                 character.thingnum,
+//                 this.left + grandom(screen.width),
+//                 this.top + grandom(screen.height)
+//               );
+//             } else {
+//               setdestination(
+//                 character.thingnum,
+//                 this.left - grandom(screen.width),
+//                 this.top - grandom(screen.height)
+//               );
+//             }
+//           }
+//         }
+      }
+    
+//       if (
+//         thingmap.get(this.Tid).Gcanmove &&
+//         thingmap.get(this.Tid).ismoving == 1 &&
+//         this.left == this.left_destination &&
+//         this.top == this.top_destination
+//       ) {
+//         
+//         if (
+//           isdefined(thingmap.get(t).Tx) &&
+//           isdefined(thingmap.get(t).Ty)
+//         ) {
+//           thingmap.get(t).o.saveLocation();
+//         }
+//         character.ismoving = 0;
+//       }
 
+    }
+    render() { 
+      let direction='default';
+      let spritedata=thingmap.get(this.Tid).sprite;
+      try {
+        this.context.drawImage(
+          spritedata.spritesheet,
+          (this.frameIndex * spritedata.w) / spritedata.framecount,
+          0,
+          spritedata.w / spritedata.framecount,
+          spritedata.h,
+          this.left,
+          this.top,
+          (spritedata.w / spritedata.framecount) * spritedata.scale,
+          spritedata.h * spritedata.scale
+        );
+      }
+      catch (e) {
+        console.log('error c488\n'+e);
+      }
+      if (thing_selected == this.Tid) {
+        ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.lineWidth = '1';
+        ctx.strokeStyle = 'red';
+        ctx.rect(
+          this.left,
+          this.top,
+          this.sprite_width,
+          this.sprite_height
+        );
+        ctx.stroke();
+      }
+    }
 }
-
-// [{"GimagesJSON":"'{\"spriteset\": {\"default\" : {\"spritesheet\":\"teleport01.png\", \"framecount\":\"9\", \"rowcount\":\"1\", \"w\":\"1800\",\"h\":\"200\",\"ticks\":\"20\",\"scale\":\"0.3\"},\"move_left\" : {\"spritesheet\":\"\", \"framecount\":\"\", \"rowcount\":\"1\", \"w\":\"\",\"h\":\"\",\"ticks\":\"\",\"scale\":\"\"},\"move_right\": {\"spritesheet\":\"\", \"framecount\":\"\", \"rowcount\":\"1\", \"w\":\"\",\"h\":\"\",\"ticks\":\"\",\"scale\":\"\"},\"move_up\": {\"spritesheet\":\"\", \"framecount\":\"\", \"rowcount\":\"1\", \"w\":\"\",\"h\":\"\",\"ticks\":\"\",\"scale\":\"\"},\"move_down\":{ \"spritesheet\":\"\", \"framecount\":\"\", \"rowcount\":\"1\", \"w\":\"\",\"h\":\"\",\"ticks\":\"\",\"scale\":\"\"},\"move_hover\" : {\"spritesheet\":\"someanimal_hovering.png\",\"framecount\":\"8\", \"rowcount\":\"1\", \"w\":\"1600\",\"h\":\"200\",\"ticks\":\"25\",\"scale\":\".2\"}}}'"}]
