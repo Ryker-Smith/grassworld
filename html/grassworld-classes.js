@@ -25,6 +25,21 @@ var thing_selected = -1;
 var audioenabled = false;
 var thingstep = 2;
 
+function isdefined(thing){
+  var r = true;
+  if (typeof thing === 'undefined') {
+    r=false;
+  }
+  return r;
+}
+function isundefined(thing){
+  var r = false;
+  if (typeof thing === 'undefined') {
+    r=true;
+  }
+  return r;
+}
+
 class Yoke {
     constructor(parent, name, genus){
       this.parent=parent;
@@ -73,7 +88,7 @@ class Yoke {
       };
     };
     saveState(){
-      let url=grassworld_db+'name='+this.name + '&a+ token();
+      let url=grassworld_db+'name='+this.name + '&a=ss'+ token();
       let xhr = new XMLHttpRequest();
       let myparent=this.parent;
       xhr.open('PUT', url);
@@ -146,7 +161,7 @@ class Thing extends Yoke {
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) { // OK?
-          postloadfunc(JSON.parse(xhr.response));          
+          postloadfunc(JSON.parse(xhr.response));  
         }
         else { 
           console.log(xhr.response);
@@ -158,15 +173,32 @@ class Thing extends Yoke {
     // DO NOT CHANGE THIS, OR ANYTHING LEADING TO OR FROM THIS
     // I made very heavy going of this, so it's best to NOT NOT NOT
     // change anything here until 
-    thething.images=JSON.parse(response.GimagesJSON);
-    thething.sprite.spritesheet=new Image();
-    thething.sprite.spritesheet.src=grassworld_url+"assets/img/"+thething.images.default.spritesheet;
-    thething.sprite.framecount=thething.images.default.framecount;
-    thething.sprite.rowcount=thething.images.default.rowcount;
-    thething.sprite.w=thething.images.default.w;
-    thething.sprite.h=thething.images.default.h;
-    thething.sprite.scale=thething.images.default.scale;
-    thething.sprite.ticks=thething.images.default.ticks;
+//     console.log('D1 '+JSON.parse(response).default.spritesheet);
+//     thething.sprite={};
+//     thething.sprite.default={};
+    thething.sprite.directions=JSON.parse(response);
+    thething.sprite.directions.default.spritesheet=new Image();
+    thething.sprite.directions.default.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).default.spritesheet;
+    thething.sprite.directions.left.spritesheet=new Image();
+    thething.sprite.directions.left.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).left.spritesheet;
+    thething.sprite.directions.right.spritesheet=new Image();
+    thething.sprite.directions.right.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).right.spritesheet;
+    thething.sprite.directions.up.spritesheet=new Image();
+    thething.sprite.directions.up.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).up.spritesheet;
+    thething.sprite.directions.down.spritesheet=new Image();
+    thething.sprite.directions.down.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).down.spritesheet;
+    thething.sprite.directions.hover.spritesheet=new Image();
+    thething.sprite.directions.hover.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).hover.spritesheet;
+//     console.log('D3 '+thething.sprite.directions.default.spritesheet.src);
+//     thething.sprite.default.spritesheet=new Image();
+//     console.log('D2 '+response);
+//     thething.sprite.directions.default.spritesheet=grassworld_url+"assets/img/"+thething.sprite.directions.default.spritesheet;
+//     console.log('D4 '+ thething.sprite.directions.default.framecount);
+//     thething.sprite.rowcount=thething.images.default.rowcount;
+//     thething.sprite.w=thething.images.default.w;
+//     thething.sprite.h=thething.images.default.h;
+//     thething.sprite.scale=thething.images.default.scale;
+//     thething.sprite.ticks=thething.images.default.ticks;
   };
   tgetimages(thething) {
       let url=grassworld_db+'t=thing&a=gij&Tid='+this.Tid + token();
@@ -184,14 +216,42 @@ class Thing extends Yoke {
           r=r.replace(/\[/g,'');
           r=r.replace(/\]/g,'');
           // ... is about to be turned into a JSON object for the next stage
-          Thing.tplfimages(JSON.parse(r), thething);
+//           console.log('B1 '+r);
+//           console.log('B2 '+JSON.parse(r).GimagesJSON);
+          Thing.tplfimages(JSON.parse(r).GimagesJSON, thething);
         }
         else { 
           console.log(xhr.response);
-          consoel.log('Error c187');
+          console.log('Error c187');
         }
       };
     }
+  tget() {
+    let url=grassworld_db+'t=thing&a=get&Tid='+this.Tid + token();
+      let xhr = new XMLHttpRequest();
+      // the next function to develop should be for: ('POST',url)
+      xhr.open('GET', url);
+      xhr.send();
+      xhr.onload = function() {
+        if (xhr.status == 200) {
+          let r=xhr.response;
+          // there's probably a very good reason (that I don't know about)
+          // why node is adding [ ... ] to the response, but I don't wan't them
+          // so I'm getting rid of [ ]
+          // the replace MUST be done here as that works on a string, and the string ...
+          r=r.replace(/\[/g,'');
+          r=r.replace(/\]/g,'');
+          // ... is about to be turned into a JSON object for the next stage
+          console.log('GET '+r);
+//           Thing.tplfimages(JSON.parse(r), thething);
+        }
+        else { 
+          console.log(xhr.response);
+          console.log('Error c187');
+        }
+      };
+  }
+  
   tsetimages(plf, imagesJSON) {
       let url=grassworld_db+'t=thing&a=sij&Tid='+this.Tid + '&j='+ imagesJSON + token();
       let xhr = new XMLHttpRequest();
@@ -208,6 +268,9 @@ class Thing extends Yoke {
         }
       };
     }
+    tkeypress(keycode) {
+      response=1;
+    }
 }
 
 class LivingThing extends Thing {
@@ -216,6 +279,7 @@ class LivingThing extends Thing {
       this.living=true;
       this.currentState='';
     }
+    lsomething() {}
 }
 
 class MovingThing extends LivingThing {
@@ -224,7 +288,7 @@ class MovingThing extends LivingThing {
     this.legs=legs;
     this.canmove=true;
   }
-  saveLocation() {
+  msaveLocation() {
       let url=grassworld_db+'t=thing&a=sl&Tid='+this.Tid;
       url += '&Tx='+this.Tx + '&Ty='+this.Ty + '&Tz='+this.Tz;
       url += token();
@@ -239,7 +303,7 @@ class MovingThing extends LivingThing {
         }
       };
   }
-  savecanmove() {
+  msavecanmove() {
       let url=grassworld_db+'t=thing&a=cm&tid='+this.Tid;
       for (var c in [this.Tx, this.Ty, this.Tz]) {
       }
@@ -257,8 +321,6 @@ class MovingThing extends LivingThing {
         }
       };
     }
-  changespritebasedondestination() {
-  }
 }
 
 class Schplágen extends MovingThing {  
@@ -344,6 +406,14 @@ class charactersprite {
       this.top= options.top;
       this.frameIndex=0;
       this.tickCount=0;
+      this.directions={
+        'default':emptyimage,
+        'left':emptyimage,
+        'right':emptyimage,
+        'up':emptyimage,
+        'down':emptyimage,
+        'hover':emptyimage
+      };
     }
     get sprite_width(){
       return (this.w / this.framecount)*this.scale;
@@ -373,7 +443,7 @@ class charactersprite {
       else if (thingmap.get(t).sprite.top_destination > canvas.height) {
         thingmap.get(t).sprite.top_destination = canvas.height;
       }
-      console.log("Thing "+t+ " going to ("+thingmap.get(t).sprite.left_destination+","+thingmap.get(t).sprite.top_destination+")");
+//       console.log("Thing "+t+ " going to ("+thingmap.get(t).sprite.left_destination+","+thingmap.get(t).sprite.top_destination+")");
     }
     interact(){
       if (thingmap.get(t).Ginteracts) {
@@ -462,15 +532,20 @@ class charactersprite {
 //           isdefined(thingmap.get(t).Tx) &&
 //           isdefined(thingmap.get(t).Ty)
 //         ) {
-//           thingmap.get(t).o.saveLocation();
+//           thingmap.get(t).o.msaveLocation();
 //         }
 //         character.ismoving = 0;
 //       }
 
     }
-    render() { 
+    render() {
       let direction='default';
-      let spritedata=thingmap.get(this.Tid).sprite;
+//       return;
+      if ( (typeof thingmap.get(this.Tid).sprite === 'undefined') ){
+        console.log('T '+this.Tid);
+        return;
+      }
+      let spritedata=thingmap.get(this.Tid).sprite.directions.default;
       try {
         this.context.drawImage(
           spritedata.spritesheet,
@@ -486,6 +561,10 @@ class charactersprite {
       }
       catch (e) {
         console.log('error c488\n'+e);
+//         console.log('V '+this.Tid);
+//         console.log(spritedata.spritesheet);
+//         console.log(spritedata.w);
+//         console.log(spritedata.h);
       }
       if (thing_selected == this.Tid) {
         ctx = canvas.getContext('2d');
@@ -501,4 +580,6 @@ class charactersprite {
         ctx.stroke();
       }
     }
+    
 }
+

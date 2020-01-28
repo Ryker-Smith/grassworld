@@ -108,6 +108,7 @@ function wakenow(thisguy) {
         break;
       default:
         console.log('Unknown: ' + event.keyCode);
+        thingmap.get(thing_selected).tkeypress(event.keyCode);
     }
   }
   function getElementPosition(element) {
@@ -336,7 +337,8 @@ function game(game_canvas) {
       }
       fting.sprite = new charactersprite(spritedetail);
       thingmap.set(fting.Tid, fting);
-      Thing.tplfimages(field.all[j], thingmap.get(fting.Tid));
+//       console.log(field.all[j]);
+      Thing.tplfimages((field.all[j]).GimagesJSON, thingmap.get(fting.Tid));
       count++;
   }
   

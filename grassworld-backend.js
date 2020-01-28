@@ -114,6 +114,27 @@ async function db_get(request, response) {
       return r;
     }
 	
+    async function tget(mobile, Tz) {
+        var r;
+        console.log("SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Tid="+ Tid + " AND Tz=" +Tz);
+        await dbms.query(
+            "SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Tid="+ (dbms.escape(Tid)) + " AND Tz="+(dbms.escape(Tz)))
+          .then( results => {
+          if(results.length < 1){
+            r='error b115';
+          }
+          else {
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+    
     async function tgetimages(Tid) {
         var r;
         await dbms.query(
@@ -164,9 +185,12 @@ async function db_get(request, response) {
       }
     }
     else if (lib.isdefined(cgi.a)) {
-      if(cgi.a == 'gij') {
-        if (cgi.t == 'thing') {
+      if (cgi.t == 'thing') {
+        if(cgi.a == 'gij') {
           reply=await tgetimages(cgi.Tid);
+        }
+        else if (cgi.a =='get') {
+          reply=await tget(cgi.Tid);
         }
       }
     }
@@ -277,7 +301,7 @@ async function db_post(request, response) {
             r=JSON.stringify(results);
             console.log(r.warningCount);
             if (r.insertId > 0) {
-                r=r.insertId;
+                r=r;
             }
             return r;
         }

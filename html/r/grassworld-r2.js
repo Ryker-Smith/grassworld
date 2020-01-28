@@ -1,7 +1,21 @@
 
 function onload_r2() {
-  console.log('This still works and Paddy hasnt broken it yet.'); 
+  console.log('This still works and Paddy hasnt broken it yet.');
 }
+/*
+class MySchplágen_r2 extends Schplágen
+  constructor (parent,name,content,genus){
+  var classes = new MySchplágen_r2();
+  schplágen.Tid
+  schplágen
+  schplágen
+  schplágen
+
+
+
+
+  }
+
 /*var names=["Urgle Burglenaut ", "Urgle von Burglenaut ","Efraim ","Boffy ","Snotsy Mac Boogletoo ","Mary ","Eva ","Pishnot Smilyface ","Boty MacBoatyface_", "Ailish Owly "];
 var newname=names[ grandom(names.length)-1 ]+ grandom(1000);
 function grandom(upper){
@@ -12,7 +26,7 @@ function oneinNchance(N){
     return true;
   }
   else {
-    return false; 
+    return false;
   }
 }
 function nowfeckinwhat(r) {
@@ -38,7 +52,7 @@ function nowfeckinwhat(r) {
         genus: genus_Schplágen,
         canmove: true
     }));
-	
+
 function onkeypress (){
 	thisschplágen.tcreate(nowfeckinwhat);
 }*/
