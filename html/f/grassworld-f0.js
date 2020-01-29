@@ -5,6 +5,14 @@ var thisschplágen;
 function grandom(upper){
   return Math.floor(Math.random() * upper) + 1;
 }
+function grandomrange(upper){
+  let r= Math.floor(Math.random() * upper) + 1;
+  let c= Math.floor(Math.random() * upper) + 1;
+  if ((c % 2) == 0) {
+    r *= -1; 
+  }
+  return r;
+}
 function oneinNchance(N){
   if (grandom(N)%N==0) {
     return true;
@@ -15,7 +23,7 @@ function oneinNchance(N){
 }
 
 function run_this_next(r) {
-  console.log('f0 18 ' + r.insertId);
+  console.log('New character with Tid ' + r.insertId);
   var myTid=r.insertId;
   var fnt={};
   
@@ -33,11 +41,15 @@ function run_this_next(r) {
   }
   
   fnt.sprite = new charactersprite(spritedetail);
+  fnt.ready=2;
   thingmap.set(fnt.Tid, fnt);
-//   fnt.o.tgetimages(thingmap.get(fnt.Tid).o);
-  fnt.o.Tx=500;
-  fnt.o.Ty=500;
-  fnt.o.msaveLocation();
+  fnt.o.tget(thingmap.get(fnt.Tid));
+  fnt.o.tgetimages(thingmap.get(fnt.Tid));
+  thingmap.get(myTid).o.Tx=500 + grandomrange(10);
+  thingmap.get(myTid).o.Ty=100 + grandomrange(10);
+  thingmap.get(myTid).o.Gcanmove=true;
+  thingmap.get(myTid).o.Ganimated=true;
+  thingmap.get(myTid).o.msaveLocation();
 }
 function onload_f0() {
   console.log('onLoad');

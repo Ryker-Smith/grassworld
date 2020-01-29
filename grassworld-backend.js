@@ -68,7 +68,7 @@ app.listen(port, () => console.log(`STARTED on port ${port}`));
 async function db_get(request, response) {
     var reply='';
     
-    async function get_by_name(name, Tz) {
+    async function tget_single_by_name(name, Tz) {
         var r;
         await dbms.query(
             "SELECT * FROM things WHERE Tname LIKE " + dbms.escape(name) + " AND Tz="+(dbms.escape(Tz)))
@@ -93,7 +93,7 @@ async function db_get(request, response) {
       return r;
     }
 
-    async function get_things(mobile, Tz) {
+    async function tget_things_multiple(mobile, Tz) {
         var r;
         console.log("SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile="+ mobile);
         await dbms.query(
@@ -114,14 +114,14 @@ async function db_get(request, response) {
       return r;
     }
 	
-    async function tget(mobile, Tz) {
+    async function tget_single_by_Tid(Tid, Tz) {
         var r;
         console.log("SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Tid="+ Tid + " AND Tz=" +Tz);
         await dbms.query(
             "SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Tid="+ (dbms.escape(Tid)) + " AND Tz="+(dbms.escape(Tz)))
           .then( results => {
           if(results.length < 1){
-            r='error b115';
+            r='error b124';
           }
           else {
             r=JSON.stringify(results);
@@ -168,14 +168,14 @@ async function db_get(request, response) {
         cgi.Tz=0;
     }
     if (lib.isdefined(cgi.name)) {
-      reply=await get_by_name(cgi.name);
+      reply=await tget_single_by_name(cgi.name);
     }
     else if (lib.isdefined(cgi.cat)) {
       if (cgi.cat == 'fauna') {
-        reply=await get_things(1,cgi.Tz);
+        reply=await tget_things_multiple(1,cgi.Tz);
       }
       else if (cgi.cat == 'flora') {
-        reply=await get_things(0,cgi.Tz);
+        reply=await tget_things_multiple(0,cgi.Tz);
       }
       else if (cgi.cat == 'object') {
         reply='{}';
@@ -190,7 +190,7 @@ async function db_get(request, response) {
           reply=await tgetimages(cgi.Tid);
         }
         else if (cgi.a =='get') {
-          reply=await tget(cgi.Tid);
+          reply=await tget_single_by_Tid(cgi.Tid, cgi.Tz);
         }
       }
     }

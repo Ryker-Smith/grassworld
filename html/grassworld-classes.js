@@ -25,6 +25,7 @@ var canvas;
 var thing_selected = -1;
 var audioenabled = false;
 var thingstep = 1;
+var world_speed_multiplier=5;
 
 function isdefined(thing){
   var r = true;
@@ -161,12 +162,14 @@ class Thing extends Yoke {
     // I made very heavy going of this, so it's best to NOT NOT NOT
     // change anything here until 
 //     console.log('D1 '+JSON.parse(response).default.spritesheet);
+//     console.log('B '+thething.Tid+' '+thething.ready);
     for (const d of activities) {
       thething.sprite.directions.set(d,JSON.parse(response)[d]);
       thething.sprite.directions.get(d).spritesheet=new Image();
       thething.sprite.directions.get(d).spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response)[d].spritesheet;
-      thething.sprite.directions.get(d).spritesheet.ticks=Math.floor(thething.sprite.directions.get(d).spritesheet.ticks/2);
+      thething.sprite.directions.get(d).ticks=Math.floor(thething.sprite.directions.get(d).ticks/world_speed_multiplier);
     }
+    thingmap.get(thething.Tid).ready--;
   };
   tgetimages(thething) {
       let url=grassworld_db+'t=thing&a=gij&Tid='+this.Tid + token();
@@ -194,7 +197,25 @@ class Thing extends Yoke {
         }
       };
     }
-  tget() {
+  static tplfget(response, thething){
+    // DO NOT CHANGE THIS, OR ANYTHING LEADING TO OR FROM THIS
+    // I made very heavy going of this, so it's best to NOT NOT NOT
+    // change anything here until 
+//     console.log('D1 '+JSON.parse(response).default.spritesheet);
+//     console.log('B '+thething.Tid+' '+thething.ready);
+//     response=JSON.parse(response);
+    console.log(response.Tname);
+    this.Tx=response.Tx;
+    this.Ty=response.Ty;
+    this.Tz=response.Tz;
+    this.Gcanmove=(response.Gcanmove == 1);
+    this.Ganimated=(response.Ganimated == 1);
+//     thingmap.get(thething.Tid).ready--;
+    Thing.tplfimages(response.GimagesJSON, thething);
+
+  };
+
+  tget(thething) {
     let url=grassworld_db+'t=thing&a=get&Tid='+this.Tid + token();
       let xhr = new XMLHttpRequest();
       // the next function to develop should be for: ('POST',url)
@@ -203,15 +224,9 @@ class Thing extends Yoke {
       xhr.onload = function() {
         if (xhr.status == 200) {
           let r=xhr.response;
-          // there's probably a very good reason (that I don't know about)
-          // why node is adding [ ... ] to the response, but I don't wan't them
-          // so I'm getting rid of [ ]
-          // the replace MUST be done here as that works on a string, and the string ...
           r=r.replace(/\[/g,'');
           r=r.replace(/\]/g,'');
-          // ... is about to be turned into a JSON object for the next stage
-          console.log('GET '+r);
-//           Thing.tplfimages(JSON.parse(r), thething);
+          Thing.tplfget(JSON.parse(r), thething);
         }
         else { 
           console.log(xhr.response);
@@ -237,7 +252,7 @@ class Thing extends Yoke {
       };
     }
     tkeypress(keycode) {
-      response=1;
+      // You should *assign* function code to tkeypress
     }
 }
 
@@ -259,6 +274,9 @@ class LivingThing extends Thing {
       thingmap.get(this.Tid).sprite.frameIndex=0;
       thingmap.get(this.Tid).sprite.tickCount=0;
       thingmap.get(this.Tid).o.Gcanmove=false;
+      thingmap.get(this.Tid).o.ismoving=false;
+      thingmap.get(this.Tid).sprite.left_destination=thingmap.get(this.Tid).sprite.left;
+      thingmap.get(this.Tid).sprite.top_destination=thingmap.get(this.Tid).sprite.top;
     }
     wakenow() {
       this.sleeping=false;
@@ -289,7 +307,7 @@ class MovingThing extends LivingThing {
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) {
-          console.log("Saved OK "+myTid);
+//           console.log("Saved OK "+myTid);
         }
         else { 
           console.log("Error c232");
@@ -314,6 +332,9 @@ class MovingThing extends LivingThing {
 }
 
 class Schplágen extends MovingThing {  
+}
+
+class WarriorSchplágen extends Schplágen {  
 }
 
 class World extends Thing {
@@ -449,6 +470,7 @@ class charactersprite {
     update (){
       // if this not an animated sprite, return
       if (!thingmap.get(this.Tid).o.Ganimated) {
+//         console.log('A');
         return;
       }
       // are we moving on X axis
@@ -481,8 +503,8 @@ class charactersprite {
           this.frameIndex = 0;
         }
         // some random actions
-        if (thingmap.get(this.Tid).o.Gcansleep) {
-          if (oneinNchance(2)) {
+        if ((thingmap.get(this.Tid).o.Gcansleep) && (!thingmap.get(this.Tid).ismoving)){
+          if (oneinNchance(10)) {
             if (thingmap.get(this.Tid).o.isasleep) {
               thingmap.get(this.Tid).o.wakenow();
             }
@@ -499,6 +521,7 @@ class charactersprite {
                 this.left + grandom(screen.width),
                 this.top + grandom(screen.height)
               );
+              this.heading='right';
             }
             else {
               this.setdestination(
@@ -506,6 +529,7 @@ class charactersprite {
                 this.left - grandom(screen.width),
                 this.top - grandom(screen.height)
               );
+              this.heading='left';
             }
           }
         }
@@ -567,4 +591,3 @@ class charactersprite {
     }
     
 }
-
