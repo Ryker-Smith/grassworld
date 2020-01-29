@@ -23,6 +23,8 @@ function distance (p1, p2) {
 	var
       dx = p2.left - p1.left,
       dy = p2.top - p1.top;
+//       console.log('E '+p2.left +','+ p1.left);
+//       console.log('F '+p2.top +','+ p1.top);
   return Math.floor(Math.sqrt(dx * dx + dy * dy));
 }
 isdefined=function (thing){
@@ -71,7 +73,7 @@ isundefined=function (thing){
 async function grassworld() {
 
   field=new World('grassworld-body','grassworld','');
-  field.getState();
+  field.ygetState();
   await field.getCategory('flora',field);
   await field.getCategory('fauna',field);
   await field.getCategory('object',field);

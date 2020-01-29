@@ -14,38 +14,33 @@ function oneinNchance(N){
   }
 }
 
-function nowfeckinwhat(r) {
+function run_this_next(r) {
   console.log('f0 18 ' + r.insertId);
   var myTid=r.insertId;
   var fnt={};
   
   fnt.Tid=myTid;
   fnt.Tname=newname;
+  fnt.selected=false;
+  fnt.o=thisschplágen;
+  fnt.o.Tid=myTid;
+  
   let spritedetail= {
           Tid: myTid,
           Ganimated: true,
-          spritesheet: new Image(),
-          framecount: 0,
-          rowcount: 0, // not presently used
-          w: 0, //fnt.images.default.w,
-          h: 0, //fnt.images.default.h,
-          ticks: 0, //fnt.images.default.ticks,
-          scale: 1, //fnt.images.default.scale
-          left: 500,
-          top: 500
+          left: 501,
+          top: 502
   }
-
+  
   fnt.sprite = new charactersprite(spritedetail);
-  fnt.o=thisschplágen;
-  fnt.o.Tid=myTid;
   thingmap.set(fnt.Tid, fnt);
-  fnt.o.tgetimages(thingmap.get(fnt.Tid).o);
+//   fnt.o.tgetimages(thingmap.get(fnt.Tid).o);
   fnt.o.Tx=500;
   fnt.o.Ty=500;
   fnt.o.msaveLocation();
 }
 function onload_f0() {
-//   console.log('onLoad');
-//     thisschplágen= new MovingThing(null,newname, null, 17,1);
-//     thisschplágen.tcreate(nowfeckinwhat);
- }
+  console.log('onLoad');
+    thisschplágen= new MovingThing(null,newname, null, 1, 1);
+    thisschplágen.tcreate(run_this_next);
+}

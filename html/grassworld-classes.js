@@ -20,10 +20,11 @@ let emptyimage={
         "ticks" : 0,
         "scale" : 0
       };
+let activities=['default', 'left', 'right', 'up', 'down', 'hover','sleep'];
 var canvas;
 var thing_selected = -1;
 var audioenabled = false;
-var thingstep = 2;
+var thingstep = 1;
 
 function isdefined(thing){
   var r = true;
@@ -43,12 +44,12 @@ function isundefined(thing){
 class Yoke {
     constructor(parent, name, genus){
       this.parent=parent;
-      this.name=name;
+      this.Tname=name;
       this.Tid=undefined;
       this.Tstatus=undefined;
     }
     ycreate() {
-      let url=grassworld_db+'a=mk&t=yoke&name='+this.name + token();
+      let url=grassworld_db+'a=mk&t=yoke&name='+this.Tname + token();
       let xhr = new XMLHttpRequest();
       let myparent=this.parent;
       xhr.open('POST', url);
@@ -69,8 +70,8 @@ class Yoke {
     static parentUpdate(p, h) {
       document.getElementById(p).text=h;
     }
-    getState(){
-      let url=grassworld_db+'name='+this.name + token();
+    ygetState(){
+      let url=grassworld_db+'name='+this.Tname + token();
       let xhr = new XMLHttpRequest();
       let myparent=this.parent;
       xhr.open('GET', url);
@@ -88,7 +89,7 @@ class Yoke {
       };
     };
     saveState(){
-      let url=grassworld_db+'name='+this.name + '&a=ss'+ token();
+      let url=grassworld_db+'name='+this.Tname + '&a=ss'+ token();
       let xhr = new XMLHttpRequest();
       let myparent=this.parent;
       xhr.open('PUT', url);
@@ -118,21 +119,7 @@ class Thing extends Yoke {
     this.Ty=undefined;
     this.Tz=0;
     this.Tteam=undefined;
-    this.images={
-      'default':emptyimage,
-      'left':emptyimage,
-      'right':emptyimage,
-      'up':emptyimage,
-      'down':emptyimage,
-      'hover':emptyimage
-    };
-    this.images.default.spritesheet=new Image();
-    this.images.left.spritesheet=new Image();
-    this.images.right.spritesheet=new Image();
-    this.images.up.spritesheet=new Image();
-    this.images.down.spritesheet=new Image();
-    this.images.hover.spritesheet=new Image();
-    this.heading=0; // default
+    this.living=false;
   }
   tgenuschange(plf) {
     // should change the genus in the instantiated object first, then call this function
@@ -154,7 +141,7 @@ class Thing extends Yoke {
       };
   }
   tcreate(postloadfunc) {
-      let url=grassworld_db+'t=thing&a=mk&name='+this.name + '&g='+this.Tgenus + token();
+      let url=grassworld_db+'t=thing&a=mk&name='+this.Tname + '&g='+this.Tgenus + token();
       let xhr = new XMLHttpRequest();
       // the next function to develop should be for: ('POST',url)
       xhr.open('POST', url);
@@ -174,31 +161,12 @@ class Thing extends Yoke {
     // I made very heavy going of this, so it's best to NOT NOT NOT
     // change anything here until 
 //     console.log('D1 '+JSON.parse(response).default.spritesheet);
-//     thething.sprite={};
-//     thething.sprite.default={};
-    thething.sprite.directions=JSON.parse(response);
-    thething.sprite.directions.default.spritesheet=new Image();
-    thething.sprite.directions.default.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).default.spritesheet;
-    thething.sprite.directions.left.spritesheet=new Image();
-    thething.sprite.directions.left.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).left.spritesheet;
-    thething.sprite.directions.right.spritesheet=new Image();
-    thething.sprite.directions.right.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).right.spritesheet;
-    thething.sprite.directions.up.spritesheet=new Image();
-    thething.sprite.directions.up.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).up.spritesheet;
-    thething.sprite.directions.down.spritesheet=new Image();
-    thething.sprite.directions.down.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).down.spritesheet;
-    thething.sprite.directions.hover.spritesheet=new Image();
-    thething.sprite.directions.hover.spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response).hover.spritesheet;
-//     console.log('D3 '+thething.sprite.directions.default.spritesheet.src);
-//     thething.sprite.default.spritesheet=new Image();
-//     console.log('D2 '+response);
-//     thething.sprite.directions.default.spritesheet=grassworld_url+"assets/img/"+thething.sprite.directions.default.spritesheet;
-//     console.log('D4 '+ thething.sprite.directions.default.framecount);
-//     thething.sprite.rowcount=thething.images.default.rowcount;
-//     thething.sprite.w=thething.images.default.w;
-//     thething.sprite.h=thething.images.default.h;
-//     thething.sprite.scale=thething.images.default.scale;
-//     thething.sprite.ticks=thething.images.default.ticks;
+    for (const d of activities) {
+      thething.sprite.directions.set(d,JSON.parse(response)[d]);
+      thething.sprite.directions.get(d).spritesheet=new Image();
+      thething.sprite.directions.get(d).spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response)[d].spritesheet;
+      thething.sprite.directions.get(d).spritesheet.ticks=Math.floor(thething.sprite.directions.get(d).spritesheet.ticks/2);
+    }
   };
   tgetimages(thething) {
       let url=grassworld_db+'t=thing&a=gij&Tid='+this.Tid + token();
@@ -253,10 +221,10 @@ class Thing extends Yoke {
   }
   
   tsetimages(plf, imagesJSON) {
+    // not done
       let url=grassworld_db+'t=thing&a=sij&Tid='+this.Tid + '&j='+ imagesJSON + token();
       let xhr = new XMLHttpRequest();
-      // the next function to develop should be for: ('POST',url)
-      xhr.open('GET', url);
+      xhr.open('PUT', url);
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) { // OK?
@@ -278,25 +246,50 @@ class LivingThing extends Thing {
       super (parent, name, content, genus);
       this.living=true;
       this.currentState='';
+      this.sleeping=false;
+      this.Gcansleep=false;
     }
     lsomething() {}
+    get isasleep() {
+      return this.sleeping;
+    }
+    sleepnow() {
+      this.sleeping = true;
+      thingmap.get(this.Tid).sprite.heading='sleep';
+      thingmap.get(this.Tid).sprite.frameIndex=0;
+      thingmap.get(this.Tid).sprite.tickCount=0;
+      thingmap.get(this.Tid).o.Gcanmove=false;
+    }
+    wakenow() {
+      this.sleeping=false;
+      thingmap.get(this.Tid).sprite.heading='default';
+      thingmap.get(this.Tid).sprite.frameIndex=0;
+      thingmap.get(this.Tid).sprite.tickCount=0;
+      thingmap.get(this.Tid).o.Gcanmove=true;
+    }
 }
 
 class MovingThing extends LivingThing {
   constructor (parent, name, content, genus, legs) {
     super (parent, name, content, genus);
     this.legs=legs;
-    this.canmove=true;
+    this.Gcanmove=true;
+    this.ismoving=false;
   }
   msaveLocation() {
       let url=grassworld_db+'t=thing&a=sl&Tid='+this.Tid;
+      this.Tx=thingmap.get(this.Tid).sprite.left;
+      this.Ty=thingmap.get(this.Tid).sprite.top;
       url += '&Tx='+this.Tx + '&Ty='+this.Ty + '&Tz='+this.Tz;
       url += token();
+//       console.log(url);
+      let myTid=this.Tid;
       let xhr = new XMLHttpRequest();
       xhr.open('PUT', url);
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) {
+          console.log("Saved OK "+myTid);
         }
         else { 
           console.log("Error c232");
@@ -305,8 +298,6 @@ class MovingThing extends LivingThing {
   }
   msavecanmove() {
       let url=grassworld_db+'t=thing&a=cm&tid='+this.Tid;
-      for (var c in [this.Tx, this.Ty, this.Tz]) {
-      }
       url += '&Tx='+this.Tx + '&Ty='+this.Ty + '&Tz='+this.Tz;
       url += token();
       let xhr = new XMLHttpRequest();
@@ -314,13 +305,12 @@ class MovingThing extends LivingThing {
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) { 
-
         }
         else { 
           console.log("Error c78");
         }
       };
-    }
+  }
 }
 
 class Schplágen extends MovingThing {  
@@ -364,7 +354,7 @@ class World extends Thing {
   }
   getCategory(cat, self){
     // cat should be flora || fauna || object etc
-      let url=grassworld_db+'world='+this.name + '&cat='+cat + token();
+      let url=grassworld_db+'world='+this.Tname + '&cat='+cat + token();
       let xhr = new XMLHttpRequest();
       let myparent=this.parent;
       let data=[];
@@ -391,14 +381,7 @@ class charactersprite {
       this.Ganimated=options.Ganimated;
       // 'canvas' must be changed to a parameter
       this.context = canvas.getContext('2d');
-      // per-sprite
-      this.spritesheet= options.spritesheet;
-      this.framecount= options.framecount;
-      this.rowcount= options.rowcount; // not presently used
-      this.w= options.w;
-      this.h= options.h;
       this.ticks= options.ticks;
-      this.scale= options.scale;
       // this instance
       this.left= options.left;
       this.left_destination= options.left;
@@ -406,29 +389,28 @@ class charactersprite {
       this.top= options.top;
       this.frameIndex=0;
       this.tickCount=0;
-      this.directions={
-        'default':emptyimage,
-        'left':emptyimage,
-        'right':emptyimage,
-        'up':emptyimage,
-        'down':emptyimage,
-        'hover':emptyimage
-      };
+      this.heading='default';
+      this.directions=new Map();
+      for (const i of activities) {
+        this.directions.set(i,emptyimage);
+      }
     }
     get sprite_width(){
-      return (this.w / this.framecount)*this.scale;
+      return (
+        this.directions.get(this.heading).w /
+        this.directions.get(this.heading).framecount) *
+        this.directions.get(this.heading).scale;
     }
     get sprite_height(){
-      return (this.h / this.rowcount)*this.scale;
+      return (
+        this.directions.get(this.heading).h /
+        this.directions.get(this.heading).rowcount)*
+        this.directions.get(this.heading).scale;
     }
     setdestination(t, dx, dy) { // make this static?
-      if (!thingmap.get(t).Gcanmove) return;
-      if ( (isNaN(thingmap.get(t).sprite.left_destination)) 
-        || (isNaN(thingmap.get(t).sprite.top_destination))) {
-            console.log('RETURNING') ;
-        return;
-      }
-      thingmap.get(t).ismoving = 1;
+//       console.log('SET DEST');
+      if (!thingmap.get(t).o.Gcanmove) return;
+      thingmap.get(t).o.ismoving = true;
       this.left_destination = Math.floor(dx - (this.sprite_width/2));
       if (thingmap.get(t).sprite.left_destination < 0) {
         thingmap.get(t).sprite.left_destination = 0;
@@ -446,8 +428,8 @@ class charactersprite {
 //       console.log("Thing "+t+ " going to ("+thingmap.get(t).sprite.left_destination+","+thingmap.get(t).sprite.top_destination+")");
     }
     interact(){
-      if (thingmap.get(t).Ginteracts) {
-        switch (thingmap.get(t).Tgenus) {
+      if (thingmap.get(this.Tid).o.Ginteracts) {
+        switch (thingmap.get(this.Tid).o.Tgenus) {
           case 16 : {
             console.log('TELEPORT DEVICE');
             break;
@@ -465,9 +447,11 @@ class charactersprite {
 //       character.sprite_height = Math.floor(things[character.thingnum].o.images.default.height * things[character.thingnum].o.images.default.scale);
     }
     update (){
-      if (!this.Ganimated) {
+      // if this not an animated sprite, return
+      if (!thingmap.get(this.Tid).o.Ganimated) {
         return;
       }
+      // are we moving on X axis
       if (this.left != this.left_destination) {
         if (this.left < this.left_destination) {
           this.left+=thingstep;
@@ -476,6 +460,7 @@ class charactersprite {
           this.left-=thingstep;
         }
       }
+      // are we moving on Y axis
       if (this.top != this.top_destination) {
         if (this.top < this.top_destination) {
           this.top+=thingstep;
@@ -484,68 +469,69 @@ class charactersprite {
           this.top-=thingstep;
         }
       }
+      // housekeeping ticks for sprite frames
       this.tickCount += 1;
-      if (this.tickCount > this.ticks) {
+      if (this.tickCount > thingmap.get(this.Tid).sprite.directions.get(this.heading).ticks) {
+        // rotate the ticker(s)
         this.tickCount = 0;
-        if (this.frameIndex < this.framecount - 1) {
+        if (this.frameIndex < thingmap.get(this.Tid).sprite.directions.get(this.heading).framecount - 1) {
           this.frameIndex += 1;
         } 
         else {
           this.frameIndex = 0;
         }
-//         if (oneinNchance(10)) {
-//           if (isasleep(character)) {
-//             wakenow(character);
-//           }
-//           else {
-//             character=sleepnow(character);
-//           }
-//         } 
-//         else {
-//           if (oneinNchance(10)) {
-//             if (oneinNchance(2)) {
-//                                       character.ticksPerFrame=character.ticksPerFrame/2;
-//               setdestination(
-//                 character.thingnum,
-//                 this.left + grandom(screen.width),
-//                 this.top + grandom(screen.height)
-//               );
-//             } else {
-//               setdestination(
-//                 character.thingnum,
-//                 this.left - grandom(screen.width),
-//                 this.top - grandom(screen.height)
-//               );
-//             }
-//           }
-//         }
+        // some random actions
+        if (thingmap.get(this.Tid).o.Gcansleep) {
+          if (oneinNchance(2)) {
+            if (thingmap.get(this.Tid).o.isasleep) {
+              thingmap.get(this.Tid).o.wakenow();
+            }
+            else {
+              thingmap.get(this.Tid).o.sleepnow();
+            }
+          }
+        }
+        if (thingmap.get(this.Tid).o.Gcanmove) {
+          if (oneinNchance(10)) {
+            if (oneinNchance(2)) {
+              this.setdestination(
+                this.Tid,
+                this.left + grandom(screen.width),
+                this.top + grandom(screen.height)
+              );
+            }
+            else {
+              this.setdestination(
+                this.Tid,
+                this.left - grandom(screen.width),
+                this.top - grandom(screen.height)
+              );
+            }
+          }
+        }
+        // end of random actions
       }
     
-//       if (
-//         thingmap.get(this.Tid).Gcanmove &&
-//         thingmap.get(this.Tid).ismoving == 1 &&
-//         this.left == this.left_destination &&
-//         this.top == this.top_destination
-//       ) {
-//         
-//         if (
-//           isdefined(thingmap.get(t).Tx) &&
-//           isdefined(thingmap.get(t).Ty)
-//         ) {
-//           thingmap.get(t).o.msaveLocation();
-//         }
-//         character.ismoving = 0;
-//       }
+      if (
+        thingmap.get(this.Tid).o.Gcanmove &&
+        thingmap.get(this.Tid).o.ismoving &&
+        (this.left == this.left_destination) &&
+        (this.top == this.top_destination)
+      ) {
+        if (thingmap.get(this.Tid).o.Gcanmove) {
+          thingmap.get(this.Tid).o.msaveLocation();
+          thingmap.get(this.Tid).o.ismoving = false;
+        }
+        
+      }
 
     }
     render() {
-      let direction='default';
-//       return;
       if ( (typeof thingmap.get(this.Tid).sprite === 'undefined') ){
-        console.log('T '+this.Tid);
         return;
       }
-      let spritedata=thingmap.get(this.Tid).sprite.directions.default;
+      // for less typing, copy the relevant data to a local variable
+      let spritedata=thingmap.get(this.Tid).sprite.directions.get(this.heading);
       try {
         this.context.drawImage(
           spritedata.spritesheet,
@@ -560,11 +546,10 @@ class charactersprite {
         );
       }
       catch (e) {
-        console.log('error c488\n'+e);
-//         console.log('V '+this.Tid);
-//         console.log(spritedata.spritesheet);
-//         console.log(spritedata.w);
-//         console.log(spritedata.h);
+        console.log('Render '+this.Tid+' error c488\n'+e);
+        thingmap.delete(this.Tid);
+//         console.log('WARNING! '+thingmap.get(this.Tid).o.Tname+' '+this.Tid+' removed from World map');
+        console.log('WARNING! '+this.Tid+' removed from World map');
       }
       if (thing_selected == this.Tid) {
         ctx = canvas.getContext('2d');
