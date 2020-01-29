@@ -27,11 +27,11 @@ canvas.height = window.innerHeight;
 function spriteInfoDump(t) {
   let txt = '==================\nSprite Data Dump\n';
   txt += 'ID: '+thingmap.get(t).Tid + '\n';
-  txt += 'Genus: '+thingmap.get(t).Tid +'\n';
+  txt += 'Genus: '+thingmap.get(t).Tid +'('+thingmap.get(t).o.Gname+')\n';
   txt += 'Name: '+thingmap.get(t).Tname +'\n';
-  txt += 'Tx: '+thingmap.get(t).Tx +'\n';
-  txt += 'Ty: '+thingmap.get(t).Ty +'\n';
-  txt += 'Tz: '+thingmap.get(t).Tz +'\n';
+  txt += 'Tx: '+thingmap.get(t).o.Tx +'\n';
+  txt += 'Ty: '+thingmap.get(t).o.Ty +'\n';
+  txt += 'Tz: '+thingmap.get(t).o.Tz +'\n';
   txt += 'Sprites:\n';
   for (const a of activities) {
       txt += 'Img: '+thingmap.get(t).sprite.directions.get(a).spritesheet.src+'\n';
@@ -42,6 +42,10 @@ function spriteInfoDump(t) {
       txt += 'scale: '+thingmap.get(t).sprite.directions.get(a).scale+'\n';
   }
   txt += 'Gcanmove: '+thingmap.get(t).o.Gcanmove +'\n';
+  txt += 'Gsleep: '+thingmap.get(t).o.Gcansleep +'\n';
+  txt += 'Ganimated: '+thingmap.get(t).o.Ganimated +'\n';
+  txt += 'Ginteracts: '+thingmap.get(t).o.Ginteracts +'\n';
+  txt += 'Team: '+thingmap.get(t).o.Tteam +'\n';
   if (thingmap.get(t).o.ismoving) {
       txt += 'Heading for: ('+thingmap.get(t).sprite.left_destination+','+thingmap.get(t).sprite.top_destination+')\n';
   }
@@ -101,7 +105,7 @@ function keypress(event) {
       }
       break;
     default:
-      console.log('Unknown key: ' + event.keyCode);
+//       console.log('Unknown key: ' + event.keyCode);
       thingmap.get(thing_selected).o.tkeypress(event.keyCode);
   }
 }
@@ -243,6 +247,8 @@ function eventDispatcher(event, d) {
     case 'mouseover':
       hoverinfo(event);
       break;
+    case 'keyup':
+      break;
     default:
       console.log('Event "' + event.type + '" not registered');
       break;
@@ -285,9 +291,9 @@ function game(game_canvas) {
       if (thingmap.get(key).ready == 0) {
         thingmap.get(key).sprite.update()
         thingmap.get(key).sprite.render()
-        //   if (thingmap.get(key).Ginteracts) {
-        //       thingmap.get(key).sprite.interact();
-        //   }
+        if (thingmap.get(key).Ginteracts) {
+          thingmap.get(key).sprite.interact();
+        }
         sleep(1);
         treadycount++;
       }
@@ -339,6 +345,8 @@ function game(game_canvas) {
     fting.o.Ginteracts = (field.all[j].Ginteracts == 1);
     fting.o.Gcansleep = (field.all[j].Gcansleep == 1);
     fting.o.Tgenus = field.all[j].Tgenus;
+    fting.o.Tteam = field.all[j].Tteam;
+    fting.o.Gname = field.all[j].Gname;
     fting.o.Tx = field.all[j].Tx;
     fting.o.Ty = field.all[j].Ty;
     let spritedetail = {
@@ -368,6 +376,11 @@ function game(game_canvas) {
       }
       else if (keychar =='I') {
         console.log( spriteInfoDump(thing_selected) );
+      }
+      else if (keychar =='.') {
+        console.log('DELETE');
+        thingmap.get(thing_selected).o.tdelete();
+        thingmap.delete(thing_selected);
       }
       else {
         console.log('*>f0 KeyCode handler got: ' + keychar + ' but presently does nothing with it');

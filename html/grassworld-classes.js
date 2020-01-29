@@ -240,6 +240,21 @@ class Thing extends Yoke {
         }
       };
     }
+    tdelete(){
+      let url=grassworld_db+'t=thing&Tid='+this.Tid + token();
+      let xhr = new XMLHttpRequest();
+      xhr.open('DELETE', url);
+      xhr.send();
+      xhr.onload = function() {
+        if (xhr.status == 200) { // OK?
+//           plf(JSON.parse(xhr.response));
+        }
+        else { 
+          console.log(xhr.response);
+//           plf('Error c64');
+        }
+      };
+    }
     tkeypress(keycode) {
       // You should *assign* function code to tkeypress, based on 
     }

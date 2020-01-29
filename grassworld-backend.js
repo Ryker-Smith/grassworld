@@ -61,6 +61,7 @@ app.use(express.static('/var/www/grassworld/html/'));
 app.get("/db/",(request, response) => db_get(request, response));
 app.put("/db/",(request, response) => db_put(request, response));
 app.post("/db/",(request, response) => db_post(request, response));
+app.delete("/db/",(request, response) => db_del(request, response));
 app.get("/debug/",(request, response) => db_dbg(request, response));
 app.listen(port, () => console.log(`STARTED on port ${port}`));
 
@@ -328,12 +329,51 @@ async function db_post(request, response) {
           reply=await conceive(cgi.name, cgi.g);
         }
       }
-    }
-    console.log('POST RESPONSE -> ' + reply);
-    response.write(String(reply));
-    response.end();
+  }
+  console.log('POST RESPONSE -> ' + reply);
+  response.write(String(reply));
+  response.end();
 }
+//========================================================================================
+async function db_del(request, response) {
+    var reply='';
+    
+    async function tdelete(Tid) {
+        var r;
+        await dbms.query(
+            "DELETE FROM things WHERE Tid="+dbms.escape(Tid))
+          .then( results => {
+            r=JSON.stringify(results);
+            console.log(r.warningCount);
+            return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
 
+  console.log( nowIs());
+  console.log('DELETE CONNECT -> DB -> '+request.method + ' ' + String(request.url));
+  fs.appendFile(debugfile, 'CONNECT\n', () => {});
+  fs.appendFile(debugfile, nowIs() + "\n", () => {});
+  fs.appendFile(debugfile, 'Method: ' + request.method + '\n', () => {});
+  for (var key in request.headers) {
+      fs.appendFile(debugfile,key + " -> " + request.headers[key] + "\n", () => {});
+  }
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  var cgi = url.parse(request.url, true).query;
+  if (lib.isdefined(cgi.t)) {
+    if ((cgi.t == 'thing') && (lib.isdefined(cgi.Tid))) {
+      reply=await tdelete(cgi.Tid);
+    }
+      
+  }
+  console.log('POST RESPONSE -> ' + reply);
+  response.write(String(reply));
+  response.end();
+}
 //========================================================================================
 async function db_dbg(request, response) {
     var reply='';
