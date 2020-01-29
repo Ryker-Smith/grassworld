@@ -161,8 +161,6 @@ class Thing extends Yoke {
     // DO NOT CHANGE THIS, OR ANYTHING LEADING TO OR FROM THIS
     // I made very heavy going of this, so it's best to NOT NOT NOT
     // change anything here until 
-//     console.log('D1 '+JSON.parse(response).default.spritesheet);
-//     console.log('B '+thething.Tid+' '+thething.ready);
     for (const d of activities) {
       thething.sprite.directions.set(d,JSON.parse(response)[d]);
       thething.sprite.directions.get(d).spritesheet=new Image();
@@ -174,7 +172,6 @@ class Thing extends Yoke {
   tgetimages(thething) {
       let url=grassworld_db+'t=thing&a=gij&Tid='+this.Tid + token();
       let xhr = new XMLHttpRequest();
-      // the next function to develop should be for: ('POST',url)
       xhr.open('GET', url);
       xhr.send();
       xhr.onload = function() {
@@ -187,8 +184,6 @@ class Thing extends Yoke {
           r=r.replace(/\[/g,'');
           r=r.replace(/\]/g,'');
           // ... is about to be turned into a JSON object for the next stage
-//           console.log('B1 '+r);
-//           console.log('B2 '+JSON.parse(r).GimagesJSON);
           Thing.tplfimages(JSON.parse(r).GimagesJSON, thething);
         }
         else { 
@@ -201,24 +196,18 @@ class Thing extends Yoke {
     // DO NOT CHANGE THIS, OR ANYTHING LEADING TO OR FROM THIS
     // I made very heavy going of this, so it's best to NOT NOT NOT
     // change anything here until 
-//     console.log('D1 '+JSON.parse(response).default.spritesheet);
-//     console.log('B '+thething.Tid+' '+thething.ready);
-//     response=JSON.parse(response);
     console.log(response.Tname);
     this.Tx=response.Tx;
     this.Ty=response.Ty;
     this.Tz=response.Tz;
     this.Gcanmove=(response.Gcanmove == 1);
     this.Ganimated=(response.Ganimated == 1);
-//     thingmap.get(thething.Tid).ready--;
     Thing.tplfimages(response.GimagesJSON, thething);
-
   };
 
   tget(thething) {
     let url=grassworld_db+'t=thing&a=get&Tid='+this.Tid + token();
       let xhr = new XMLHttpRequest();
-      // the next function to develop should be for: ('POST',url)
       xhr.open('GET', url);
       xhr.send();
       xhr.onload = function() {
@@ -252,7 +241,7 @@ class Thing extends Yoke {
       };
     }
     tkeypress(keycode) {
-      // You should *assign* function code to tkeypress
+      // You should *assign* function code to tkeypress, based on 
     }
 }
 
@@ -300,14 +289,12 @@ class MovingThing extends LivingThing {
       this.Ty=thingmap.get(this.Tid).sprite.top;
       url += '&Tx='+this.Tx + '&Ty='+this.Ty + '&Tz='+this.Tz;
       url += token();
-//       console.log(url);
       let myTid=this.Tid;
       let xhr = new XMLHttpRequest();
       xhr.open('PUT', url);
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) {
-//           console.log("Saved OK "+myTid);
         }
         else { 
           console.log("Error c232");
@@ -429,7 +416,6 @@ class charactersprite {
         this.directions.get(this.heading).scale;
     }
     setdestination(t, dx, dy) { // make this static?
-//       console.log('SET DEST');
       if (!thingmap.get(t).o.Gcanmove) return;
       thingmap.get(t).o.ismoving = true;
       this.left_destination = Math.floor(dx - (this.sprite_width/2));
@@ -446,7 +432,6 @@ class charactersprite {
       else if (thingmap.get(t).sprite.top_destination > canvas.height) {
         thingmap.get(t).sprite.top_destination = canvas.height;
       }
-//       console.log("Thing "+t+ " going to ("+thingmap.get(t).sprite.left_destination+","+thingmap.get(t).sprite.top_destination+")");
     }
     interact(){
       if (thingmap.get(this.Tid).o.Ginteracts) {
@@ -470,7 +455,6 @@ class charactersprite {
     update (){
       // if this not an animated sprite, return
       if (!thingmap.get(this.Tid).o.Ganimated) {
-//         console.log('A');
         return;
       }
       // are we moving on X axis
@@ -535,7 +519,6 @@ class charactersprite {
         }
         // end of random actions
       }
-    
       if (
         thingmap.get(this.Tid).o.Gcanmove &&
         thingmap.get(this.Tid).o.ismoving &&
@@ -546,9 +529,7 @@ class charactersprite {
           thingmap.get(this.Tid).o.msaveLocation();
           thingmap.get(this.Tid).o.ismoving = false;
         }
-        
       }
-
     }
     render() {
       if ( (typeof thingmap.get(this.Tid).sprite === 'undefined') ){
@@ -572,7 +553,6 @@ class charactersprite {
       catch (e) {
         console.log('Render '+this.Tid+' error c488\n'+e);
         thingmap.delete(this.Tid);
-//         console.log('WARNING! '+thingmap.get(this.Tid).o.Tname+' '+this.Tid+' removed from World map');
         console.log('WARNING! '+this.Tid+' removed from World map');
       }
       if (thing_selected == this.Tid) {
@@ -589,5 +569,4 @@ class charactersprite {
         ctx.stroke();
       }
     }
-    
 }

@@ -36,11 +36,16 @@ function run_this_next(r) {
   let spritedetail= {
           Tid: myTid,
           Ganimated: true,
-          left: 501,
-          top: 502
+          left: 501 + grandomrange(10),
+          top: 502 + grandomrange(10)
   }
   
   fnt.sprite = new charactersprite(spritedetail);
+  // because there are two network retrievals to complete the process, the
+  // ready flag starts with a value of 2 and as each step completes the flag
+  // is decremented. Only when the ready flag is 0 does the charactersprite
+  // class get to update and/or render. The gameloop won't call the charactersprite
+  // methods on an object with non-zero ready flag.
   fnt.ready=2;
   thingmap.set(fnt.Tid, fnt);
   fnt.o.tget(thingmap.get(fnt.Tid));
@@ -50,6 +55,10 @@ function run_this_next(r) {
   thingmap.get(myTid).o.Gcanmove=true;
   thingmap.get(myTid).o.Ganimated=true;
   thingmap.get(myTid).o.msaveLocation();
+  thingmap.get(myTid).o.tkeypress = (function(keycode) {
+      keychar=String.fromCharCode(keycode);
+      console.log("I'm new schplágen. I don't do anything yet");
+  });
 }
 function onload_f0() {
   console.log('onLoad');
