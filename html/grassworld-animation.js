@@ -46,6 +46,7 @@ function spriteInfoDump(t) {
   txt += 'Ganimated: '+thingmap.get(t).o.Ganimated +'\n';
   txt += 'Ginteracts: '+thingmap.get(t).o.Ginteracts +'\n';
   txt += 'Team: '+thingmap.get(t).o.Tteam +'\n';
+  txt += 'Status: '+thingmap.get(t).o.Tstatus +'\n';
   if (thingmap.get(t).o.ismoving) {
       txt += 'Heading for: ('+thingmap.get(t).sprite.left_destination+','+thingmap.get(t).sprite.top_destination+')\n';
   }
@@ -105,8 +106,11 @@ function keypress(event) {
       }
       break;
     default:
-//       console.log('Unknown key: ' + event.keyCode);
-      thingmap.get(thing_selected).o.tkeypress(event.keyCode);
+      if (
+        !thingmap.get(thing_selected).o.tkeypress(event.keyCode)
+      ) {
+          console.log('Unknown key: ' + event.keyCode);
+      }
   }
 }
 
@@ -205,7 +209,6 @@ function rightclick(event) {
     });
     if (!(thing_selected < 0) && thingmap.get(thing_selected).o.Gcanmove) {
       thingmap.get(thing_selected).sprite.setdestination(thing_selected, location.left, location.top);
-      
     }
   }
 }
@@ -284,14 +287,22 @@ function game(game_canvas) {
     window.requestAnimationFrame(gameLoop);
     // clear the field
     ctx = canvas.getContext('2d');
-    ctx.fillStyle = 'green';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+//     ctx.fillStyle = 'green';
+//     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    var img = new Image();
+    img.src='https://grassworld.fachtnaroe.net/assets/img/grass_txtr1.png';
+    var pat = ctx.createPattern(img, 'repeat');
+    ctx.rect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = pat;
+    ctx.fill();
+    
     let treadycount=0;
     for (key of thingmap.keys()) {
       if (thingmap.get(key).ready == 0) {
         thingmap.get(key).sprite.update()
         thingmap.get(key).sprite.render()
-        if (thingmap.get(key).Ginteracts) {
+        if (thingmap.get(key).o.Ginteracts) {
           thingmap.get(key).sprite.interact();
         }
         sleep(1);
@@ -347,6 +358,7 @@ function game(game_canvas) {
     fting.o.Tgenus = field.all[j].Tgenus;
     fting.o.Tteam = field.all[j].Tteam;
     fting.o.Gname = field.all[j].Gname;
+    fting.o.Tstatus=field.all[j].Tstatus;
     fting.o.Tx = field.all[j].Tx;
     fting.o.Ty = field.all[j].Ty;
     let spritedetail = {
@@ -377,10 +389,18 @@ function game(game_canvas) {
       else if (keychar =='I') {
         console.log( spriteInfoDump(thing_selected) );
       }
+      else if (keychar =='J') {
+        thingmap.get(thing_selected).sprite.imagesJSON ;
+      }
       else if (keychar =='.') {
         console.log('DELETE');
-        thingmap.get(thing_selected).o.tdelete();
-        thingmap.delete(thing_selected);
+        if (thingmap.get(thing_selected).o.Tstatus != 'p') {
+          thingmap.get(thing_selected).o.tdelete();
+          thingmap.delete(thing_selected);
+        }
+        else {
+          console.log('PERMANENT');
+        }
       }
       else {
         console.log('*>f0 KeyCode handler got: ' + keychar + ' but presently does nothing with it');

@@ -9,8 +9,6 @@
  */
 
 var field;
-grassworld_url="https://grassworld.fachtnaroe.net/";
-grassworld_db=grassworld_url+"db/?";
 let thingmap= new Map();
 
 function token() {

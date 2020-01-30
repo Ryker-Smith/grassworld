@@ -21,6 +21,12 @@ let emptyimage={
         "scale" : 0
       };
 let activities=['default', 'left', 'right', 'up', 'down', 'hover','sleep'];
+let sillydeletesounds=['cri-d-effroi-scream.wav','Ouche.wav','scream4.wav','scream6.wav','screamwhat.wav',
+'shockperson.wav'];
+var grassworld_url="https://grassworld.fachtnaroe.net/";
+var grassworld_db=grassworld_url+"db/?";
+var grassworld_url_img=grassworld_url+"assets/img/";
+var grassworld_url_audio=grassworld_url+"assets/audio/";
 var canvas;
 var thing_selected = -1;
 var audioenabled = false;
@@ -150,6 +156,7 @@ class Thing extends Yoke {
       xhr.onload = function() {
         if (xhr.status == 200) { // OK?
           postloadfunc(JSON.parse(xhr.response));  
+          console.log(xhr.response);
         }
         else { 
           console.log(xhr.response);
@@ -161,10 +168,11 @@ class Thing extends Yoke {
     // DO NOT CHANGE THIS, OR ANYTHING LEADING TO OR FROM THIS
     // I made very heavy going of this, so it's best to NOT NOT NOT
     // change anything here until 
+    
     for (const d of activities) {
       thething.sprite.directions.set(d,JSON.parse(response)[d]);
       thething.sprite.directions.get(d).spritesheet=new Image();
-      thething.sprite.directions.get(d).spritesheet.src=grassworld_url+"assets/img/"+JSON.parse(response)[d].spritesheet;
+      thething.sprite.directions.get(d).spritesheet.src=grassworld_url_img+JSON.parse(response)[d].spritesheet;
       thething.sprite.directions.get(d).ticks=Math.floor(thething.sprite.directions.get(d).ticks/world_speed_multiplier);
     }
     thingmap.get(thething.Tid).ready--;
@@ -240,7 +248,17 @@ class Thing extends Yoke {
         }
       };
     }
-    tdelete(){
+    tdelete(af){
+      if (thingmap.get(this.Tid).sprite.audioenabled) {
+        var audio;
+        if (isdefined(af)){
+          audio = new Audio(grassworld_url_audio+af);
+        }
+        else {
+          audio = new Audio(grassworld_url_audio+'Ouche.wav');
+        }
+        audio.play(); 
+      }
       let url=grassworld_db+'t=thing&Tid='+this.Tid + token();
       let xhr = new XMLHttpRequest();
       xhr.open('DELETE', url);
@@ -404,6 +422,11 @@ class charactersprite {
       this.Ganimated=options.Ganimated;
       // 'canvas' must be changed to a parameter
       this.context = canvas.getContext('2d');
+//       this.context.shadowBlur=15;
+//       this.context.shadowColor='#000'; 
+//       this.context.shadowOffsetX=5; // offset along X axis
+//       this.context.shadowOffsetY=-5;  // offset along Y axis
+//       this.context.globalAlpha=1;
       this.ticks= options.ticks;
       // this instance
       this.left= options.left;
@@ -413,6 +436,7 @@ class charactersprite {
       this.frameIndex=0;
       this.tickCount=0;
       this.heading='default';
+      this.audioenabled=true;
       this.directions=new Map();
       for (const i of activities) {
         this.directions.set(i,emptyimage);
@@ -430,6 +454,25 @@ class charactersprite {
         this.directions.get(this.heading).rowcount)*
         this.directions.get(this.heading).scale;
     }
+    get imagesJSON() {
+      // NOT completed
+      let t='{';
+      let j=this.directions;
+
+      for (const d of activities) {
+        t+= '"'+d+'":'
+        if (j.get(d) == 'spritesheet') {
+          t+= 'spr';
+        }
+        else {
+          t+= JSON.stringify(j.get(d));
+        }
+        t+= ',';
+      }
+      t += '}';
+      console.log('J '+t);
+      return t;
+    }
     setdestination(t, dx, dy) { // make this static?
       if (!thingmap.get(t).o.Gcanmove) return;
       thingmap.get(t).o.ismoving = true;
@@ -446,13 +489,28 @@ class charactersprite {
       }
       else if (thingmap.get(t).sprite.top_destination > canvas.height) {
         thingmap.get(t).sprite.top_destination = canvas.height;
-      }
+    }
     }
     interact(){
       if (thingmap.get(this.Tid).o.Ginteracts) {
         switch (thingmap.get(this.Tid).o.Tgenus) {
-          case 16 : {
-            console.log('TELEPORT DEVICE');
+          case 16 : { // the teleport device
+              let somearbitraryvalue=51;
+              for (key of thingmap.keys()) {
+                  let dist = distance({
+                    left: (thingmap.get(key).sprite.left + (thingmap.get(key).sprite.sprite_width / 2)),
+                    top: (thingmap.get(key).sprite.top + (thingmap.get(key).sprite.sprite_height / 2))
+                  }, {
+                    left: this.left + Math.floor(this.sprite_width/2),
+                    top: this.top + Math.floor(this.sprite_height/2)
+                  });
+                  if (dist < somearbitraryvalue) {
+                    if (thingmap.get(key).o.Tstatus != 'p') {
+                      thingmap.get(key).o.tdelete('shockperson.wav');
+                      thingmap.delete(key);
+                    }
+                  }
+              }
             break;
           }
           default : {
@@ -503,7 +561,7 @@ class charactersprite {
         }
         // some random actions
         if ((thingmap.get(this.Tid).o.Gcansleep) && (!thingmap.get(this.Tid).ismoving)){
-          if (oneinNchance(10)) {
+          if (oneinNchance(20)) {
             if (thingmap.get(this.Tid).o.isasleep) {
               thingmap.get(this.Tid).o.wakenow();
             }
@@ -546,6 +604,20 @@ class charactersprite {
         }
       }
     }
+    showid(ctx, l, t, w, h) {
+      let msgh=14;
+      ctx.font = msgh+'px Arial';
+      // +thingmap.get(this.Tid).Tname
+      let msg=thingmap.get(this.Tid).Tname;
+      let msgw=Math.floor(ctx.measureText(msg).width /2);
+      let tl=Math.floor(l + w/2 - msgw);
+      let tt=(t+h+10);
+      ctx.fillStyle = '#1b496d';
+      ctx.fillRect(tl-2, tt-12, (msgw*2)+4, msgh+2);
+      ctx.fillStyle = 'white';
+      ctx.fillText(msg, tl, tt);
+      ctx.stroke();
+    }
     render() {
       if ( (typeof thingmap.get(this.Tid).sprite === 'undefined') ){
         return;
@@ -582,6 +654,7 @@ class charactersprite {
           this.sprite_height
         );
         ctx.stroke();
+        this.showid(canvas.getContext('2d'), this.left, this.top, this.sprite_width, this.sprite_height);
       }
     }
 }
