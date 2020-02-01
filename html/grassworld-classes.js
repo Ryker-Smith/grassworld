@@ -33,6 +33,26 @@ var audioenabled = false;
 var thingstep = 1;
 var world_speed_multiplier=5;
 
+function grandom(upper){
+  return Math.floor(Math.random() * upper) + 1;
+}
+function grandomrange(upper){
+  let r= Math.floor(Math.random() * upper) + 1;
+  let c= Math.floor(Math.random() * upper) + 1;
+  if ((c % 2) == 0) {
+    r *= -1; 
+  }
+  return r;
+}
+function oneinNchance(N){
+  if (grandom(N)%N==0) {
+    return true;
+  }
+  else {
+    return false; 
+  }
+}
+
 function isdefined(thing){
   var r = true;
   if (typeof thing === 'undefined') {
@@ -276,6 +296,11 @@ class Thing extends Yoke {
     tkeypress(keycode) {
       // You should *assign* function code to tkeypress, based on 
     }
+    gkeypress(){
+      return false;
+    }
+    tsaveState() {
+    }
 }
 
 class LivingThing extends Thing {
@@ -320,6 +345,7 @@ class MovingThing extends LivingThing {
       let url=grassworld_db+'t=thing&a=sl&Tid='+this.Tid;
       this.Tx=thingmap.get(this.Tid).sprite.left;
       this.Ty=thingmap.get(this.Tid).sprite.top;
+//       console.log('SK '+thingmap.get(this.Tid).o.tkeypress);
       url += '&Tx='+this.Tx + '&Ty='+this.Ty + '&Tz='+this.Tz;
       url += token();
       let myTid=this.Tid;
@@ -354,7 +380,7 @@ class MovingThing extends LivingThing {
 class Schplágen extends MovingThing {  
 }
 
-class WarriorSchplágen extends Schplágen {  
+class SamuraiSchplágen extends Schplágen {  
 }
 
 class World extends Thing {
@@ -422,11 +448,6 @@ class charactersprite {
       this.Ganimated=options.Ganimated;
       // 'canvas' must be changed to a parameter
       this.context = canvas.getContext('2d');
-//       this.context.shadowBlur=15;
-//       this.context.shadowColor='#000'; 
-//       this.context.shadowOffsetX=5; // offset along X axis
-//       this.context.shadowOffsetY=-5;  // offset along Y axis
-//       this.context.globalAlpha=1;
       this.ticks= options.ticks;
       // this instance
       this.left= options.left;
@@ -489,12 +510,13 @@ class charactersprite {
       }
       else if (thingmap.get(t).sprite.top_destination > canvas.height) {
         thingmap.get(t).sprite.top_destination = canvas.height;
-    }
+      }
     }
     interact(){
       if (thingmap.get(this.Tid).o.Ginteracts) {
         switch (thingmap.get(this.Tid).o.Tgenus) {
           case 16 : { // the teleport device
+//               thingmap.get(this.Tid).o.behaviours.get('interact')(this.Tid);
               let somearbitraryvalue=51;
               for (key of thingmap.keys()) {
                   let dist = distance({

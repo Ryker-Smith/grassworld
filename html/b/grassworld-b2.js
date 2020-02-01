@@ -1,62 +1,56 @@
 
-    var list_of_names=["Richie ", "Shannon ","Jack ","John ","Lizz ","Margret ","Moira "];
-	var addnames=list_of_names[ b2_random(list_of_names.length)-1 ]+ b2_random(1000);
-	var b2_schplágen;
-	function b2_random(upper){
-  	return Math.floor(Math.random() * upper) + 1;
-}
-    function b2_randomrange(upper){
-  let r= Math.floor(Math.random() * upper) + 1;
-  let c= Math.floor(Math.random() * upper) + 1;
-  if ((c % 2) == 0) {
-    r *= -1; 
-  }
-  return r;
-}
-function chances(N){
-  if (b2_schplágenrandom(N)%N==0) {
-    return true;
-  }
-  else {
-    return false; 
-  }
-}
+  var list_of_names=["Richie ", "Shannon ","Jack ","John ","Lizz ","Margret ","Moira "]; // array with list of names
+	var addnames=list_of_names[ grandom(list_of_names.length)-1 ]+ grandom(1000); // gets a new random name from the list of names.
+	var MySchplágen_B2; // variable name for my character schplagen.
 
-function next_execute(r) {
-  console.log('b2' + r.insertId);
-  var b2Tid=r.insertId;
+function next_execute(r) {          // next executable to give schplagen properties and methods.
+  console.log('b2' + r.insertId); // r.insertId gets the Tid. 
+  var Tid=r.insertId;
   var kr={};
   
-  kr.Tid=b2Tid;
+  kr.Tid=Tid; // adds random Tid for random names and resets onload.  
   kr.Tname=addnames;
   kr.selected=false;
-  kr.o=b2_schplágen;
-  kr.o.Tid=b2Tid;
+  kr.o=MySchplágen_B2;
+  kr.o.Tid=Tid;
   
-  let spritefeature= {
-          Tid:b2Tid,
-          Ganimated: true,
-          left: 501 + b2_randomrange(10),
-          top: 502 + b2_randomrange(10)
+  let myspritedetail= {         // sprite info.
+          Tidkey: "value", Tid,
+          Ganimated: true, // animates your schplagen so its not 1 frame.
+          left: 501 + grandomrange(10), // the schplagen can spawn at a random x-axis co-ordinate between 491 and 511.
+          top: 502 + grandomrange(10) // the schplagen can spawna t a random y-axis co-ordinate between 492 and 512.
   }
  	 
-  kr.sprite = new charactersprite(spritefeature);
+  kr.sprite = new charactersprite(myspritedetail); // creates a new spritesheet.
   kr.ready=2;
+  //gets a Tid and images from the objects.
   thingmap.set(kr.Tid, kr);
   kr.o.tget(thingmap.get(kr.Tid));
   kr.o.tgetimages(thingmap.get(kr.Tid));
-  thingmap.get(b2Tid).o.Tx=500 + b2_randomrange(10);
-  thingmap.get(b2Tid).o.Ty=100 + b2_randomrange(10);
-  thingmap.get(b2Tid).o.Gcanmove=true;
-  thingmap.get(b2Tid).o.Ganimated=true;
-  thingmap.get(b2Tid).o.msaveLocation();
-  thingmap.get(b2Tid).o.tkeypress = (function(keycode) {
-      keychar=String.fromCharCode(keycode);
-      console.log("Kris has made a schplágen!.");
+  // gets the spritesheet
+  thingmap.get(Tid).o.Tx=MySchplágen_B2.left;
+  thingmap.get(Tid).o.Ty=MySchplágen_B2.top;  
+  // allows the schplagen to move with multple frames and save location.
+  thingmap.get(Tid).o.Gcanmove=true;
+  thingmap.get(Tid).o.Ganimated=true;
+  thingmap.get(Tid).o.msaveLocation();
+  // gets the tkeypress from classes to be used as pressing keychars.
+  thingmap.get(Tid).o.tkeypress = (function(keycode) { //keycode is used to get letters from numbers.
+      keychar=String.fromCharCode(keycode); 
+      if (keychar=='S') {
+          thingmap.get(thing_selected).o.sleepnow();  // if "S" key is pressed, gets the function from classes, passes it on and then is called to run
+                                                    //sleepnow.
+        }
+      console.log(" b2 sleep ");
+      if (keychar=='W') {
+        thingmap.get(thing_selected).o.wakenow(); // if "W" key is pressed, gets the function from classes, passes it on and then is called to run
+                                                  // wakenow.
+      }
+      console.log(" b2 wake")
   });
 }		
-function onload_b2() {
+function onload_b2() { // When page reloads it creates a new schplagen.
         console.log('b2');
-        b2_schplágen= new MovingThing(null,addnames, null, 12, 1); // 12 = genus from classes.js which is my penguin.
-    	b2_schplágen.tcreate(next_execute);
+        MySchplágen_B2= new MovingThing(null,addnames, null, 12, 1); // 12 = genus from classes.js which is my penguin.
+    	MySchplágen_B2.tcreate(next_execute);
     }

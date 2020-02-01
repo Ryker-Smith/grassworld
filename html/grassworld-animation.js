@@ -67,33 +67,41 @@ function keypress(event) {
   if (thing_selected < 0) return;
   switch (event.keyCode) {
     case key_left:
-      if (thingmap.get(thing_selected).sprite.left > 0) {
-        thingmap.get(thing_selected).sprite.left_destination =
-          thingmap.get(thing_selected).sprite.left - thingstep;
+      if (thingmap.get(thing_selected).o.Gcanmove) {
+        if (thingmap.get(thing_selected).sprite.left > 0) {
+          thingmap.get(thing_selected).sprite.left_destination =
+            thingmap.get(thing_selected).sprite.left - thingstep;
+        }
       }
       break;
     case key_right:
-      if (
-        thingmap.get(thing_selected).sprite.left <
-        canvas.width - thingmap.get(thing_selected).sprite.sprite_width
-      ) {
-        thingmap.get(thing_selected).sprite.left_destination =
-          thingmap.get(thing_selected).sprite.left + thingstep;
+      if (thingmap.get(thing_selected).o.Gcanmove) {
+        if (
+          thingmap.get(thing_selected).sprite.left <
+          canvas.width - thingmap.get(thing_selected).sprite.sprite_width
+        ) {
+          thingmap.get(thing_selected).sprite.left_destination =
+            thingmap.get(thing_selected).sprite.left + thingstep;
+        }
       }
       break;
     case key_up:
-      if (thingmap.get(thing_selected).sprite.top > 0) {
-        thingmap.get(thing_selected).sprite.top_destination =
-          thingmap.get(thing_selected).sprite.top - thingstep;
+      if (thingmap.get(thing_selected).o.Gcanmove) {
+        if (thingmap.get(thing_selected).sprite.top > 0) {
+          thingmap.get(thing_selected).sprite.top_destination =
+            thingmap.get(thing_selected).sprite.top - thingstep;
+        }
       }
       break;
     case key_down:
-      if (
-        thingmap.get(thing_selected).sprite.top <
-        canvas.height - thingmap.get(thing_selected).sprite.sprite_height
-      ) {
-        thingmap.get(thing_selected).sprite.top_destination =
-          thingmap.get(thing_selected).sprite.top + thingstep;
+      if (thingmap.get(thing_selected).o.Gcanmove) {
+        if (
+          thingmap.get(thing_selected).sprite.top <
+          canvas.height - thingmap.get(thing_selected).sprite.sprite_height
+        ) {
+          thingmap.get(thing_selected).sprite.top_destination =
+            thingmap.get(thing_selected).sprite.top + thingstep;
+        }
       }
       break;
     case ESC:
@@ -106,11 +114,11 @@ function keypress(event) {
       }
       break;
     default:
-      if (
-        !thingmap.get(thing_selected).o.tkeypress(event.keyCode)
-      ) {
-          console.log('Unknown key: ' + event.keyCode);
-      }
+      if (!thingmap.get(thing_selected).o.gkeypress(event.keyCode)) {
+        if (!thingmap.get(thing_selected).o.tkeypress(event.keyCode)) {
+            console.log('Unknown key: ' + event.keyCode);
+        }
+    }
   }
 }
 
@@ -273,7 +281,7 @@ function gameStatus(totalready) {
     howmany = '0' + howmany;
   }
   ctx2.fillText(howmany + ' things', 10, 50);
-  ctx2.fillStyle = 'red';
+//   ctx2.fillStyle = 'red';
   ctx2.beginPath();
   ctx2.lineWidth = '1';
   ctx2.strokeStyle = 'white';
@@ -313,6 +321,7 @@ function game(game_canvas) {
       }
     }
     gameStatus(treadycount);
+
   }
 
   //========================================Starts here ======================
@@ -374,6 +383,7 @@ function game(game_canvas) {
     thingmap.set(fting.Tid, fting);
     Thing.tplfimages((field.all[j]).GimagesJSON, thingmap.get(fting.Tid));
     //       console.log(thingmap.get(fting.Tid).Tx+'v'+thingmap.get(fting.Tid).Ty);
+//     fting.o.tkeypressfunc=field.all[j].tkeypressfunc;
     fting.o.tkeypress = (function(keycode) {
       keychar=String.fromCharCode(keycode);
       if (keychar =='V') {

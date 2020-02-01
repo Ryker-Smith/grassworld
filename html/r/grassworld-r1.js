@@ -1,68 +1,71 @@
-
-
-var r1names=["Fun Uncle ", "Bad Uncle ","Tim From Spain ","Buff Dude ","Snot ","Mammy ","Alien ","David(RIP) ","Jack(RIP) ", "Chris(RIP) "];
-var r1newname=r1names[ r1random(r1names.length)-1 ]+ r1random(1000);
-var r1schplágen;
-function r1random(r1upper){
-  return Math.floor(Math.random() * r1upper) + 1;
-}
-function r1randomrange(r1upper){
-  let r1r= Math.floor(Math.random() * r1upper) + 1;
-  let r1c= Math.floor(Math.random() * r1upper) + 1;
-  if ((r1c % 2) == 0) {
-    r1r *= -1;
-  }
-  return r1r;
-}
-function r1oneinNchance(r1N){
-  if (r1random(r1N)%r1N==0) {
-    return true;
-  }
-  else {
-    return false;
-  }
-}
-
-function r1run_this_next(r1r) {
-  console.log('New r1 with Tid ' + r1r.insertId);
-  var r1Tid=r1r.insertId;
-  var r1fnt={};
-
-  r1fnt.Tid=r1Tid;
-  r1fnt.Tname=r1newname;
-  r1fnt.selected=false;
-  r1fnt.o=r1schplágen;
-  r1fnt.o.Tid=r1Tid;
-
-  let r1spritedetail= {
-          Tid: r1Tid,
+//List Of Names
+var listOfBirdNames = ["Fun Uncle ", "Bad Uncle ","Tim From Spain ","Buff Mama ","Pigeon ","Brian ","Small Ostrich ","David(RIP) ","Jack(RIP) ", "Chris(RIP) "];
+//Uses random function to pick a random name from name list and a random number thats not bigger than 1000
+var newBirdName = listOfBirdNames[ grandom(listOfBirdNames.length) - 1 ] + grandom(1000);
+//instantiate vaariable for Schplágen
+var   MySchplágen_r1;
+//function for setting properties of Schplágen
+function runNextForBird(RedOne) {
+  console.log('r1: New Bird with Tid ' + RedOne.insertId + " " + newBirdName);
+  //Getting Tid
+  var birdTid = RedOne.insertId;
+  var r1 = {};
+  //sets Tid
+  r1.Tid = birdTid;
+  //sets Tname
+  r1.Tname = newBirdName;
+  //sets selected
+  r1.selected = false;
+  //sets o
+  r1.o =  MySchplágen_r1;
+  //sets o.Tid
+  r1.o.Tid = birdTid;
+  //'moves' the Schplágen
+  let BirdSpriteDetail = {
+          Tid: birdTid,
           Ganimated: true,
-          left: 501 + r1randomrange(10),
-          top: 502 + r1randomrange(10)
+          //random x-axis location for Schplágen to spawn close to 250
+          left: 250 + grandomrange(10),
+          //random y-axis location for Schplágen to spawn close to 250
+          top: 250 + grandomrange(10)
   }
-
-  r1fnt.sprite = new charactersprite(r1spritedetail);
-  // because there are two network retrievals to complete the process, the
-  // ready flag starts with a value of 2 and as each step completes the flag
-  // is decremented. Only when the ready flag is 0 does the charactersprite
-  // class get to update and/or render. The gameloop won't call the charactersprite
-  // methods on an object with non-zero ready flag.
-  r1fnt.ready=2;
-  thingmap.set(r1fnt.Tid, r1fnt);
-  r1fnt.o.tget(thingmap.get(r1fnt.Tid));
-  r1fnt.o.tgetimages(thingmap.get(r1fnt.Tid));
-  thingmap.get(r1Tid).o.Tx=500 + r1randomrange(10);
-  thingmap.get(r1Tid).o.Ty=100 + r1randomrange(10);
-  thingmap.get(r1Tid).o.Gcanmove=true;
-  thingmap.get(r1Tid).o.Ganimated=true;
-  thingmap.get(r1Tid).o.msaveLocation();
-  thingmap.get(r1Tid).o.tkeypress = (function(keycode) {
+  //Instantiates charactersprite, new spritesheet for character
+  r1.sprite = new charactersprite(BirdSpriteDetail);
+  r1.ready = 2;
+  //gets the spritesheet
+  thingmap.set(r1.Tid, r1);
+  r1.o.tget(thingmap.get(r1.Tid));
+  r1.o.tgetimages(thingmap.get(r1.Tid));
+  thingmap.get(birdTid).o.Tx =  MySchplágen_r1.left;
+  thingmap.get(birdTid).o.Ty =  MySchplágen_r1.top;
+  //Sets a parameter that allows Schplágen to move
+  thingmap.get(birdTid).o.Gcanmove = true;
+  //Sets a parameter that allows Schplágen to be animated from spritesheet
+  thingmap.get(birdTid).o.Ganimated = true;
+  //Saves location
+  thingmap.get(birdTid).o.msaveLocation();
+  //function to detect key presses
+  thingmap.get(birdTid).o.tkeypress = (function(keycode) {
       keychar=String.fromCharCode(keycode);
-      console.log("POOPY r1schplágen. I don't do anything yet");
+      switch (keychar) {
+        //If S key is pressed Schplágen will 'sleep' with sleepnow() function
+        case 'S':
+          thingmap.get(birdTid).o.sleepnow();
+          console.log("r1: Bird- " + newBirdName + " Is Asleep");
+          break;
+        //If W key is pressed Schplágen will 'Awake' with wakenow() function
+        case 'W':
+          thingmap.get(birdTid).o.wakenow();
+          console.log("r1: Bird- " + newBirdName + " Is Awake");
+          break;
+      }
   });
 }
+//function called in grassworld-onload.js
 function onload_r1() {
-  console.log('r1');
-    r1schplágen= new MovingThing(null,r1newname, null, 15, 1);
-    r1schplágen.tcreate(r1run_this_next);
+  console.log("r1: Bird Onload function");
+  //Instantiate   MySchplágen_r1 as MovingThing Schplágen, 15 is genus of my Schplágen
+      MySchplágen_r1= new MovingThing(null,newBirdName, null, 15, 1);
+    //calls tcreate method and passes runNextForBird
+      MySchplágen_r1.tcreate(runNextForBird);
 }
