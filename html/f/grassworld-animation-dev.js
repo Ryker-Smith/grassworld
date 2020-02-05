@@ -402,12 +402,6 @@ function game(game_canvas) {
       else if (keychar =='J') {
         thingmap.get(thing_selected).sprite.imagesJSON ;
       }
-      else if (keychar =='S') {
-        thingmap.get(thing_selected).o.sleepnow();
-      }
-      else if (keychar =='W') {
-        thingmap.get(thing_selected).o.wakenow();  
-      }
       else if (keychar =='.') {
         console.log('DELETE');
         if (thingmap.get(thing_selected).o.Tstatus != 'p') {

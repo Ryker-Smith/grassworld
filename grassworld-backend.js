@@ -2,11 +2,14 @@
 var url = require('url');
 var fs = require('fs');
 var mysql = require('mysql');
-
+var bodyParser = require('body-parser')
 const express = require('express');
-const app=express();
-const port = 81;
 
+const app=express();
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
+var port = 81;
 var events = require('events');
 var eventEmitter = new events.EventEmitter();
 var config = require('./grassworld-pw.js');
@@ -58,10 +61,20 @@ var lib = require('./grassworld-library.js');
 var pending=0;
 
 app.use(express.static('/var/www/grassworld/html/'));
-app.get("/db/",(request, response) => db_get(request, response));
-app.put("/db/",(request, response) => db_put(request, response));
-app.post("/db/",(request, response) => db_post(request, response));
-app.delete("/db/",(request, response) => db_del(request, response));
+
+
+app.post("/DB/",(request, response) => db_post(request, response));
+app.put("/DB/",(request, response) => db_put(request, response));
+app.get("/DB/",(request, response) => db_get(request, response));
+app.delete("/DB/",(request, response) => db_del(request, response));
+
+app.post("/SI/",(request, response) => si_post(request, response));
+//app.post("/SI/NAME/:SCname/TK/:token",(request, response) => si_post(request, response));
+app.post("/SI/NAME/:SCname/TK/:token/C/:SCscript/",(request, response) => si_post(request, response));
+app.put("/SI/",(request, response) => si_post(request, response));
+app.get("/SI/",(request, response) => si_post(request, response));
+app.delete("/SI/",(request, response) => si_post(request, response));
+
 app.get("/debug/",(request, response) => db_dbg(request, response));
 app.listen(port, () => console.log(`STARTED on port ${port}`));
 
@@ -341,10 +354,9 @@ async function db_del(request, response) {
     async function tdelete(Tid) {
         var r;
         await dbms.query(
-            "DELETE FROM things WHERE Tid="+dbms.escape(Tid))
+            "DELETE FROM things WHERE (Tid="+dbms.escape(Tid)+") ")
           .then( results => {
             r=JSON.stringify(results);
-            console.log(r.warningCount);
             return r;
         }
       )
@@ -390,6 +402,65 @@ async function db_dbg(request, response) {
  
   response.write(String('-not implemented-'));
   response.end();
+  response.write(String(reply));
+  response.end();
+}
+//========================================================================================
+async function si_post(request, response) {
+    var reply='';
+    
+    async function SIcreate(SCname, SCscript) {
+        var r;
+        await dbms.query(
+            "INSERT INTO scripts (SCname, SCscript) VALUES ("+dbms.escape(SCname)+","+dbms.escape(SCscript)+")")
+          .then( results => {
+            r=JSON.stringify(results);
+            console.log(r.warningCount);
+            if (r.insertId > 0) {
+                r=r;
+            }
+            return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+
+    async function SIwrite(Sid, SIname, SIcode) {
+        var r;
+        await dbms.query(
+            "INSERT INTO scripts (SCname, SCscript) VALUES ("+dbms.escape(SIname)+","+dbms.escape(SIcode) +")")
+          .then( results => {
+            r=JSON.stringify(results);
+//             console.log(r.warningCount);
+            if (r.insertId > 0) {
+                r=r;
+            }
+            return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+  console.log( nowIs() );
+  console.log('CONNECT -> SI -> '+request.method + ' ' + String(request.url));
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  var cgi = url.parse(request.url, true).query;
+//   console.log('-> '+request.body);
+
+  var TK=request.body.TK;
+//   console.log('TK: '+TK);
+  var SIcode=unescape(request.body.SIcode) ;
+  console.log('Code: '+unescape(SIcode) );
+  var SIname=request.body.SIname;
+//   console.log('NM: '+SIname);
+  reply=await SIcreate(SIname, SIcode);
+  
+  console.log('POST RESPONSE -> ' + reply);
   response.write(String(reply));
   response.end();
 }

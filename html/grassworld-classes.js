@@ -24,7 +24,7 @@ let activities=['default', 'left', 'right', 'up', 'down', 'hover','sleep'];
 let sillydeletesounds=['cri-d-effroi-scream.wav','Ouche.wav','scream4.wav','scream6.wav','screamwhat.wav',
 'shockperson.wav'];
 var grassworld_url="https://grassworld.fachtnaroe.net/";
-var grassworld_db=grassworld_url+"db/?";
+var grassworld_db=grassworld_url+"DB/?";
 var grassworld_url_img=grassworld_url+"assets/img/";
 var grassworld_url_audio=grassworld_url+"assets/audio/";
 var canvas;
@@ -32,7 +32,16 @@ var thing_selected = -1;
 var audioenabled = false;
 var thingstep = 1;
 var world_speed_multiplier=5;
-
+var explode=emptyimage;
+explode={
+        "spritesheet" : "explosions-20-t1.png",
+        "framecount" : 20,
+        "rowcount" : 1,
+        "w" : 200,
+        "h" : 200,
+        "ticks" : 5,
+        "scale" : .2  
+};
 function grandom(upper){
   return Math.floor(Math.random() * upper) + 1;
 }
@@ -52,7 +61,6 @@ function oneinNchance(N){
     return false; 
   }
 }
-
 function isdefined(thing){
   var r = true;
   if (typeof thing === 'undefined') {
@@ -67,7 +75,13 @@ function isundefined(thing){
   }
   return r;
 }
-
+function imagewithfullpath(img) {
+  return grassworld_url_img + img;
+}
+function imageremovepath(img) {
+  // untested
+  return img.substring(img.lastIndexOf('/'), img.length-1);
+}
 class Yoke {
     constructor(parent, name, genus){
       this.parent=parent;
@@ -192,7 +206,7 @@ class Thing extends Yoke {
     for (const d of activities) {
       thething.sprite.directions.set(d,JSON.parse(response)[d]);
       thething.sprite.directions.get(d).spritesheet=new Image();
-      thething.sprite.directions.get(d).spritesheet.src=grassworld_url_img+JSON.parse(response)[d].spritesheet;
+      thething.sprite.directions.get(d).spritesheet.src=imagewithfullpath(JSON.parse(response)[d].spritesheet);
       thething.sprite.directions.get(d).ticks=Math.floor(thething.sprite.directions.get(d).ticks/world_speed_multiplier);
     }
     thingmap.get(thething.Tid).ready--;
@@ -457,7 +471,8 @@ class charactersprite {
       this.frameIndex=0;
       this.tickCount=0;
       this.heading='default';
-      this.audioenabled=true;
+      this.audioenabled=false;
+      this.tempticks=0;
       this.directions=new Map();
       for (const i of activities) {
         this.directions.set(i,emptyimage);
@@ -515,10 +530,12 @@ class charactersprite {
     interact(){
       if (thingmap.get(this.Tid).o.Ginteracts) {
         switch (thingmap.get(this.Tid).o.Tgenus) {
-          case 16 : { // the teleport device
-//               thingmap.get(this.Tid).o.behaviours.get('interact')(this.Tid);
+          case genus_teleport : { // the teleport device
               let somearbitraryvalue=51;
               for (key of thingmap.keys()) {
+                  if (key == this.Tid) {
+                    continue;
+                  }
                   let dist = distance({
                     left: (thingmap.get(key).sprite.left + (thingmap.get(key).sprite.sprite_width / 2)),
                     top: (thingmap.get(key).sprite.top + (thingmap.get(key).sprite.sprite_height / 2))
@@ -528,8 +545,7 @@ class charactersprite {
                   });
                   if (dist < somearbitraryvalue) {
                     if (thingmap.get(key).o.Tstatus != 'p') {
-                      thingmap.get(key).o.tdelete('shockperson.wav');
-                      thingmap.delete(key);
+                      charactersprite.pffft(key);
                     }
                   }
               }
@@ -540,6 +556,15 @@ class charactersprite {
           }
         }
       }
+    }
+    static pffft(Tid) {
+      // unfinished
+      // delete/explode the character
+      console.log('OUT');
+      thingmap.get( thingmap.get(Tid).o.tdelete('shockperson.wav') );
+      console.log('pffft: '+Tid);
+      thingmap.delete(Tid);
+//       console.log('IN3');
     }
     directionChange() {
 //       character.sprite_width = Math.floor(

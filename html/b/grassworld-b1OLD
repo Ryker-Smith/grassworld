@@ -34,7 +34,7 @@ function placeOnScreen(r) {
   let spritedetail= {
           Tid: Tid,
           Ganimated: true,
-          spLeft:300 + r,
+          spLeft:300 + r,		// helps to randomise landing area.
           spTop: 310 + r
   }
   
@@ -54,20 +54,22 @@ function placeOnScreen(r) {
   thingmap.get(Tid).o.Ganimated=true;
   thingmap.get(Tid).o.msaveLocation();
   thingmap.get(Tid).o.tkeypress = (function(keycode) {
-      let keychar=String.fromCharCode(keycode);
+      keychar=String.fromCharCode(keycode);
       console.log("I'm new Schplágen. I don't do anything yet");
-      if ((keychar=='S') || (keychar=='s')) {
+	  if (keychar=='S' or keychar=='s') {
           thingmap.get(thing_selected).o.sleepnow(); // activates Sleep function
       }
       console.log(" b1 sleeping ");
-      if ((keychar=='W') || (keychar=='w')) {
+      if (keychar=='W' or keychar=='w') {
         thingmap.get(thing_selected).o.wakenow(); // activates Wake function
       }
       console.log(" b1 wake up");
   });
   console.log('b1 created '+ Tid);
+	  
+	  
+  });
 }
-
 function onload_b1() {
   console.log('onLoad');
     MySchplágen_b1= new MovingThing(null,newname, null, 10, 1); //Genus = 10

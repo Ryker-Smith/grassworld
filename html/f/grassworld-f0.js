@@ -3,8 +3,6 @@ var names=["Urgle Burglenaut ", "Urgle von Burglenaut ","Efraim ","Boffy ","Snot
 var newname=names[ grandom(names.length)-1 ]+ grandom(1000);
 var thisschplágen;
 
-doTheDefaultFunction=();
-
 function run_this_next(r) {
   console.log('New character with Tid ' + r.insertId);
   var myTid=r.insertId;
@@ -54,6 +52,6 @@ function run_this_next(r) {
 }
 function onload_f0() {
   console.log('onLoad');
-  thisschplágen= new MovingThing(null,newname, null, 1, 1);
+  thisschplágen= new SamuraiSchplágen(null,newname, null, 1, 1);
   thisschplágen.tcreate(run_this_next);
 }

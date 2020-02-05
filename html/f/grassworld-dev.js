@@ -12,7 +12,7 @@ var field;
 let thingmap= new Map();
 
 function token() {
-  return '&TK=a1b2c3d4';
+  return '&tk=a1b2c3d4';
 }
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -66,20 +66,13 @@ isundefined=function (thing){
         };
 }()); 
 
-async function grassworld() {
-
-  field=new World('grassworld-body','grassworld','');
-  field.ygetState();
-  await field.getCategory('flora',field);
-  await field.getCategory('fauna',field);
-  await field.getCategory('object',field);
-  // this is a kludge to give time for the obkjects to travel across the network:
-  await sleep(2500); 
-  document.getElementById("loaderanimation").style.display="none";
-  // not working yet:
-//   let editorselection=new Thing('editorselection-body','editorselection','');
-//   editorselection.getState();
-  game('grassworld');
+function grassworld_dev() {
+  var si = new ScriptItem(null, 'first', 'console.log("Hello world")');
+  console.log(si.id)
+  si.SIdisplay();
+  si.SIcreate();
+  // solely to practice with promises...
+  si.SIwrite();
 }
 
-grassworld();
+grassworld_dev();
