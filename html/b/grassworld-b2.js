@@ -1,7 +1,9 @@
 
   var list_of_names=["Richie ", "Shannon ","Jack ","John ","Lizz ","Margret ","Moira "]; // array with list of names
+  var samurai_name=["Ping"];
 	var addnames=list_of_names[ grandom(list_of_names.length)-1 ]+ grandom(1000); // gets a new random name from the list of names.
 	var MySchplágen_B2; // variable name for my character schplagen.
+  var blueSamuari; // variable name for our Samuari schplagen.
 
 function next_execute(r) {          // next executable to give schplagen properties and methods.
   console.log('b2' + r.insertId); // r.insertId gets the Tid. 
@@ -29,7 +31,7 @@ function next_execute(r) {          // next executable to give schplagen propert
   kr.o.tgetimages(thingmap.get(kr.Tid));
   // gets the spritesheet
   thingmap.get(Tid).o.Tx=MySchplágen_B2.left;
-  thingmap.get(Tid).o.Ty=MySchplágen_B2.top;  
+  thingmap.get(Tid).o.Ty=MySchplágen_B2.top;
   // allows the schplagen to move with multple frames and save location.
   thingmap.get(Tid).o.Gcanmove=true;
   thingmap.get(Tid).o.Ganimated=true;
@@ -52,5 +54,6 @@ function next_execute(r) {          // next executable to give schplagen propert
 function onload_b2() { // When page reloads it creates a new schplagen.
         console.log('b2');
         MySchplágen_B2= new MovingThing(null,addnames, null, 12, 1); // 12 = genus from classes.js which is my penguin.
+        blueSamuari = new MovingThing(null,samurai_name, null, 20, 1);
     	MySchplágen_B2.tcreate(next_execute);
     }

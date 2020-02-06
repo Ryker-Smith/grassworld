@@ -68,6 +68,7 @@ isundefined=function (thing){
 
 var si;
 var samplecode = 'console.log("Hello world")';
+var samplecode2 = 'function() {console.log("Hello world");}';
 
 function cfnnext2(id, name, code) {
   si.code=code;
@@ -75,17 +76,18 @@ function cfnnext2(id, name, code) {
 }
 function cfnnext(id) {
   si.id=id;
-  si.SIwrite(samplecode);
+  si.code=samplecode2;
+  si.SIwrite();
   console.log('D '+si.id);
-  si.SIread(cfnnext2);
+//   si.SIread(cfnnext2);
 }
 function grassworld_dev() {
-  si = new ScriptItem(null, 'first', samplecode);
-  console.log(si.id)
+  si = new ScriptItem('first_f0_'+grandom(100));
   si.SIdisplay();
   si.SIcreate(cfnnext);
-  // solely to practice with promises...
-  
+  console.log('A');
+  si.SIdisplay();
+  console.log('B');
 }
 
 grassworld_dev();

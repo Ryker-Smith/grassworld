@@ -70,9 +70,9 @@ app.delete("/DB/",(request, response) => db_del(request, response));
 
 app.post("/SI/",(request, response) => si_post(request, response));
 //app.post("/SI/NAME/:SCname/TK/:token",(request, response) => si_post(request, response));
-app.post("/SI/NAME/:SCname/TK/:token/C/:SCscript/",(request, response) => si_post(request, response));
-app.put("/SI/",(request, response) => si_post(request, response));
-app.get("/SI/",(request, response) => si_post(request, response));
+// app.post("/SI/NAME/:SCname/TK/:token/C/:SCscript/",(request, response) => si_post(request, response));
+app.put("/SI/",(request, response) => si_put(request, response));
+app.get("/SI/",(request, response) => si_get(request, response));
 app.delete("/SI/",(request, response) => si_post(request, response));
 
 app.get("/debug/",(request, response) => db_dbg(request, response));
@@ -428,24 +428,6 @@ async function si_post(request, response) {
       return r;
     }
 
-    async function SIwrite(Sid, SIname, SIcode) {
-        var r;
-        await dbms.query(
-            "INSERT INTO scripts (SCname, SCscript) VALUES ("+dbms.escape(SIname)+","+dbms.escape(SIcode) +")")
-          .then( results => {
-            r=JSON.stringify(results);
-//             console.log(r.warningCount);
-            if (r.insertId > 0) {
-                r=r;
-            }
-            return r;
-        }
-      )
-      .catch( err => {
-        console.log(err);
-      });
-      return r;
-    }
   console.log( nowIs() );
   console.log('CONNECT -> SI -> '+request.method + ' ' + String(request.url));
   response.writeHead(200, {'Content-Type': 'text/html'});
@@ -459,6 +441,83 @@ async function si_post(request, response) {
   var SIname=request.body.SIname;
 //   console.log('NM: '+SIname);
   reply=await SIcreate(SIname, SIcode);
+  
+  console.log('POST RESPONSE -> ' + reply);
+  response.write(String(reply));
+  response.end();
+}
+//========================================================================================
+async function si_get(request, response) {
+    var reply='';
+
+    async function SIread(SCid) {
+        var r;
+        await dbms.query(
+            "SELECT SCscript FROM scripts WHERE SCid="+ (dbms.escape(SCid)))
+          .then( results => {
+          if(results.length < 1){
+            r=results;
+            console.log('E '+r);
+          }
+          else {
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+    
+  console.log( nowIs() );
+  console.log('CONNECT -> SI -> '+request.method + ' ' + String(request.url));
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  var cgi = url.parse(request.url, true).query;
+  var TK=request.body.TK;
+  var SCid=request.body.SIid;
+  console.log('ID: '+SCid);
+  reply=await SIread(SCid);
+  
+  console.log('POST RESPONSE -> ' + reply);
+  response.write(String(reply));
+  response.end();
+}
+
+//========================================================================================
+async function si_put(request, response) {
+    var reply='';
+
+    async function SIwrite(SCid, SCscript) {
+        var r;
+        
+        await dbms.query(
+            "UPDATE scripts SET SCscript="+(dbms.escape(SCscript))+" WHERE SCid="+ (dbms.escape(SCid)))
+          .then( results => {
+          if(results.length < 1){
+            r='error b226';
+          }
+          else {
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+    
+  console.log( nowIs() );
+  console.log('CONNECT -> SI -> '+request.method + ' ' + String(request.url));
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  var TK=request.body.TK;
+  var SCid=request.body.SIid;
+  var SCscript=unescape(request.body.SIcode) ;
+  console.log('ID: '+SCid);
+  reply=await SIwrite(SCid, SCscript);
   
   console.log('POST RESPONSE -> ' + reply);
   response.write(String(reply));

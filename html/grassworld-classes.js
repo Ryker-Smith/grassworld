@@ -30,6 +30,7 @@ var grassworld_url_img=grassworld_url+"assets/img/";
 var grassworld_url_audio=grassworld_url+"assets/audio/";
 var canvas;
 var thing_selected = -1;
+var thing_designated = -1;
 var audioenabled = false;
 var thingstep = 1;
 var world_speed_multiplier=5;
@@ -573,6 +574,7 @@ class charactersprite {
               }
             break;
           }
+		  
           default : {
             break;
           }
@@ -715,7 +717,7 @@ class charactersprite {
         ctx = canvas.getContext('2d');
         ctx.beginPath();
         ctx.lineWidth = '1';
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = 'blue';
         ctx.rect(
           this.left,
           this.top,

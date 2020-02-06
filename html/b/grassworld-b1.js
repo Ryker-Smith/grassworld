@@ -1,13 +1,16 @@
 
 var SchplágenNames=["Fester ","Inky ","Pinky ","Stinky ","Brain ","WeeMan ","Jimmy ","SeeYouPal ","Gombeen ","Ted "]; // names for Schplágen
 
-var newName=SchplágenNames[randomNum(SchplágenNames.length)-1 ]+ randomNum(1000); //Generates a random name from the list and adds a random number to the end.
+var newName=SchplágenNames[grandom(SchplágenNames.length)-1 ]+ grandom(1000); //Generates a random name from the list and adds a random number to the end.
 
 var MySchplágen_b1;
 
+/*
 function randomNum(upper){ // random number generator
-  return Math.floor(Math.random() * upper) + 1;
+return Math.floor(Math.random() * upper) + 1;
 }
+
+
 
 // Produces random number 'r' which is positive when 'c' is even and negative when 'c' is odd.
 function randomNumRange(upper){	
@@ -18,7 +21,7 @@ function randomNumRange(upper){
   }
   return r;
 }
-																																																					
+*/
 
 function placeOnScreen(r) {
   console.log('New character with Tid ' + r.insertId);
@@ -34,8 +37,8 @@ function placeOnScreen(r) {
   let spritedetail= {
           Tid: Tid,
           Ganimated: true,
-          spLeft:300 + r,
-          spTop: 310 + r
+          spLeft:500 + r,
+          spTop: 510 + r
   }
   
   fnt.sprite = new charactersprite(spritedetail);
@@ -68,8 +71,11 @@ function placeOnScreen(r) {
   console.log('b1 created '+ Tid);
 }
 
+
 function onload_b1() {
-  console.log('onLoad');
-    MySchplágen_b1= new MovingThing(null,newname, null, 10, 1); //Genus = 10
-    MySchplágen_b1.tcreate(placeOnScreen);
+//  console.log('onLoad_b1');
+//    MySchplágen_b1= new MovingThing(null,newname, null, 10, 1); //Genus = 10
+//    MySchplágen_b1.tcreate(placeOnScreen);
+//	blueSamuari_b1= new MovingThing(null,newname, null, 20, 1); // 20 = blueSamuari genus from classes.js
+//	blueSamuari_b1.tcreate(placeOnScreen);
 }
