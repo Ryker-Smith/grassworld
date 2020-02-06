@@ -10,6 +10,7 @@ let genus_Schplágen_g3 = 11;
 let genus_Schplágen_b1 = 10;
 let genus_Schplágen_b2 = 12;
 let genus_Schplágen_b3 = 9;
+let genus_blueSamuari = 20;
 let genus_teleport = 16;
 let emptyimage={
         "spritesheet" : "",
@@ -544,6 +545,27 @@ class charactersprite {
                     top: this.top + Math.floor(this.sprite_height/2)
                   });
                   if (dist < somearbitraryvalue) {
+                    if (thingmap.get(key).o.Tstatus != 'p') {
+                      charactersprite.pffft(key);
+                    }
+                  }
+              }
+            break;
+          }
+		   case genus_blueSamuari : { // the killing machine!!
+              let killzone=99;
+              for (key of thingmap.keys()) {
+                  if (key == this.Tid) {
+                    continue;
+                  }
+                  let dist = distance({
+                    left: (thingmap.get(key).sprite.left + (thingmap.get(key).sprite.sprite_width / 2)),
+                    top: (thingmap.get(key).sprite.top + (thingmap.get(key).sprite.sprite_height / 2))
+                  }, {
+                    left: this.left + Math.floor(this.sprite_width/2),
+                    top: this.top + Math.floor(this.sprite_height/2)
+                  });
+                  if (dist < killzone) {
                     if (thingmap.get(key).o.Tstatus != 'p') {
                       charactersprite.pffft(key);
                     }

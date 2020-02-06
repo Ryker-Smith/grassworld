@@ -66,13 +66,26 @@ isundefined=function (thing){
         };
 }()); 
 
+var si;
+var samplecode = 'console.log("Hello world")';
+
+function cfnnext2(id, name, code) {
+  si.code=code;
+  console.log('E '+id+' '+name+' '+code);
+}
+function cfnnext(id) {
+  si.id=id;
+  si.SIwrite(samplecode);
+  console.log('D '+si.id);
+  si.SIread(cfnnext2);
+}
 function grassworld_dev() {
-  var si = new ScriptItem(null, 'first', 'console.log("Hello world")');
+  si = new ScriptItem(null, 'first', samplecode);
   console.log(si.id)
   si.SIdisplay();
-  si.SIcreate();
+  si.SIcreate(cfnnext);
   // solely to practice with promises...
-  si.SIwrite();
+  
 }
 
 grassworld_dev();

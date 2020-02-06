@@ -40,11 +40,10 @@ class ScriptItem {
       console.log('CODE '+this.code);
       console.log('URL '+this.url);
     }
-    SIcreate() {
+    SIcreate(plf) {
       this.dirty=true;
       let xhr = new XMLHttpRequest();
       let t=this.url;// + SItoken();
-      xhr.method="POST";
       let message= JSON.stringify({
           TK : 'a1b2c3d4',
           SIcode : escape (this.code),
@@ -54,11 +53,20 @@ class ScriptItem {
       xhr.open('POST', t);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       xhr.send(message); 
+      let caller={};
+      caller=this;
       this.id=xhr.onload = function() {
         if (xhr.status == 200) {
             console.log('R '+ xhr.response );
-            
-            this.dirty=false;
+            if (typeof plf === 'function' ) {
+              plf(JSON.parse(xhr.response).insertId);
+//               caller.id=JSON.parse(xhr.response).insertId;
+//               console.log('1> '+caller.name+' '+caller.id);
+            }
+            else {
+                caller.id=JSON.parse(xhr.response).insertId;
+//                 console.log('2> '+caller.name+' '+caller.id);
+            }
         }
         else { 
             console.log('E '+xhr.response);
@@ -66,47 +74,53 @@ class ScriptItem {
         }
       }
     }
-//     SIBcreate() {
-//       fetch(this.url, {
-//         method : "POST",
-//         body : JSON.stringify({
-//           TK : 'a1b2c3d4',
-//           C  : escape (this.content)
-//         })
-//       }).then(
-//         response => response.text() // .json(), etc.
-//         this.lastresult = response.text()
-//         
-//         same as function(response) {return response.text();}
-//       )
-//       .then(
-//           html => console.log(html)
-//       );
-//     }
-    SIread(){
+    SIread(plf){
+      this.dirty=true;
+      let caller={};
+      caller=this;
       let xhr = new XMLHttpRequest();
+      let message= JSON.stringify({
+          TK : 'a1b2c3d4',
+          SIid : this.id
+        });
       xhr.open('GET', this.url);
-      xhr.send();
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.send(message);
       xhr.onload = function() {
         if (xhr.status == 200) { 
-          this.dirty=false;
+          let r=JSON.parse(xhr.response);
+          if (typeof plf === 'function' ) {
+            plf(r.SCid, r.SCname, r.SCscript);
+          }
+          else {
+            caller.id=r.SCid;
+            caller.name=r.SCname;
+            caller.code=r.SCscript;
+          }
+          caller.dirty=false;
         }
         else { 
           console.log('Error x40');
         }
       };
     }
-    SIwrite(){
+    SIwrite(plf){
       this.dirty=true;
+      let message= JSON.stringify({
+          TK : 'a1b2c3d4',
+          SIid : this.id,
+          SIname : this.name
+        });
       let xhr = new XMLHttpRequest();
       xhr.open('PUT', this.url + '/SI/' + escape(this.content));
-      xhr.send();
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.send(message);
       xhr.onload = function() {
-        if (xhr.status == 200) { 
+        if (xhr.status == 200) {
           console.log(); 
           this.dirty=false;
         }
-        else { 
+        else {
           console.log('Error x55');
         }
       };
@@ -114,8 +128,13 @@ class ScriptItem {
     SIerase(){
       this.dirty=true;
       let xhr = new XMLHttpRequest();
+      let message= JSON.stringify({
+          TK : 'a1b2c3d4',
+          SIid : this.id
+        });
       xhr.open('PUT', this.url);
-      xhr.send();
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.send(message);
       xhr.onload = function() {
         if (xhr.status == 200) {
             console.log(); 
