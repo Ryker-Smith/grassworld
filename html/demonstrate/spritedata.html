@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Demos &amp; Proofs of concept 2</title>
+<script src="/assets/js/jquery-3.4.1.min.js"></script>
+<script src="../grassworld-classes.js"></script>
+
+<script>
+sampledata={"sleep": {"spritesheet":"schplagen-genus01-default.png", "framecount":"8", "rowcount":"1", "w":"1600","h":"200","ticks":"250","scale":"0.2"},"default": {"spritesheet":"schplagen-genus01-default.png", "framecount":"8", "rowcount":"1", "w":"1600","h":"200","ticks":"250","scale":"0.2"},"left": {"spritesheet":"", "framecount":"", "rowcount":"1", "w":"","h":"","ticks":"","scale":""},"right": {"spritesheet":"", "framecount":"", "rowcount":"1", "w":"","h":"","ticks":"","scale":""},"up": {"spritesheet":"", "framecount":"", "rowcount":"1", "w":"","h":"","ticks":"","scale":""},"down":{"spritesheet":"", "framecount":"", "rowcount":"1", "w":"","h":"","ticks":"","scale":""},"hover": {"spritesheet":"someanimal_hovering.png","framecount":"8", "rowcount":"1", "w":"1600","h":"200","ticks":"25","scale":".2"}} ;
+
+window.onload=thisstart();
+function thisstart() {
+  var table = document.getElementById('imgs');
+  var row = table.insertRow();
+  // var cell0 = row.insertCell(0);
+            
+  document.getElementById('imgs');
+}
+
+console.log(sampledata.sleep);
+</script>
+</head>
+<body>
+<table id="imgs">
+<tr>
+<td>filename</td>
+<td>framecount</td>
+<td>rowcount</td>
+<td>w</td>
+<td>h</td>
+<td>ticks</td>
+<td>scale</td>
+</tr>
+</table>
+
+</body>
+</html>

@@ -43,13 +43,13 @@ class ScriptItem {
     SIcreate(plf) {
       this.dirty=true;
       let xhr = new XMLHttpRequest();
-      let t=this.url;// + SItoken();
+      let t=this.url;
       let message= JSON.stringify({
           TK : 'a1b2c3d4',
           SIcode : escape (this.code),
           SIname : this.name
         });
-      console.log('SEND '+message);
+//       console.log('SEND '+message);
       xhr.open('POST', t);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       xhr.send(message); 
@@ -60,54 +60,55 @@ class ScriptItem {
             console.log('RX '+ xhr.response );
             if (typeof plf === 'function' ) {
               plf(JSON.parse(xhr.response).insertId);
-//               caller.id=JSON.parse(xhr.response).insertId;
-              console.log('1> '+caller.name+' '+caller.id);
+//               console.log('1> '+caller.name+' '+caller.id);
             }
             else {
                 caller.id=JSON.parse(xhr.response).insertId;
-                console.log('2> '+caller.name+' '+caller.id);
+//                 console.log('2> '+caller.name+' '+caller.id);
             }
         }
         else { 
-            console.log('E '+xhr.response);
+//             console.log('E '+xhr.response);
             return 'Error x26';
         }
       }
     }
+    //===================================================
     SIread(plf){
-      this.dirty=true;
-      let caller={};
-      caller=this;
       let xhr = new XMLHttpRequest();
-      let message= JSON.stringify({
+      let t=this.url;
+      let message=JSON.stringify({
           TK : 'a1b2c3d4',
-          SIid : this.id
-        });
-      xhr.open('GET', this.url);
+          id : this.id,
+          SIname : this.name
+      });
+      t += 'ID/' + this.id + SItoken();
+      xhr.open('GET', t);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      
       xhr.send(message);
+//       console.log('SEND '+message);
       xhr.onload = function() {
         if (xhr.status == 200) { 
-          let r=JSON.parse(xhr.response);
-          console.log( 'J0 '+r.SCid+' '+r.SCname+' '+r.SCscript );
+//           console.log(xhr.response);
+          let r=xhr.response;
+          r=r.replace(/\[/g,'');
+          r=r.replace(/\]/g,'');
+          r=JSON.parse(r);
           if (typeof plf === 'function' ) {
-            console.log( 'J1 '+r.SCid+' '+r.SCname+' '+r.SCscript );
-            plf(r.SCid, r.SCname, r.SCscript);
+           plf(r.SCid, r.Scname, r.SCscript);
           }
           else {
-            console.log( 'J2 '+r.SCid+' '+r.SCname+' '+r.SCscript );
-            caller.id=r.SCid;
-            caller.name=r.SCname;
-            caller.code=r.SCscript;
+            console.log('feck');
           }
-          caller.dirty=false;
         }
         else { 
           console.log('Error x40');
         }
       };
     }
-    SIwrite(plf){
+    //===================================================
+    SIwrite(){
       this.dirty=true;
       let message= JSON.stringify({
           TK : 'a1b2c3d4',
@@ -121,7 +122,7 @@ class ScriptItem {
       xhr.send(message);
       xhr.onload = function() {
         if (xhr.status == 200) {
-          console.log('W '+xhr.response); 
+//           console.log('W '+xhr.response); 
 //           plf(JSON.parse(xhr.reponse));
           this.dirty=false;
         }
@@ -142,7 +143,7 @@ class ScriptItem {
       xhr.send(message);
       xhr.onload = function() {
         if (xhr.status == 200) {
-            console.log(); 
+//             console.log(); 
             this.dirty=false;
         }
         else { 

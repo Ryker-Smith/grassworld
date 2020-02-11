@@ -398,6 +398,10 @@ class Schplágen extends MovingThing {
 
 class SamuraiSchplágen extends Schplágen {  
 }
+class CowboySchplágen extends Schplágen {  
+}
+class BelieverSchplágen extends Schplágen {  
+}
 
 class World extends Thing {
   constructor (parent, name, content) {

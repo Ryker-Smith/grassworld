@@ -37,7 +37,7 @@ function placeOnScreen(r) {
   let spritedetail= {
           Tid: Tid,
           Ganimated: true,
-          spLeft:500 + r,
+          spLeft:5 + r,
           spTop: 510 + r
   }
   

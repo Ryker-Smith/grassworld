@@ -72,8 +72,8 @@ app.post("/SI/",(request, response) => si_post(request, response));
 //app.post("/SI/NAME/:SCname/TK/:token",(request, response) => si_post(request, response));
 // app.post("/SI/NAME/:SCname/TK/:token/C/:SCscript/",(request, response) => si_post(request, response));
 app.put("/SI/",(request, response) => si_put(request, response));
-app.get("/SI/",(request, response) => si_get(request, response));
-app.delete("/SI/",(request, response) => si_post(request, response));
+app.get("/SI/ID/:SCid/TK/:token",(request, response) => si_get(request, response));
+// app.delete("/SI/",(request, response) => si_post(request, response));
 
 app.get("/debug/",(request, response) => db_dbg(request, response));
 app.listen(port, () => console.log(`STARTED on port ${port}`));
@@ -149,6 +149,26 @@ async function db_get(request, response) {
       return r;
     }
     
+    async function gget_single_by_gid(gid) {
+        var r;
+        await dbms.query(
+            "SELECT * FROM genus WHERE Gid="+ (dbms.escape(gid)) )
+          .then( results => {
+          if(results.length < 1){
+            r='error b159';
+          }
+          else {
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+    
     async function tgetimages(Tid) {
         var r;
         await dbms.query(
@@ -207,6 +227,11 @@ async function db_get(request, response) {
           reply=await tget_single_by_Tid(cgi.Tid, cgi.Tz);
         }
       }
+      else if (cgi.t == 'genus') {
+        if (cgi.a =='get') {
+          reply=await gget_single_by_gid(cgi.gid);
+        }
+      }
     }
     response.write(String(reply));
     response.end();
@@ -237,11 +262,11 @@ async function db_put(request, response) {
       return r;
     }
     
-    async function tsetimages(Tid, imagesJSON) {
+    async function gsetimages(Gid, GimagesJSON) {
         var r;
         
         await dbms.query(
-            "UPDATE genus SET GimagesJSON="+(dbms.escape(imagesJSON))+" WHERE Gid=(SELECT Tgenus FROM genus WHERE Tid="+ (dbms.escape(Tid)))
+            "UPDATE genus SET GimagesJSON="+(dbms.escape(GimagesJSON))+" WHERE Gid="+ (dbms.escape(Gid)))
           .then( results => {
           if(results.length < 1){
             r='error b226';
@@ -258,6 +283,29 @@ async function db_put(request, response) {
       return r;
     }
 
+    async function gupdate(Gid, Gname, Gdescription, Gmobile, Ganimated, Ginteracts, Gcansleep, Gliving) {
+        var r;
+        await dbms.query(
+            "UPDATE genus SET Gname="+(dbms.escape(Gname))+", Gdescription="+(dbms.escape(Gdescription))+", Gmobile="+(dbms.escape(Gmobile))+", Ginteracts="+(dbms.escape(Ginteracts))+", Ganimated="+(dbms.escape(Ganimated))+ ", Gcansleep="+(dbms.escape(Gcansleep))+", Gliving="+(dbms.escape(Gliving))+ " WHERE Gid="+(dbms.escape(Gid)))
+          .then( results => {
+          if(results.length < 1){
+            console.log(r);
+            console.log(results);
+            r='error b226';
+          }
+          else {
+            console.log(results);
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      console.log('D');
+      return r;
+    }
     async function tgenuschange(Tid, newGenus) {
         var r;
         await dbms.query(
@@ -293,10 +341,15 @@ async function db_put(request, response) {
         reply=await saveLocation(cgi.Tid, cgi.Tx, cgi.Ty, cgi.Tz);
       }
       else if (cgi.a == 'sij'){
-        reply=await tsetimages(cgi.Tid,cgi.j);
+        reply=await gsetimages(cgi.Tid,cgi.j);
       }
       else if (cgi.a == 'gc'){
         reply=await tgenuschange(cgi.Tid,cgi.ng);
+      }
+      else if (cgi.a == 'sv'){
+        reply=await gupdate(
+          request.body.Gid,request.body.Gname, request.body.Gmobile, request.body.Gdescription,
+          request.body.Ganimated, request.body.Ginteracts, request.body.Gcansleep, request.body.Gliving);
       }
     }
     response.write(String(reply));
@@ -306,7 +359,7 @@ async function db_put(request, response) {
 async function db_post(request, response) {
     var reply='';
     
-    async function conceive(Tname, Tgenus) {
+    async function newThing(Tname, Tgenus) {
         var r;
         var x=0,y=0,z=0;
         await dbms.query(
@@ -326,6 +379,26 @@ async function db_post(request, response) {
       return r;
     }
 
+    async function newGenus(Gname, Gmobile, Ganimated, Ginteracts, Gcansleep, Gliving, GimagesJSON) {
+        var r;
+        var x=0,y=0,z=0;
+        await dbms.query(
+            "INSERT INTO genus (Gname, Gmobile, Ganimated, Ginteracts, Gcansleep, Gliving) VALUES ("+dbms.escape(Gname)+","+dbms.escape(Gmobile)+","+dbms.escape(Ganimated)+","+dbms.escape(Ginteracts)+","+dbms.escape(Gcansleep)+","+dbms.escape(Gliving)+")")
+          .then( results => {
+            r=JSON.stringify(results);
+            console.log(r.warningCount);
+            if (r.insertId > 0) {
+                r=r;
+            }
+            return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+    
   console.log( nowIs());
   console.log('CONNECT -> DB -> '+request.method + ' ' + String(request.url));
   fs.appendFile(debugfile, 'CONNECT\n', () => {});
@@ -339,7 +412,10 @@ async function db_post(request, response) {
   if (lib.isdefined(cgi.a)) {
       if(cgi.a == 'mk') {
         if (cgi.t == 'thing') {
-          reply=await conceive(cgi.name, cgi.g);
+          reply=await newThing(cgi.name, cgi.g);
+        }
+        else if (cgi.t == 'genus') {
+          reply=await newGenus(cgi.Gname, cgi.Gmobile, cgi.Ganimated, cgi.Ginteracts, cgi.Gcansleep, cgi.Gliving, cgi.GimagesJSON);
         }
       }
   }
@@ -447,45 +523,6 @@ async function si_post(request, response) {
   response.end();
 }
 //========================================================================================
-async function si_get(request, response) {
-    var reply='';
-
-    async function SIread(SCid) {
-        var r;
-        await dbms.query(
-            "SELECT SCscript FROM scripts WHERE SCid="+ (dbms.escape(SCid)))
-          .then( results => {
-          if(results.length < 1){
-            r=results;
-            console.log('E '+r);
-          }
-          else {
-            r=JSON.stringify(results);
-          }
-          return r;
-        }
-      )
-      .catch( err => {
-        console.log(err);
-      });
-      return r;
-    }
-    
-  console.log( nowIs() );
-  console.log('CONNECT -> SI -> '+request.method + ' ' + String(request.url));
-  response.writeHead(200, {'Content-Type': 'text/html'});
-  var cgi = url.parse(request.url, true).query;
-  var TK=request.body.TK;
-  var SCid=request.body.SIid;
-  console.log('ID: '+SCid);
-  reply=await SIread(SCid);
-  
-  console.log('POST RESPONSE -> ' + reply);
-  response.write(String(reply));
-  response.end();
-}
-
-//========================================================================================
 async function si_put(request, response) {
     var reply='';
 
@@ -499,7 +536,7 @@ async function si_put(request, response) {
             r='error b226';
           }
           else {
-            r=JSON.stringify(results);
+            r=JSON.stringify(results.warningCount);
           }
           return r;
         }
@@ -518,8 +555,50 @@ async function si_put(request, response) {
   var SCscript=unescape(request.body.SIcode) ;
   console.log('ID: '+SCid);
   reply=await SIwrite(SCid, SCscript);
-  
-  console.log('POST RESPONSE -> ' + reply);
+  console.log('PUT RESPONSE -> ' + reply);
   response.write(String(reply));
   response.end();
 }
+//========================================================================================
+async function si_get(request, response) {
+    var reply='';
+
+    async function SIread(SCid) {
+        var r;
+        await dbms.query(
+            "SELECT SCid, Scname, SCscript FROM scripts WHERE SCid="+ (dbms.escape(SCid)))
+          .then( results => {
+          if(results.length < 1){
+            r=results;
+            console.log('E '+r);
+          }
+          else {
+            r=JSON.stringify(results);
+//             console.log('R '+r);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+    
+  console.log( nowIs() );
+  console.log('CONNECT -> SI -> '+request.method + ' ' + String(request));
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  var cgi = url.parse(request.url, true).query;
+  var TK=request.params.token;
+  console.log('TK: '+TK);
+  var SCid=request.params.SCid;
+  console.log('ID: '+SCid);
+  console.log('B '+JSON.stringify(request.body));
+  reply=await SIread(SCid);
+  
+  console.log('GET RESPONSE -> ' + reply);
+  response.write(String(reply));
+  response.end();
+}
+
+

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TeamBlue Genus</title>
+<script src="/assets/js/jquery-3.4.1.min.js"></script>
+<script src="../grassworld-classes.js"></script>
+<script>
+  window.onload=start();
+  
+  function start() {
+    for (var x=1; x < 10; x++) {
+      fetchg(x);
+    }
+  }
+
+  function token() {
+    return '&TK=a1b2c3d4';
+  }
+  function createlink(Gid, l) {	
+    var h='<a href=" '+grassworld_db+'t=genus&a=get&gid='+gid + token() + ' ">' + l + '</a>';
+    return h;
+  }
+  function fetchg(gid) {
+    let url=grassworld_db+'t=genus&a=get&gid='gid + token();
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+//     console.log(url );
+    xhr.send();
+    xhr.onload = function() {
+        if (xhr.status == 200) {
+          let r=xhr.response;
+          r=r.replace(/\[/g,'');
+          r=r.replace(/\]/g,'');
+          r=JSON.parse(r);
+          console.log('B '+r);
+          var table = document.getElementById("blue");
+          var row = table.insertRow(0);
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          cell1.innerHTML = r.Gid;
+          cell2.innerHTML = createlink(r.Gid, r.Gname);
+          
+          //document.getElementById('thisgname').innerHTML=r.Gname;
+        }
+        else { 
+          console.log(xhr.response);
+          console.log('Error c187');
+        }
+      };
+  }
+ 
+</script>
+</head>
+<body>
+<table id="blue">
+<thead><tr><td>Gid</td><td>Gname</td></tr></thead>
+<tbody></tbody>
+</table>
+</body>
+
+</html>
+
