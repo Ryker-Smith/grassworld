@@ -100,17 +100,13 @@
       yesornofromchecks('Gcansleep',Gid);
       yesornofromchecks('Gliving',Gid);
       document.getElementById('Gdescription_'+Gid).innerHTML=document.getElementById('Gdescription').value;
+      document.getElementById('Gname_'+Gid).innerHTML=makelink(Gid, document.getElementById('Gname').value);
       
-
-//       if (document.getElementById('Gliving').checked) {
-//         document.getElementById('Gliving_'+Gid).innerHTML = 'Y';
-//       }
-//       else {
-//         document.getElementById('Gliving_'+Gid).innerHTML = 'N';
-//       }
     }
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(message); 
+    document.getElementById('editform').style.visibility='hidden';
+    document.getElementById('editform').style.height=0;
   }
   function getg(gid) {
     let url=grassworld_db+'t=genus&a=get&gid='+gid + token();
@@ -136,6 +132,7 @@
           cell0.innerHTML = r.Gid;
           cell0.id='Gid_'+gid;
           cell1.innerHTML = makelink(r.Gid, r.Gname);
+          cell1.id="Gname_"+gid;
           cell2.innerHTML = yesorno(r.Gmobile);
           cell2.id='Gmobile_'+gid;
           cell3.innerHTML = yesorno(r.Ganimated);
