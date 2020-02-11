@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <title>Demos &amp; Proofs of concept</title>
+<meta charset="utf-8"/>
 <script src="/assets/js/jquery-3.4.1.min.js"></script>
 <script src="../grassworld-classes.js"></script>
-<!-- <script src="../grassworld.js"></script> -->
 
 <style>
   #editform {
@@ -31,16 +31,24 @@
   function token() {
     return '&TK=a1b2c3d4';
   }
+  function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\á/g, '&aacute;').replace(/\Á/g, '&Aacute;');
+  }
   function getdata (Gid, l) {
     document.getElementById('Gid').value=Gid;
     document.getElementById('Gname').value=l;
+    document.getElementById('Gdescription').value=document.getElementById('Gdescription_'+Gid).innerHTML;
+    document.getElementById('Gmobile').checked=(document.getElementById('Gmobile_'+Gid).innerHTML == 'Y');
+    document.getElementById('Ganimated').checked=(document.getElementById('Ganimated_'+Gid).innerHTML == 'Y');
+    document.getElementById('Ginteracts').checked=(document.getElementById('Ginteracts_'+Gid).innerHTML == 'Y');
+    document.getElementById('Gcansleep').checked=(document.getElementById('Gcansleep_'+Gid).innerHTML == 'Y');
+    document.getElementById('Gliving').checked=(document.getElementById('Gliving_'+Gid).innerHTML == 'Y');
     document.getElementById('editform').style.visibility='visible';
     document.getElementById('editform').style.height='auto';
   }
   function makelink(Gid, l) {
     document.getElementById('POSTorPUTflag').value=2;
     var h='<span onclick="getdata('+Gid+', \''+l+'\')">' + l + '</span>';
-    //)'href=" '+grassworld_db+'t=genus&a=get&gid='+Gid + token() + ' ">' + l + '</a>'
     return h;
   }
   function yesorno(v) {
@@ -59,6 +67,14 @@
       return 0;
     }
   }
+  function yesornofromchecks(w, g) {
+    if (document.getElementById(w).checked) {
+      document.getElementById(w+'_'+g).innerHTML = 'Y';
+    }
+    else {
+      document.getElementById(w+'_'+g).innerHTML = 'N';
+    }
+  }
   function savethis() {
     let Gid = document.getElementById('Gid').value ;
     let url=grassworld_db+'t=genus&a=sv&gid='+Gid + token();
@@ -71,13 +87,27 @@
           Ganimated: oneorzero(document.getElementById('Ganimated').checked),
           Gcansleep: oneorzero(document.getElementById('Gcansleep').checked),
           Gliving: oneorzero(document.getElementById('Gliving').checked),
-          Gdescription: oneorzero(document.getElementById('Gdescription').value),
+          Gdescription: document.getElementById('Gdescription').value,
         });
     if ( document.getElementById('POSTorPUTflag').value==1 ) {
-      xhr.open('POST', url);
+      xhr.open('POST', url); // new
     }
     else {
       xhr.open('PUT', url);
+      yesornofromchecks('Gmobile',Gid);
+      yesornofromchecks('Ginteracts',Gid);
+      yesornofromchecks('Ganimated',Gid);
+      yesornofromchecks('Gcansleep',Gid);
+      yesornofromchecks('Gliving',Gid);
+      document.getElementById('Gdescription_'+Gid).innerHTML=document.getElementById('Gdescription').value;
+      
+
+//       if (document.getElementById('Gliving').checked) {
+//         document.getElementById('Gliving_'+Gid).innerHTML = 'Y';
+//       }
+//       else {
+//         document.getElementById('Gliving_'+Gid).innerHTML = 'N';
+//       }
     }
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.send(message); 
@@ -104,13 +134,20 @@
           var cell6 = row.insertCell(6);
           var cell7 = row.insertCell(7);
           cell0.innerHTML = r.Gid;
+          cell0.id='Gid_'+gid;
           cell1.innerHTML = makelink(r.Gid, r.Gname);
           cell2.innerHTML = yesorno(r.Gmobile);
+          cell2.id='Gmobile_'+gid;
           cell3.innerHTML = yesorno(r.Ganimated);
+          cell3.id='Ganimated_'+gid;
           cell4.innerHTML = yesorno(r.Ginteracts);
+          cell4.id='Ginteracts_'+gid;
           cell5.innerHTML = yesorno(r.Gcansleep);
+          cell5.id='Gcansleep_'+gid;
           cell6.innerHTML = yesorno(r.Gliving);
+          cell6.id='Gliving_'+gid;
           cell7.innerHTML = r.Gdescription;
+          cell7.id='Gdescription_'+gid;
           //document.getElementById('thisgname').innerHTML=r.Gname;
         }
         else { 
@@ -129,7 +166,7 @@
   <input type="hidden" id="POSTorPUTflag" value="1">
   Genus ID:&nbsp;<input type="text" id="Gid" name="Gid" readonly="true"  size="5"><br>
   Genus name:&nbsp;<input type="text" id="Gname" name="Gname" value=""><br>
-  Genus description:&nbsp;<textarea id="Gdescription" name="Gdescription" rows="3" columns="40" value=""></textarea><br>
+  Genus description:&nbsp;<textarea id="Gdescription" name="Gdescription" rows="3" columns="40" ></textarea><br>
   Mobile:&nbsp;<input type="checkbox" id="Gmobile" name="Gmobile" checked><br>
   Animated:&nbsp;<input type="checkbox" id="Ganimated" name="Ganimated" checked><br>
   Interacts:&nbsp;<input type="checkbox" id="Ginteracts" name="Ginteracts" checked><br>

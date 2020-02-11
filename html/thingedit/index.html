@@ -1,41 +1,127 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>TeamRed Thing</title>
 <script src="/assets/js/jquery-3.4.1.min.js"></script>
 <script src="../grassworld-classes.js"></script>
-<!-- <script>
+<script>
+// https://grassworld.fachtnaroe.net/DB/?t=thing&cat=
+// fauna
+// flora
+// object
 
-</script> -->
+window.onload=mystart();
+
+function mystart() {
+  //**--Uncomment When rest of program works---**
+  // var catbit ="";
+  // for (var x=1; x <= 3; x++) {
+  //   switch (x) {
+  //     case 1:
+  //       catbit="fauna";
+  //       break;
+  //     case 2:
+  //       catbit="flora";
+  //       break;
+  //     case 3:
+  //       catbit="object";
+  //       break;
+  //   }
+  //   getT(catbit);
+  // }
+  //**--Uncomment When rest of program works---**
+
+  //--temporary(Delete when you become good at javascript)--
+  getT("fauna");
+}
+
+function token() {
+  return '&TK=a1b2c3d4';
+}
+//to do-> call url above 3 times, parse json data and display, edit and save a Thing
+// (1) Call url ->https://grassworld.fachtnaroe.net/DB/?t=thing&cat=fauna ,and displayed
+//(**This is for later**)(Remember)-> Post and Put in url to save a thing
+
+function getT(catbit) {
+  //let url=grassworld_db+'t=thing&cat='+catbit + token();
+  let url=grassworld_db+'t=thing&cat='+catbit;
+  let xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
+//     console.log(url );
+  xhr.send();
+  xhr.onload = function() {
+      if (xhr.status == 200) {
+        let r=xhr.response;
+        r=r.replace(/\[/g,'');
+        r=r.replace(/\]/g,'');
+        r=JSON.parse(r);
+////           console.log('B '+r);
+        // var table = document.getElementById("listtable");
+        // var row = table.insertRow();
+        // var cell0 = row.insertCell(0);
+        // var cell1 = row.insertCell(1);
+        // var cell2 = row.insertCell(2);
+        // var cell3 = row.insertCell(3);
+        // var cell4 = row.insertCell(4);
+        // var cell5 = row.insertCell(5);
+        // var cell6 = row.insertCell(6);
+        // var cell7 = row.insertCell(7);
+        // cell0.innerHTML = r.Gid;
+        // cell1.innerHTML = makelink(r.Gid, r.Gname);
+        // cell2.innerHTML = yesorno(r.Gmobile);
+        // cell3.innerHTML = yesorno(r.Ganimated);
+        // cell4.innerHTML = yesorno(r.Ginteracts);
+        // cell5.innerHTML = yesorno(r.Gcansleep);
+        // cell6.innerHTML = yesorno(r.Gliving);
+        // cell7.innerHTML = r.Gdescription;
+////           document.getElementById('thisgname').innerHTML=r.Gname;
+      }
+      else {
+        console.log(xhr.response);
+        console.log('Error c187');
+      }
+    };
+}
+
+
+</script>
 </head>
 <body>
-<h1>Thing List</h1>
-<button id='butt'>Nu</button>
+<h1>Thing Editor</h1>
+<button id='NewthingButton'>New</button>
+<!-- input type and value need to be checked in form, I guessed them.... -->
 <form id="editThingform">
   <input type="hidden" id="POSTorPUTflag" value="1">
   Thing ID:&nbsp;<input type="text" id="Tid" name="Tid" readonly="true"  size="5"><br>
   Thing name:&nbsp;<input type="text" id="Tname" name="Tname" value=""><br>
+  Thing Creator:&nbsp;<input type="text" id="Tcreator" name="Tcreator" value=""><br>
+  Thing Status:&nbsp;<input type="input" id="Tstatus" name="Tstatus" value=""><br>
+  Thing Content:&nbsp;<input type="input" id="Tcontent" name="Tcontent" value=""><br>
   Thing Genus:&nbsp;<input type="text" id="Tgenus" name="Tgenus" value=""><br>
-  Tx :&nbsp;<input type="text" id="tx" name="tx" value=""><br>
-  Ty :&nbsp;<input type="text" id="ty" name="ty" value=""><br>
-  Tz :&nbsp;<input type="text" id="tz" name="tz" value=""><br>
-  <!-- Genus description:&nbsp;<textarea id="Gdescription" name="Gdescription" rows="3" columns="40" value=""><br>
-  Mobile:&nbsp;<input type="checkbox" id="Gmobile" name="Gmobile" checked><br>
-  Animated:&nbsp;<input type="checkbox" id="Ganimated" name="Ganimated" checked><br>
-  Interacts:&nbsp;<input type="checkbox" id="Ginteracts" name="Ginteracts" checked><br>
-  Can sleep:&nbsp;<input type="checkbox" id="Gcansleep" name="Gcansleep" checked><br>
-  Living:&nbsp;<input type="checkbox" id="Gliving" name="Gliving" checked><br><br> -->
+  Thing x :&nbsp;<input type="text" id="tx" name="tx" value=""><br>
+  Thing y :&nbsp;<input type="text" id="ty" name="ty" value=""><br>
+  Thing z :&nbsp;<input type="text" id="tz" name="tz" value=""><br>
+  Thing s :&nbsp;<input type="text" id="ts" name="ts" value=""><br>
+  Thing Team :&nbsp;<input type="input" id="Tteam" name="Tteam" value=""><br>
+  Thing Keypress Function:&nbsp;<input type="input" id="Tkeypressfunc" name="Tkeypressfunc" value=""><br>
+  Genus ID :&nbsp;<input type="text" id="Gid" name="Gid" value=""><br>
   <input type="button" value="Save" onclick="savethis()">
 </form>
 <table id="listtable">
 <thead><tr>
   <td>Tid</td>
   <td>Tname</td>
+  <td>Tcreator</td>
+  <td>Tstatus</td>
+  <td>Tcontent</td>
   <td>Tgenus</td>
   <td>Tx</td>
   <td>Ty</td>
   <td>Tz</td>
+  <td>Ts</td>
+  <td>Tteam</td>
+  <td>Tkeypressfunc</td>
+  <td>Gid</td>
 </tr></thead>
 <tbody></tbody>
 </table>

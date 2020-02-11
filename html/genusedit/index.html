@@ -4,6 +4,20 @@
 <title>TeamBlue Genus</title>
 <script src="/assets/js/jquery-3.4.1.min.js"></script>
 <script src="../grassworld-classes.js"></script>
+
+<style>
+  #editform {
+    border: 2px solid blue;
+    visibility: hidden;
+    height: 0;
+  }
+  #listtable tr td{
+    margin: 0;
+    border: 2px solid blue;
+    width: 100%;
+    border-collapse: collapse;
+  }
+</style>
 <script>
   window.onload=start();
   
@@ -14,9 +28,11 @@
   }
 
   function token() {
-    return '&TK=a1b2c3d4';
+    return '&TK=a1b2c3d4';	
   }
   function createlink(Gid, l) {	
+  // document.getElementById('POSTorPUTflag').value=2;
+  // var h='<span onclick="getdata('+Gid+', \''+l+'\')">' + l + '</span>';
     var h='<a href=" '+grassworld_db+'t=genus&a=get&gid='+gid + token() + ' ">' + l + '</a>';
     return h;
   }
@@ -37,7 +53,17 @@
           var row = table.insertRow(0);
           var cell1 = row.insertCell(0);
           var cell2 = row.insertCell(1);
-          cell1.innerHTML = r.Gid;
+		  var cell2 = row.insertCell(2);
+          var cell3 = row.insertCell(3);
+          var cell4 = row.insertCell(4);
+          var cell5 = row.insertCell(5);
+          var cell6 = row.insertCell(6);
+
+
+ // add more rows??
+ 
+ 
+		  cell1.innerHTML = r.Gid;
           cell2.innerHTML = createlink(r.Gid, r.Gname);
           
           //document.getElementById('thisgname').innerHTML=r.Gname;
@@ -48,7 +74,56 @@
         }
       };
   }
- 
+ /*=================
+          var table = document.getElementById("listtable");
+          var row = table.insertRow();
+          var cell0 = row.insertCell(0);
+          var cell1 = row.insertCell(1);
+         
+          cell0.innerHTML = r.Gid;
+          cell1.innerHTML = makelink(r.Gid, r.Gname);
+          cell2.innerHTML = yesorno(r.Gmobile);
+          cell3.innerHTML = yesorno(r.Ganimated);
+          cell4.innerHTML = yesorno(r.Ginteracts);
+          cell5.innerHTML = yesorno(r.Gcansleep);
+          cell6.innerHTML = yesorno(r.Gliving);
+          //document.getElementById('thisgname').innerHTML=r.Gname;
+        }
+        else { 
+          console.log(xhr.response);
+          console.log('Error c187');
+        }
+      };
+  }
+  
+</script>
+</head>
+<body>
+<h1>Genus Editor</h1>
+<button id="newgenusbut">New</button>
+<form id="editform">
+  <input type="hidden" id="POSTorPUTflag" value="1">
+  Genus ID:&nbsp;<input type="text" id="Gid" name="Gid" readonly="true"  size="5"><br>
+  Genus name:<br>
+  <input type="text" id="Gname" name="Gname" value="">
+  <br>
+  Mobile:&nbsp;<input type="checkbox" id="Gmobile" name="Gmobile" checked><br>
+  Animated:&nbsp;<input type="checkbox" id="Ganimated" name="Ganimated" checked><br>
+  Interacts:&nbsp;<input type="checkbox" id="Ginteracts" name="Ginteracts" checked><br>
+  Can sleep:&nbsp;<input type="checkbox" id="Gcansleep" name="Gcansleep" checked><br>
+  Living:&nbsp;<input type="checkbox" id="Gliving" name="Gliving" checked><br><br>
+  <input type="button" value="Save" onclick="savethis()">
+</form>
+<table id="listtable">
+<thead><tr><td>Gid</td><td>Gname</td>
+<td>Mobile</td>
+<td>Animated</td>
+<td>Interacts</td>
+<td>Can sleep</td>
+<td>Living</td>
+</tr></thead>
+*/
+=================
 </script>
 </head>
 <body>

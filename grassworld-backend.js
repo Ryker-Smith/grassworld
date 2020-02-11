@@ -348,7 +348,7 @@ async function db_put(request, response) {
       }
       else if (cgi.a == 'sv'){
         reply=await gupdate(
-          request.body.Gid,request.body.Gname, request.body.Gmobile, request.body.Gdescription,
+          request.body.Gid,request.body.Gname, request.body.Gdescription, request.body.Gmobile, 
           request.body.Ganimated, request.body.Ginteracts, request.body.Gcansleep, request.body.Gliving);
       }
     }
