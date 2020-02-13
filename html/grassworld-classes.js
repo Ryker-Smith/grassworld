@@ -12,6 +12,7 @@ let genus_Schplágen_b2 = 12;
 let genus_Schplágen_b3 = 9;
 let genus_blueSamuari = 20;
 let genus_teleport = 16;
+let genus_Leader  = 20;
 let emptyimage={
         "spritesheet" : "",
         "framecount" : 0,

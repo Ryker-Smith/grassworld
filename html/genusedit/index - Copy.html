@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TeamBlue Genus</title>
+<script src="/assets/js/jquery-3.4.1.min.js"></script>
+<script src="../grassworld-classes.js"></script>
+
+<style>
+  #editform {
+    border: 2px solid blue;
+    visibility: hidden;
+    height: 0;
+  }
+  #listtable tr td{
+    margin: 0;
+    border: 2px solid blue;
+    width: 100%;
+    border-collapse: collapse;
+  }
+</style>
+<script>
+  window.onload=start();
+  
+  function start() {
+    for (var x=1; x < 10; x++) {
+      fetchg(x);
+    }
+  }
+
+  function token() {
+    return '&TK=a1b2c3d4';	
+  }
+  function createlink(Gid, l) {	
+   document.getElementById('POSTorPUTflag').value=2;
+  // var h='<span onclick="getdata('+Gid+', \''+l+'\')">' + l + '</span>';
+    var h='<a href=" '+grassworld_db+'t=genus&a=get&gid='+gid + token() + ' ">' + l + '</a>';
+    return h;
+  }
+  
+    function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\รก/g, '&aacute;').replace(/\ร/g, '&Aacute;');
+	}
+  
+    function getdata (Gid, l) {
+    document.getElementById('Gid').value=Gid;
+    document.getElementById('Gname').value=l;
+    document.getElementById('Gdescription').value=document.getElementById('Gdescription_'+Gid).innerHTML;
+    document.getElementById('Gmobile').checked=(document.getElementById('Gmobile_'+Gid).innerHTML == 'Y');
+    document.getElementById('Ganimated').checked=(document.getElementById('Ganimated_'+Gid).innerHTML == 'Y');
+    document.getElementById('Ginteracts').checked=(document.getElementById('Ginteracts_'+Gid).innerHTML == 'Y');
+    document.getElementById('Gcansleep').checked=(document.getElementById('Gcansleep_'+Gid).innerHTML == 'Y');
+    document.getElementById('Gliving').checked=(document.getElementById('Gliving_'+Gid).innerHTML == 'Y');
+    document.getElementById('editform').style.visibility='visible';
+    document.getElementById('editform').style.height='auto';
+  }
+  
+
+		
+function getg(gid) {
+    let url=grassworld_db+'t=genus&a=get&gid='+gid + token();
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.send();
+    xhr.onload = function() {
+        if (xhr.status == 200) {
+          let r=xhr.response;
+          r=r.replace(/\[/g,'');
+          r=r.replace(/\]/g,'');
+          r=JSON.parse(r);
+          var table = document.getElementById("listtable");
+          var row = table.insertRow();
+          var cell0 = row.insertCell(0);
+          var cell1 = row.insertCell(1);
+          var cell2 = row.insertCell(2);
+          var cell3 = row.insertCell(3);
+          var cell4 = row.insertCell(4);
+          var cell5 = row.insertCell(5);
+          var cell6 = row.insertCell(6);
+          var cell7 = row.insertCell(7);
+          cell0.innerHTML = r.Gid;
+          cell0.id='Gid_'+gid;
+          cell1.innerHTML = makelink(r.Gid, r.Gname);
+          cell1.id="Gname_"+gid;
+          cell2.innerHTML = yesorno(r.Gmobile);
+          cell2.id='Gmobile_'+gid;
+          cell3.innerHTML = yesorno(r.Ganimated);
+          cell3.id='Ganimated_'+gid;
+          cell4.innerHTML = yesorno(r.Ginteracts);
+          cell4.id='Ginteracts_'+gid;
+          cell5.innerHTML = yesorno(r.Gcansleep);
+          cell5.id='Gcansleep_'+gid;
+          cell6.innerHTML = yesorno(r.Gliving);
+          cell6.id='Gliving_'+gid;
+          cell7.innerHTML = r.Gdescription;
+          cell7.id='Gdescription_'+gid;
+          //document.getElementById('thisgname').innerHTML=r.Gname;
+        }
+        else { 
+          console.log(xhr.response);
+          console.log('Error c187');
+        }
+      };
+  }
+
+</script>
+</head>
+<body>
+<table id="blue">
+<thead><tr><td>Gid</td><td>Gname</td></tr></thead>
+<tbody></tbody>
+</table>
+</body>
+
+</html>
+

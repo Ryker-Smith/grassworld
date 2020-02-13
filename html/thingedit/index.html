@@ -44,18 +44,23 @@ function token() {
 
 function getT(catbit) {
   //let url=grassworld_db+'t=thing&cat='+catbit + token();
-  let url=grassworld_db+'t=thing&cat='+catbit;
+   let url='https://grassworld.fachtnaroe.net/DB/?t=things&cat=fauna';
+  //let url='https://grassworld.fachtnaroe.net/DB/?t=thing&a=get&Tid=8810&TK=a1b2c3d4';
   let xhr = new XMLHttpRequest();
-  xhr.open('GET', url);
-//     console.log(url );
+  xhr.open('POST', url);
+    console.log(url );
   xhr.send();
+
   xhr.onload = function() {
-      if (xhr.status == 200) {
-        let r=xhr.response;
-        r=r.replace(/\[/g,'');
-        r=r.replace(/\]/g,'');
-        r=JSON.parse(r);
-////           console.log('B '+r);
+
+       if (xhr.status == 200) {
+         //console.log(xhr.response);
+      //   let r=xhr.response;
+      //   //console.log('Ting: '+r);
+      //   r=r.replace(/\[/g,'');
+      //   r=r.replace(/\]/g,'');
+      //   r=JSON.parse(r);
+      //     console.log('B '+r);
         // var table = document.getElementById("listtable");
         // var row = table.insertRow();
         // var cell0 = row.insertCell(0);
@@ -94,17 +99,17 @@ function getT(catbit) {
   <input type="hidden" id="POSTorPUTflag" value="1">
   Thing ID:&nbsp;<input type="text" id="Tid" name="Tid" readonly="true"  size="5"><br>
   Thing name:&nbsp;<input type="text" id="Tname" name="Tname" value=""><br>
-  Thing Creator:&nbsp;<input type="text" id="Tcreator" name="Tcreator" value=""><br>
-  Thing Status:&nbsp;<input type="input" id="Tstatus" name="Tstatus" value=""><br>
-  Thing Content:&nbsp;<input type="input" id="Tcontent" name="Tcontent" value=""><br>
-  Thing Genus:&nbsp;<input type="text" id="Tgenus" name="Tgenus" value=""><br>
-  Thing x :&nbsp;<input type="text" id="tx" name="tx" value=""><br>
-  Thing y :&nbsp;<input type="text" id="ty" name="ty" value=""><br>
-  Thing z :&nbsp;<input type="text" id="tz" name="tz" value=""><br>
-  Thing s :&nbsp;<input type="text" id="ts" name="ts" value=""><br>
-  Thing Team :&nbsp;<input type="input" id="Tteam" name="Tteam" value=""><br>
-  Thing Keypress Function:&nbsp;<input type="input" id="Tkeypressfunc" name="Tkeypressfunc" value=""><br>
-  Genus ID :&nbsp;<input type="text" id="Gid" name="Gid" value=""><br>
+  Thing Creator:&nbsp;<input type="text" id="Tcreator" name="Tcreator"  readonly="true"  size="5"><br>
+  Thing Status:&nbsp;<input type="input" id="Tstatus" name="Tstatus"  readonly="true"  size="5"><br>
+  Thing Content:&nbsp;<input type="input" id="Tcontent" name="Tcontent"  readonly="true"  size="5"><br>
+  Thing Genus:&nbsp;<input type="text" id="Tgenus"  readonly="true"  size="5"><br>
+  Thing x :&nbsp;<input type="text" id="tx" name="tx"  readonly="true"  size="5"><br>
+  Thing y :&nbsp;<input type="text" id="ty" name="ty"  readonly="true"  size="5"><br>
+  Thing z :&nbsp;<input type="text" id="tz" name="tz"  readonly="true"  size="5"><br>
+  Thing s :&nbsp;<input type="text" id="ts" name="ts"  readonly="true"  size="5"><br>
+  Thing Team :&nbsp;<input type="input" id="Tteam" name="Tteam"  readonly="true"  size="5"><br>
+  Thing Keypress Function:&nbsp;<input type="input" id="Tkeypressfunc" name="Tkeypressfunc"  readonly="true"  size="5"><br>
+  Genus ID :&nbsp;<input type="text" id="Gid" name="Gid" readonly="true"  size="5"><br>
   <input type="button" value="Save" onclick="savethis()">
 </form>
 <table id="listtable">

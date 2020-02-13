@@ -7,40 +7,110 @@
 
 <style>
   #editform {
-    border: 2px solid blue;
+    border: 1px solid blue;
     visibility: hidden;
     height: 0;
   }
-  #listtable tr td{
+  #listtable, tr, td {
     margin: 0;
-    border: 2px solid blue;
-    width: 100%;
-    border-collapse: collapse;
+    border: 0.5px solid blue;
+    width: 100%;	
+	border-collapse: collapse;
   }
 </style>
 <script>
-  window.onload=start();
+  window.onload=mystart();
   
-  function start() {
-    for (var x=1; x < 10; x++) {
-      fetchg(x);
+  function mystart() {
+    for (var x=1; x < 30; x++) {
+      getg(x);
     }
   }
 
   function token() {
-    return '&TK=a1b2c3d4';	
+    return '&TK=a1b2c3d4';
   }
-  function createlink(Gid, l) {	
-  // document.getElementById('POSTorPUTflag').value=2;
-  // var h='<span onclick="getdata('+Gid+', \''+l+'\')">' + l + '</span>';
-    var h='<a href=" '+grassworld_db+'t=genus&a=get&gid='+gid + token() + ' ">' + l + '</a>';
+  function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\รก/g, '&aacute;').replace(/\ร/g, '&Aacute;');
+  }
+  function getdata (Gid, l) {
+    document.getElementById('Gid').value=Gid;
+    document.getElementById('Gname').value=l;
+    document.getElementById('Gdescription').value=document.getElementById('Gdescription_'+Gid).innerHTML;
+    document.getElementById('Gmobile').checked=(document.getElementById('Gmobile_'+Gid).innerHTML == 'Y');
+    document.getElementById('Ganimated').checked=(document.getElementById('Ganimated_'+Gid).innerHTML == 'Y');
+    document.getElementById('Ginteracts').checked=(document.getElementById('Ginteracts_'+Gid).innerHTML == 'Y');
+    document.getElementById('Gcansleep').checked=(document.getElementById('Gcansleep_'+Gid).innerHTML == 'Y');
+    document.getElementById('Gliving').checked=(document.getElementById('Gliving_'+Gid).innerHTML == 'Y');
+    document.getElementById('editform').style.visibility='visible';
+    document.getElementById('editform').style.height='auto';
+  }
+  function makelink(Gid, l) {
+    document.getElementById('POSTorPUTflag').value=2;
+    var h='<span onclick="getdata('+Gid+', \''+l+'\')">' + l + '</span>';
     return h;
   }
-  function fetchg(gid) {
-    let url=grassworld_db+'t=genus&a=get&gid='gid + token();
+  function yesorno(v) {
+    if (v==1) {
+      return 'Y';
+    }
+    else {
+      return 'N';
+    }
+  }
+  function oneorzero(v) {
+    if (v ==true) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+  function yesornofromchecks(w, g) {
+    if (document.getElementById(w).checked) {
+      document.getElementById(w+'_'+g).innerHTML = 'Y';
+    }
+    else {
+      document.getElementById(w+'_'+g).innerHTML = 'N';
+    }
+  }
+  function savethis() {
+    let Gid = document.getElementById('Gid').value ;
+    let url=grassworld_db+'t=genus&a=sv&gid='+Gid + token();
+    let xhr = new XMLHttpRequest();
+    let message= JSON.stringify({
+          Gid: Gid,
+          Gname: document.getElementById('Gname').value,
+          Gmobile: oneorzero(document.getElementById('Gmobile').checked),
+          Ginteracts: oneorzero(document.getElementById('Ginteracts').checked),
+          Ganimated: oneorzero(document.getElementById('Ganimated').checked),
+          Gcansleep: oneorzero(document.getElementById('Gcansleep').checked),
+          Gliving: oneorzero(document.getElementById('Gliving').checked),
+          Gdescription: document.getElementById('Gdescription').value,
+        });
+    if ( document.getElementById('POSTorPUTflag').value==1 ) {
+      xhr.open('POST', url); // new
+    }
+    else {
+      xhr.open('PUT', url);
+      yesornofromchecks('Gmobile',Gid);
+      yesornofromchecks('Ginteracts',Gid);
+      yesornofromchecks('Ganimated',Gid);
+      yesornofromchecks('Gcansleep',Gid);
+      yesornofromchecks('Gliving',Gid);
+      document.getElementById('Gdescription_'+Gid).innerHTML=document.getElementById('Gdescription').value;
+      document.getElementById('Gname_'+Gid).innerHTML=makelink(Gid, document.getElementById('Gname').value);
+      
+    }
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(message); 
+    document.getElementById('editform').style.visibility='hidden';
+    document.getElementById('editform').style.height=0;
+  }
+  function getg(gid) {
+    let url=grassworld_db+'t=genus&a=get&gid='+gid + token();
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url);
-//     console.log(url );
     xhr.send();
     xhr.onload = function() {
         if (xhr.status == 200) {
@@ -48,45 +118,32 @@
           r=r.replace(/\[/g,'');
           r=r.replace(/\]/g,'');
           r=JSON.parse(r);
-          console.log('B '+r);
-          var table = document.getElementById("blue");
-          var row = table.insertRow(0);
-          var cell1 = row.insertCell(0);
-          var cell2 = row.insertCell(1);
-		  var cell2 = row.insertCell(2);
-          var cell3 = row.insertCell(3);
-          var cell4 = row.insertCell(4);
-          var cell5 = row.insertCell(5);
-          var cell6 = row.insertCell(6);
-
-
- // add more rows??
- 
- 
-		  cell1.innerHTML = r.Gid;
-          cell2.innerHTML = createlink(r.Gid, r.Gname);
-          
-          //document.getElementById('thisgname').innerHTML=r.Gname;
-        }
-        else { 
-          console.log(xhr.response);
-          console.log('Error c187');
-        }
-      };
-  }
- /*=================
           var table = document.getElementById("listtable");
           var row = table.insertRow();
           var cell0 = row.insertCell(0);
           var cell1 = row.insertCell(1);
-         
+          var cell2 = row.insertCell(2);
+          var cell3 = row.insertCell(3);
+          var cell4 = row.insertCell(4);
+          var cell5 = row.insertCell(5);
+          var cell6 = row.insertCell(6);
+          var cell7 = row.insertCell(7);
           cell0.innerHTML = r.Gid;
+          cell0.id='Gid_'+gid;
           cell1.innerHTML = makelink(r.Gid, r.Gname);
+          cell1.id="Gname_"+gid;
           cell2.innerHTML = yesorno(r.Gmobile);
+          cell2.id='Gmobile_'+gid;
           cell3.innerHTML = yesorno(r.Ganimated);
+          cell3.id='Ganimated_'+gid;
           cell4.innerHTML = yesorno(r.Ginteracts);
+          cell4.id='Ginteracts_'+gid;
           cell5.innerHTML = yesorno(r.Gcansleep);
+          cell5.id='Gcansleep_'+gid;
           cell6.innerHTML = yesorno(r.Gliving);
+          cell6.id='Gliving_'+gid;
+          cell7.innerHTML = r.Gdescription;
+          cell7.id='Gdescription_'+gid;
           //document.getElementById('thisgname').innerHTML=r.Gname;
         }
         else { 
@@ -104,9 +161,8 @@
 <form id="editform">
   <input type="hidden" id="POSTorPUTflag" value="1">
   Genus ID:&nbsp;<input type="text" id="Gid" name="Gid" readonly="true"  size="5"><br>
-  Genus name:<br>
-  <input type="text" id="Gname" name="Gname" value="">
-  <br>
+  Genus name:&nbsp;<input type="text" id="Gname" name="Gname" value=""><br>
+  Genus description:&nbsp;<textarea id="Gdescription" name="Gdescription" rows="3" columns="40" ></textarea><br>
   Mobile:&nbsp;<input type="checkbox" id="Gmobile" name="Gmobile" checked><br>
   Animated:&nbsp;<input type="checkbox" id="Ganimated" name="Ganimated" checked><br>
   Interacts:&nbsp;<input type="checkbox" id="Ginteracts" name="Ginteracts" checked><br>
@@ -121,17 +177,9 @@
 <td>Interacts</td>
 <td>Can sleep</td>
 <td>Living</td>
+<td>Desc.</td>
 </tr></thead>
-*/
-=================
-</script>
-</head>
-<body>
-<table id="blue">
-<thead><tr><td>Gid</td><td>Gname</td></tr></thead>
 <tbody></tbody>
 </table>
 </body>
-
 </html>
-
