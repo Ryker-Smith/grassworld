@@ -22,8 +22,9 @@
   window.onload=mystart();
   
   function mystart() {
-    for (var x=1; x < 30; x++) {
+    for (var x=1; x < 27; x++) {
       getg(x);
+      console.log("kr.")
     }
   }
 
@@ -157,7 +158,16 @@
 </head>
 <body>
 <h1>Genus Editor</h1>
-<button id="newgenusbut">New</button>
+ <!--- testing out click function K.R --->
+  <button id="newgenusbut">New</button>
+  <script>
+  document.getElementById("newgenusbut").addEventListener("click", Newbtn);
+
+  function Newbtn() {
+     document.getElementById("newgenusbut").innerHTML = "TEST!";
+     console.log("button testing");
+  }
+</script>
 <form id="editform">
   <input type="hidden" id="POSTorPUTflag" value="1">
   Genus ID:&nbsp;<input type="text" id="Gid" name="Gid" readonly="true"  size="5"><br>

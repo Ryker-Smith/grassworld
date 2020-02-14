@@ -75,6 +75,11 @@ app.put("/SI/",(request, response) => si_put(request, response));
 app.get("/SI/ID/:SCid/TK/:token",(request, response) => si_get(request, response));
 // app.delete("/SI/",(request, response) => si_post(request, response));
 
+app.post("/U/",(request, response) => u_post(request, response));
+app.put("/U/",(request, response) => u_put(request, response));
+app.get("/U/ID/:SCid/TK/:token",(request, response) => u_get(request, response));
+
+
 app.get("/debug/",(request, response) => db_dbg(request, response));
 app.listen(port, () => console.log(`STARTED on port ${port}`));
 
@@ -109,7 +114,7 @@ async function db_get(request, response) {
 
     async function tget_things_multiple(mobile, Tz) {
         var r;
-        console.log("SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile="+ mobile);
+//         console.log("SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile="+ mobile);
         await dbms.query(
             "SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile="+ (dbms.escape(mobile)) + " AND Tz="+(dbms.escape(Tz)))
           .then( results => {
@@ -128,6 +133,44 @@ async function db_get(request, response) {
       return r;
     }
 	
+	async function tget_all() {
+        var r;
+        await dbms.query(
+            "SELECT * FROM things ORDER BY Tid" )
+          .then( results => {
+          if(results.length < 1){
+            r='error b142';
+          }
+          else {
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+	async function gget_all() {
+        var r;
+        await dbms.query(
+            "SELECT * FROM genus ORDER BY Gid" )
+          .then( results => {
+          if(results.length < 1){
+            r='error b161';
+          }
+          else {
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
     async function tget_single_by_Tid(Tid, Tz) {
         var r;
         console.log("SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Tid="+ Tid + " AND Tz=" +Tz);
@@ -224,12 +267,22 @@ async function db_get(request, response) {
           reply=await tgetimages(cgi.Tid);
         }
         else if (cgi.a =='get') {
-          reply=await tget_single_by_Tid(cgi.Tid, cgi.Tz);
+          if (lib.isdefined(cgi.Tid)) {
+            reply=await tget_single_by_Tid(cgi.Tid, cgi.Tz);
+          }
+          else {
+            reply=await tget_all();
+          }
         }
       }
       else if (cgi.t == 'genus') {
         if (cgi.a =='get') {
-          reply=await gget_single_by_gid(cgi.gid);
+          if (lib.isdefined(cgi.gid)) {
+            reply=await gget_single_by_gid(cgi.gid);
+          }
+          else {
+            reply=await gget_all();
+          }
         }
       }
     }
@@ -601,4 +654,46 @@ async function si_get(request, response) {
   response.end();
 }
 
+async function u_get(request, response) {
+  
+}
+async function u_post(request, response) {
+  var reply='';
 
+  async function Ucreate(Uname, Uemail, Upassword) {
+        var r;
+        await dbms.query(
+            "INSERT INTO users (Uname, Uemail, Upassword) VALUES ("+dbms.escape(Uname)+","+dbms.escape(Uemail)+","+dbms.escape(Upassword)+")")
+          .then( results => {
+            r=JSON.stringify(results);
+            console.log(r.warningCount);
+            if (r.insertId > 0) {
+                r=JSON.stringify('Uid',r.insertId);
+            }
+            return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+
+  console.log( nowIs() );
+  console.log('CONNECT -> U -> '+request.method + ' ' + String(request.url));
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  var cgi = url.parse(request.url, true).query;
+//   console.log('-> '+request.body);
+
+  var Uname=request.body.Uname;
+  var Uemail=unescape(request.body.Uemail) ;
+  var Upassword=request.body.Upassword;
+  reply=await Ucreate(Uname, Uemail, Upassword);
+  
+  console.log('U POST RESPONSE -> ' + reply);
+  response.write(String(reply));
+  response.end();
+}
+async function u_put(request, response) {
+  
+}

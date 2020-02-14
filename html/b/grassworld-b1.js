@@ -31,7 +31,7 @@ function placeOnScreen(r) {
   fnt.Tid=Tid;
   fnt.Tname=newName;
   fnt.selected=false;
-  fnt.o=MySchplágen_b1;
+  fnt.o=blueSamuari_b1;
   fnt.o.Tid=Tid;
   
   let spritedetail= {
@@ -73,9 +73,9 @@ function placeOnScreen(r) {
 
 
 function onload_b1() {
-//  console.log('onLoad_b1');
+  console.log('onLoad_b1');
 //    MySchplágen_b1= new MovingThing(null,newname, null, 10, 1); //Genus = 10
 //    MySchplágen_b1.tcreate(placeOnScreen);
-//	blueSamuari_b1= new MovingThing(null,newname, null, 20, 1); // 20 = blueSamuari genus from classes.js
-//	blueSamuari_b1.tcreate(placeOnScreen);
+	blueSamuari_b1= new MovingThing(null,newname, null, 25, 1); // 25 = blueSamuari genus from classes.js
+	blueSamuari_b1.tcreate(placeOnScreen);
 }

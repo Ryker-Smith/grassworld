@@ -281,7 +281,6 @@ function gameStatus(totalready) {
     howmany = '0' + howmany;
   }
   ctx2.fillText(howmany + ' things', 10, 50);
-//   ctx2.fillStyle = 'red';
   ctx2.beginPath();
   ctx2.lineWidth = '1';
   ctx2.strokeStyle = 'white';
@@ -310,8 +309,13 @@ function game(game_canvas) {
       if (thingmap.get(key).ready == 0) {
         thingmap.get(key).sprite.update()
         thingmap.get(key).sprite.render()
-        if (thingmap.get(key).o.Ginteracts) {
-          thingmap.get(key).sprite.interact();
+        try {
+          if (thingmap.get(key).o.Ginteracts) {
+            thingmap.get(key).sprite.interact();
+          }
+        }
+        catch(e) {
+          console.log('ERR: '+key);
         }
         sleep(1);
         treadycount++;

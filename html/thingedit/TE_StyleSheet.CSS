@@ -1,0 +1,49 @@
+table{
+border-collapse: collapse;
+}
+table, th, td{
+border: 2px solid red;
+}
+body{
+background-color: black;
+}
+td{
+color: white;
+font-weight: bold;
+}
+body{
+color: white;
+}
+h1{
+  text-align: center;
+  font-size: 50px;
+  color: red;
+}
+button{
+  font-size: 25px;
+  background-color: red;
+  cursor:pointer;
+  border: none;
+}
+form{
+  font-size:25px;
+  color: white;
+}
+input{
+  font-size: 25px;
+  border: none;
+  border-bottom: 2px solid red;
+  background-color: #960000;
+  width: 40%;
+  color: white;
+  display: inline-block;
+  float: right;
+  clear:right;
+}
+thead{
+  font-size:25px;
+  width: 25%;
+}
+table{
+  width:100%;
+}

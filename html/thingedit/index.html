@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<link rel="stylesheet" href="TE_StyleSheet.CSS">
 <head>
     <title>TeamRed Thing</title>
 <script src="/assets/js/jquery-3.4.1.min.js"></script>
@@ -10,32 +11,36 @@
 // flora
 // object
 
-window.onload=mystart();
+window.onload=r1thingstart();
 
-function mystart() {
+function r1thingstart() {
+  console.log();
   //**--Uncomment When rest of program works---**
-  // var catbit ="";
+  //var catbit ="";
   // for (var x=1; x <= 3; x++) {
-  //   switch (x) {
-  //     case 1:
+  // switch (x) {
+  // case 1:
   //       catbit="fauna";
+  //       console.log('L23');
   //       break;
-  //     case 2:
+  // case 2:
   //       catbit="flora";
+  //       console.log('L27');
   //       break;
-  //     case 3:
+  // case 3:
   //       catbit="object";
+  //       console.log('L31');
   //       break;
   //   }
   //   getT(catbit);
   // }
-  //**--Uncomment When rest of program works---**
+  // **--Uncomment When rest of program works---**
 
   //--temporary(Delete when you become good at javascript)--
   getT("fauna");
 }
 
-function token() {
+function r1token() {
   return '&TK=a1b2c3d4';
 }
 //to do-> call url above 3 times, parse json data and display, edit and save a Thing
@@ -43,50 +48,62 @@ function token() {
 //(**This is for later**)(Remember)-> Post and Put in url to save a thing
 
 function getT(catbit) {
-  //let url=grassworld_db+'t=thing&cat='+catbit + token();
-   let url='https://grassworld.fachtnaroe.net/DB/?t=things&cat=fauna';
-  //let url='https://grassworld.fachtnaroe.net/DB/?t=thing&a=get&Tid=8810&TK=a1b2c3d4';
-  let xhr = new XMLHttpRequest();
-  xhr.open('POST', url);
-    console.log(url );
-  xhr.send();
+  let url='https://grassworld.fachtnaroe.net/DB/?a=get&t=thing'+r1token();;
+  console.log("url: "+url);
 
-  xhr.onload = function() {
+  var req = new XMLHttpRequest();
+  console.log("b");
+  req.open('GET', url);
+  req.send();
 
-       if (xhr.status == 200) {
-         //console.log(xhr.response);
-      //   let r=xhr.response;
-      //   //console.log('Ting: '+r);
-      //   r=r.replace(/\[/g,'');
-      //   r=r.replace(/\]/g,'');
-      //   r=JSON.parse(r);
-      //     console.log('B '+r);
-        // var table = document.getElementById("listtable");
-        // var row = table.insertRow();
-        // var cell0 = row.insertCell(0);
-        // var cell1 = row.insertCell(1);
-        // var cell2 = row.insertCell(2);
-        // var cell3 = row.insertCell(3);
-        // var cell4 = row.insertCell(4);
-        // var cell5 = row.insertCell(5);
-        // var cell6 = row.insertCell(6);
-        // var cell7 = row.insertCell(7);
-        // cell0.innerHTML = r.Gid;
-        // cell1.innerHTML = makelink(r.Gid, r.Gname);
-        // cell2.innerHTML = yesorno(r.Gmobile);
-        // cell3.innerHTML = yesorno(r.Ganimated);
-        // cell4.innerHTML = yesorno(r.Ginteracts);
-        // cell5.innerHTML = yesorno(r.Gcansleep);
-        // cell6.innerHTML = yesorno(r.Gliving);
-        // cell7.innerHTML = r.Gdescription;
-////           document.getElementById('thisgname').innerHTML=r.Gname;
+  req.onload = function() {
+
+       if (req.status == 200) {
+        let r=req.response;
+        r=JSON.parse(r);
+        var table = document.getElementById("listtable");
+        for (var i=0; i< r.length; i++) {
+
+            console.log( r[i].Tname );
+
+            var row = table.insertRow();
+            var cell0 = row.insertCell(0);
+            var cell1 = row.insertCell(1);
+            var cell2 = row.insertCell(2);
+            var cell3 = row.insertCell(3);
+            var cell4 = row.insertCell(4);
+            var cell5 = row.insertCell(5);
+            var cell6 = row.insertCell(6);
+            var cell7 = row.insertCell(7);
+            var cell8 = row.insertCell(8)
+            var cell9 = row.insertCell(9)
+            var cell10 = row.insertCell(10)
+            var cell11 = row.insertCell(11)
+            var cell12 = row.insertCell(12)
+            cell0.innerHTML = r[i].Tid;
+            cell1.innerHTML = r[i].Tname;
+            cell2.innerHTML = r[i].Tcreator;
+            cell3.innerHTML = r[i].Tstatus;
+            cell4.innerHTML = r[i].Tcontent;
+            cell5.innerHTML = r[i].Tgenus;
+            cell6.innerHTML = r[i].Tx;
+            cell7.innerHTML = r[i].Ty;
+            cell8.innerHTML = r[i].Tz;
+            cell9.innerHTML = r[i].Ts;
+            cell10.innerHTML = r[i].Tteam;
+            cell11.innerHTML = r[i].Tkeypressfunc;
+            cell12.innerHTML = r[i].Gid;
+           document.getElementById('Tid').innerHTML=r.Tid;
+}
+
       }
       else {
-        console.log(xhr.response);
+          console.log(req.response);
         console.log('Error c187');
       }
     };
 }
+
 
 
 </script>
@@ -110,8 +127,9 @@ function getT(catbit) {
   Thing Team :&nbsp;<input type="input" id="Tteam" name="Tteam"  readonly="true"  size="5"><br>
   Thing Keypress Function:&nbsp;<input type="input" id="Tkeypressfunc" name="Tkeypressfunc"  readonly="true"  size="5"><br>
   Genus ID :&nbsp;<input type="text" id="Gid" name="Gid" readonly="true"  size="5"><br>
-  <input type="button" value="Save" onclick="savethis()">
+  <!-- <input type="button" value="Save" onclick="savethis()"> -->
 </form>
+<button id='SavethingButton'>Save</button>
 <table id="listtable">
 <thead><tr>
   <td>Tid</td>

@@ -49,7 +49,6 @@ class ScriptItem {
           SIcode : escape (this.code),
           SIname : this.name
         });
-//       console.log('SEND '+message);
       xhr.open('POST', t);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       xhr.send(message); 
@@ -60,15 +59,12 @@ class ScriptItem {
             console.log('RX '+ xhr.response );
             if (typeof plf === 'function' ) {
               plf(JSON.parse(xhr.response).insertId);
-//               console.log('1> '+caller.name+' '+caller.id);
             }
             else {
                 caller.id=JSON.parse(xhr.response).insertId;
-//                 console.log('2> '+caller.name+' '+caller.id);
             }
         }
         else { 
-//             console.log('E '+xhr.response);
             return 'Error x26';
         }
       }
@@ -87,10 +83,8 @@ class ScriptItem {
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       
       xhr.send(message);
-//       console.log('SEND '+message);
       xhr.onload = function() {
         if (xhr.status == 200) { 
-//           console.log(xhr.response);
           let r=xhr.response;
           r=r.replace(/\[/g,'');
           r=r.replace(/\]/g,'');
@@ -122,8 +116,6 @@ class ScriptItem {
       xhr.send(message);
       xhr.onload = function() {
         if (xhr.status == 200) {
-//           console.log('W '+xhr.response); 
-//           plf(JSON.parse(xhr.reponse));
           this.dirty=false;
         }
         else {
@@ -143,7 +135,6 @@ class ScriptItem {
       xhr.send(message);
       xhr.onload = function() {
         if (xhr.status == 200) {
-//             console.log(); 
             this.dirty=false;
         }
         else { 

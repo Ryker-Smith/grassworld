@@ -54,6 +54,5 @@ function next_execute(r) {          // next executable to give schplagen propert
 function onload_b2() { // When page reloads it creates a new schplagen.
         console.log('b2');
         MySchplágen_B2= new MovingThing(null,addnames, null, 12, 1); // 12 = genus from classes.js which is my penguin.
-        blueSamuari = new MovingThing(null,samurai_name, null, 20, 1);
     	MySchplágen_B2.tcreate(next_execute);
     }

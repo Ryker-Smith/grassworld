@@ -192,8 +192,11 @@ class Thing extends Yoke {
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) { // OK?
-          postloadfunc(JSON.parse(xhr.response));  
-          console.log(xhr.response);
+          try {
+            postloadfunc(JSON.parse(xhr.response));  
+            console.log(xhr.response);
+          }
+          catch(e){}
         }
         else { 
           console.log(xhr.response);
@@ -207,10 +210,13 @@ class Thing extends Yoke {
     // change anything here until 
     
     for (const d of activities) {
-      thething.sprite.directions.set(d,JSON.parse(response)[d]);
-      thething.sprite.directions.get(d).spritesheet=new Image();
-      thething.sprite.directions.get(d).spritesheet.src=imagewithfullpath(JSON.parse(response)[d].spritesheet);
-      thething.sprite.directions.get(d).ticks=Math.floor(thething.sprite.directions.get(d).ticks/world_speed_multiplier);
+      try {
+        thething.sprite.directions.set(d,JSON.parse(response)[d]);
+        thething.sprite.directions.get(d).spritesheet=new Image();
+        thething.sprite.directions.get(d).spritesheet.src=imagewithfullpath(JSON.parse(response)[d].spritesheet);
+        thething.sprite.directions.get(d).ticks=Math.floor(thething.sprite.directions.get(d).ticks/world_speed_multiplier);
+      }
+      catch(e){}
     }
     thingmap.get(thething.Tid).ready--;
   };
@@ -397,13 +403,6 @@ class MovingThing extends LivingThing {
 class Schplágen extends MovingThing {  
 }
 
-class SamuraiSchplágen extends Schplágen {  
-}
-class CowboySchplágen extends Schplágen {  
-}
-class BelieverSchplágen extends Schplágen {  
-}
-
 class World extends Thing {
   constructor (parent, name, content) {
     super(parent, name, content);
@@ -558,27 +557,27 @@ class charactersprite {
               }
             break;
           }
-		   case genus_blueSamuari : { // the killing machine!!
-              let killzone=99;
-              for (key of thingmap.keys()) {
-                  if (key == this.Tid) {
-                    continue;
-                  }
-                  let dist = distance({
-                    left: (thingmap.get(key).sprite.left + (thingmap.get(key).sprite.sprite_width / 2)),
-                    top: (thingmap.get(key).sprite.top + (thingmap.get(key).sprite.sprite_height / 2))
-                  }, {
-                    left: this.left + Math.floor(this.sprite_width/2),
-                    top: this.top + Math.floor(this.sprite_height/2)
-                  });
-                  if (dist < killzone) {
-                    if (thingmap.get(key).o.Tstatus != 'p') {
-                      charactersprite.pffft(key);
-                    }
-                  }
-              }
-            break;
-          }
+// 		   case genus_blueSamuari : { // the killing machine!!
+//               let killzone=99;
+//               for (key of thingmap.keys()) {
+//                   if (key == this.Tid) {
+//                     continue;
+//                   }
+//                   let dist = distance({
+//                     left: (thingmap.get(key).sprite.left + (thingmap.get(key).sprite.sprite_width / 2)),
+//                     top: (thingmap.get(key).sprite.top + (thingmap.get(key).sprite.sprite_height / 2))
+//                   }, {
+//                     left: this.left + Math.floor(this.sprite_width/2),
+//                     top: this.top + Math.floor(this.sprite_height/2)
+//                   });
+//                   if (dist < killzone) {
+//                     if (thingmap.get(key).o.Tstatus != 'p') {
+//                       charactersprite.pffft(key);
+//                     }
+//                   }
+//               }
+//             break;
+//           }
 		  
           default : {
             break;
@@ -716,6 +715,7 @@ class charactersprite {
       catch (e) {
         console.log('Render '+this.Tid+' error c488\n'+e);
         thingmap.delete(this.Tid);
+        console.log(key+' '+spritedata.spritesheet);
         console.log('WARNING! '+this.Tid+' removed from World map');
       }
       if (thing_selected == this.Tid) {

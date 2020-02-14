@@ -52,6 +52,6 @@ function run_this_next(r) {
 }
 function onload_f0() {
   console.log('onLoad');
-  thisschplágen= new SamuraiSchplágen(null,newname, null, 1, 1);
+  thisschplágen= new Schplágen(null,newname, null, 1, 1);
   thisschplágen.tcreate(run_this_next);
 }
