@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<!-- make the list rows clickable, -->
+<link rel="stylesheet" href="TE_StyleSheet.CSS">
+<head>
+    <title>TeamRed Thing</title>
+<script src="/assets/js/jquery-3.4.1.min.js"></script>
+<script src="../grassworld-classes.js"></script>
+<script>
+// https://grassworld.fachtnaroe.net/DB/?t=thing&cat=
+// fauna
+// flora
+// object
+
+window.onload=rThingstart();
+
+function rThingstart() {
+  getT();
+}
+
+function rToken() {
+  return '&TK=a1b2c3d4';
+}
+//to do-> call url above, parse json data and display, edit and save a Thing
+// (1) Call url ->https://grassworld.fachtnaroe.net/DB/DB/?a=get&t=thing,and displayed
+//(**This is for later**)(Remember)-> Post and Put in url to save a thing
+function ThingDataToForm(){
+  console.log("THis is working thats great huh " + this.id + " " + document.getElementById('Tname'+this.id).textContent);
+  var cell = '#616247FF';
+  var darkercell = '#484935';
+  document.getElementById('Tid').value = document.getElementById('Tid'+this.id).textContent;
+  document.getElementById('Tname').value = document.getElementById('Tname'+this.id).textContent;
+  document.getElementById('Tcreator').value = document.getElementById('Tcreator'+this.id).textContent;
+  document.getElementById('Tstatus').value = document.getElementById('Tstatus'+this.id).textContent;
+  document.getElementById('Tcontent').value = document.getElementById('Tcontent'+this.id).textContent;
+  document.getElementById('Tgenus').value = document.getElementById('Tgenus'+this.id).textContent;
+  document.getElementById('tx').value = document.getElementById('Tx'+this.id).textContent;
+  document.getElementById('ty').value = document.getElementById('Ty'+this.id).textContent;
+  document.getElementById('tz').value = document.getElementById('Tz'+this.id).textContent;
+  document.getElementById('ts').value = document.getElementById('Ts'+this.id).textContent;
+  document.getElementById('Tteam').value = document.getElementById('Tteam'+this.id).textContent;
+  document.getElementById('Tkeypressfunc').value = document.getElementById('Tkeypressfunc'+this.id).textContent;
+  document.getElementById('Tid').style.backgroundColor = darkercell;
+  document.getElementById('Tcreator').style.backgroundColor = darkercell;
+  document.getElementById('Tstatus').style.backgroundColor = cell;
+  document.getElementById('Tcontent').style.backgroundColor = cell;
+  document.getElementById('tx').style.backgroundColor = cell;
+  document.getElementById('ty').style.backgroundColor = cell;
+  document.getElementById('tz').style.backgroundColor = cell;
+  document.getElementById('ts').style.backgroundColor = cell;
+  document.getElementById('Tteam').style.backgroundColor = cell;
+  document.getElementById('Tkeypressfunc').style.backgroundColor = cell;
+  document.getElementById('editThingform').style.visibility = 'visible';
+  document.getElementById('editThingform').style.height = 'auto';
+  document.getElementById('EditOrCreate').style.visibility = 'visible';
+  document.getElementById('EditOrCreate').style.height = 'auto';
+  document.getElementById('EditOrCreate').innerHTML = "Editing A Thing";
+}
+function newThingClick() {
+  var darkercell = '#484935';
+  document.getElementById('Tid').value = '';
+  document.getElementById('Tname').value = '';
+  document.getElementById('Tcreator').value = '';
+  document.getElementById('Tstatus').value = '';
+  document.getElementById('Tcontent').value = '';
+  document.getElementById('Tgenus').value = '';
+  document.getElementById('tx').value = '';
+  document.getElementById('ty').value = '';
+  document.getElementById('tz').value = '';
+  document.getElementById('ts').value = '';
+  document.getElementById('Tteam').value = '';
+  document.getElementById('Tkeypressfunc').value = '';
+  document.getElementById('editThingform').style.visibility = 'visible';
+  document.getElementById('Tid').style.backgroundColor = darkercell;
+  document.getElementById('Tcreator').style.backgroundColor = darkercell;
+  document.getElementById('Tstatus').style.backgroundColor = darkercell;
+  document.getElementById('Tcontent').style.backgroundColor = darkercell;
+  document.getElementById('tx').style.backgroundColor = darkercell;
+  document.getElementById('ty').style.backgroundColor = darkercell;
+  document.getElementById('tz').style.backgroundColor = darkercell;
+  document.getElementById('ts').style.backgroundColor = darkercell;
+  document.getElementById('Tteam').style.backgroundColor = darkercell;
+  document.getElementById('Tkeypressfunc').style.backgroundColor = darkercell;
+  document.getElementById('editThingform').style.height = 'auto';
+  document.getElementById('EditOrCreate').style.visibility = 'visible';
+  document.getElementById('EditOrCreate').style.height = 'auto';
+  document.getElementById('EditOrCreate').innerHTML = "Creating A Thing";
+}
+function newThing(){
+  let Tname = document.getElementById('Tname').value;
+  let Tgenus = document.getElementById('Tgenus').value;
+  let url=grassworld_db+'t=thing&a=mk&name='+Tname + '&g='+Tgenus + token();
+  xhr.open('POST', url);
+  xhr.send();
+}
+// 10829
+function saveThingClick() {
+  let Tid = document.getElementById('Tid').value ;
+  let url=grassworld_db+'t=thing&a=upd&Tid='+Tid + rToken();
+  let xhr = new XMLHttpRequest();
+  let message= JSON.stringify({
+        Tid: Tid,
+        Tname: document.getElementById('Tname').value,
+        Tcreator: document.getElementById('Tcreator').value,
+        Tstatus: document.getElementById('Tstatus').value,
+        Tcontent: document.getElementById('Tcontent').value,
+        Tgenus: document.getElementById('Tgenus').value,
+        Tx: document.getElementById('tx').value,
+        Ty: document.getElementById('ty').value,
+        Tz: document.getElementById('tz').value,
+        Ts: document.getElementById('ts').value,
+        Tteam: document.getElementById('Tteam').value,
+        Tkeypressfunc: document.getElementById('Tkeypressfunc').value,
+      });
+  // if ( document.getElementById('POSTorPUTflag').value==1 ) {
+    xhr.open('PUT', url); // new
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(message);
+   console.log("Y/- "+url+" / "+xhr.status+" -/"+message);
+  // }
+}
+function getT() {
+  let url = grassworld_db+'a=get&t=thing'+rToken();;
+  console.log("url: "+url);
+  var req = new XMLHttpRequest();
+  console.log("b");
+  req.open('GET', url);
+  req.send();
+  req.onload = function() {
+       if (req.status == 200) {
+        let r=req.response;
+        r=JSON.parse(r);
+         console.log( r );
+        var table = document.getElementById("listtable");
+        for (var i=0; i< r.length; i++) {
+            var row = table.insertRow();
+            var cell0 = row.insertCell(0);
+            var cell1 = row.insertCell(1);
+            var cell2 = row.insertCell(2);
+            var cell3 = row.insertCell(3);
+            var cell4 = row.insertCell(4);
+            var cell5 = row.insertCell(5);
+            var cell6 = row.insertCell(6);
+            var cell7 = row.insertCell(7);
+            var cell8 = row.insertCell(8)
+            var cell9 = row.insertCell(9)
+            var cell10 = row.insertCell(10)
+            var cell11 = row.insertCell(11)
+            // var cell12 = row.insertCell(12)
+            row.id=i;
+            cell0.innerHTML = r[i].Tid;
+            cell0.id = 'Tid'+i;
+            cell1.innerHTML = r[i].Tname;
+            cell1.id = 'Tname'+i;
+            cell2.innerHTML = r[i].Tcreator;
+            cell2.id = 'Tcreator'+i;
+            cell3.innerHTML = r[i].Tstatus;
+            cell3.id = 'Tstatus'+i;
+            cell4.innerHTML = r[i].Tcontent;
+            cell4.id = 'Tcontent'+i;
+            cell5.innerHTML = r[i].Tgenus;
+            cell5.id = 'Tgenus'+i;
+            cell6.innerHTML = r[i].Tx;
+            cell6.id = 'Tx'+i;
+            cell7.innerHTML = r[i].Ty;
+            cell7.id = 'Ty'+i;
+            cell8.innerHTML = r[i].Tz;
+            cell8.id = 'Tz'+i;
+            cell9.innerHTML = r[i].Ts;
+            cell9.id = 'Ts'+i;
+            cell10.innerHTML = r[i].Tteam;
+            cell10.id = 'Tteam'+i;
+            cell11.innerHTML = r[i].Tkeypressfunc;
+            cell11.id = 'Tkeypressfunc'+i;
+            // cell12.innerHTML = r[i].Gid;
+            // cell12.id = 'Gid'+i
+            document.getElementById(i).addEventListener("click", ThingDataToForm);
+            }
+      }
+      else {
+          console.log(req.response);
+        console.log('Error c187');
+      }
+    };
+}
+</script>
+</head>
+<body>
+<h1>Thing Editor</h1>
+<!-- <button id='NewthingButton'>New</button> -->
+<!-- input type and value need to be checked in form, I guessed them.... -->
+<h2 id="EditOrCreate">heyYallAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</h2>
+<form id="editThingform">
+  <input type="hidden" id="POSTorPUTflag" value="1">
+  Thing ID:&nbsp;<input type="text" id="Tid" name="Tid" readonly="true" size="5"><br>
+  Thing name:&nbsp;<input type="text" id="Tname" name="Tname" value=""><br>
+  Thing Creator:&nbsp;<input type="text" id="Tcreator" name="Tcreator"  readonly="true"  size="5"><br>
+  Thing Status:&nbsp;<input type="input" id="Tstatus" name="Tstatus" size="5"><br>
+  Thing Content:&nbsp;<input type="input" id="Tcontent" name="Tcontent" size="5"><br>
+  Thing Genus:&nbsp;<input type="text" id="Tgenus" size="5"><br>
+  Thing x :&nbsp;<input type="text" id="tx" name="tx"  readonly="true"  size="5"><br>
+  Thing y :&nbsp;<input type="text" id="ty" name="ty"  readonly="true"  size="5"><br>
+  Thing z :&nbsp;<input type="text" id="tz" name="tz"  readonly="true"  size="5"><br>
+  Thing s :&nbsp;<input type="text" id="ts" name="ts"  readonly="true"  size="5"><br>
+  Thing Team :&nbsp;<input type="input" id="Tteam" name="Tteam"  readonly="true"  size="5"><br>
+  Thing Keypress Function:&nbsp;<input type="input" id="Tkeypressfunc" name="Tkeypressfunc"  readonly="true"  size="5"><br>
+  <!-- Genus ID :&nbsp;<input type="text" id="Gid" name="Gid" readonly="true"  size="5"><br> -->
+  <!-- <input type="button" id="FormButton" value="Save" onclick="savethis()">
+  <input type="button" id="FormButton" value="New"> -->
+</form>
+<!-- <button id='SavethingButton'>Save</button> -->
+<button id="FormButton" onclick="newThingClick()">New</button>
+<button id="FormButton" onclick="saveThingClick()">Save</button>
+<table id="listtable">
+<thead><tr id="NoInteract">
+  <th>Tid</th>
+  <th>Tname</th>
+  <th>Tcreator</th>
+  <th>Tstatus</th>
+  <th>Tcontent</th>
+  <th>Tgenus</th>
+  <th>Tx</th>
+  <th>Ty</th>
+  <th>Tz</th>
+  <th>Ts</th>
+  <th>Tteam</th>
+  <th>Tkeypressfunc</th>
+  <!-- <th>Gid</th> -->
+</tr></thead>
+<tbody></tbody>
+</table>
+</body>
+</html>

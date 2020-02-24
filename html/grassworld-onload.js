@@ -11,3 +11,9 @@ window.onload=(function(){
   onload_b3();
   onload_f0();
 });
+
+window.onresize=(function(){
+  let resizecanvas = document.getElementById('grassworld');
+  resizecanvas.width = window.innerWidth;
+  resizecanvas.height = window.innerHeight;  
+});

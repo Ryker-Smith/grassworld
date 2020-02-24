@@ -386,8 +386,6 @@ function game(game_canvas) {
     fting.sprite = new charactersprite(spritedetail);
     thingmap.set(fting.Tid, fting);
     Thing.tplfimages((field.all[j]).GimagesJSON, thingmap.get(fting.Tid));
-    //       console.log(thingmap.get(fting.Tid).Tx+'v'+thingmap.get(fting.Tid).Ty);
-//     fting.o.tkeypressfunc=field.all[j].tkeypressfunc;
     fting.o.tkeypress = (function(keycode) {
       keychar=String.fromCharCode(keycode);
       if (keychar =='V') {

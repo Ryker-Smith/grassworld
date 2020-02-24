@@ -1,6 +1,6 @@
 
 var grassworld_url="https://grassworld.fachtnaroe.net/";
-var grassworld_db=grassworld_url+"DB/?";
+var grassworld_u=grassworld_url+"U/";
 
 /*
 var username = document.getElementById("rusername").textContent;
@@ -13,38 +13,43 @@ class Reg {
     this.username=u;
     this.email=e;
     this.password=p;
-    this.url=grassworld_db;
+    this.url=grassworld_u;
   }
 
   register(){
     let xhr = new XMLHttpRequest();
-    let t=this.url;
-    let message= JSON.stringify({//error with this function
-        u,e,p
+    let message= JSON.stringify({
+        Uname : this.username,
+        Uemail : this.email,
+        Upassword : this.password
     });
-    xhr.open('POST', t);
-    xhr.send(message); 
+    xhr.open('POST', this.url);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(message);
   }
 
   login() {
 
   }
-  
+
 }
 
 function submit_tobackend(b) {
-var n;
+  var n;
   if (b==1) {
+      // new user
       n=new Reg(
-        document.getElementById("rusername").textContent,
-        document.getElementById("remail").textContent,
-        document.getElementById("rpassword").textContent);
+        document.getElementById("rusername").value,
+        document.getElementById("remail").value,
+        document.getElementById("rpassword").value);
       n.register();
   }
   else if(b==2) {
+      //  normal login
       n=new Reg(
-        document.getElementById("remail").textContent,
-        document.getElementById("rpassword").textContent);
+        document.getElementById("lemail").value,
+        document.getElementById("lpassword").value);
+        console.log(lemail);
       n.login();
   }
 }

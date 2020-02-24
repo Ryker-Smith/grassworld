@@ -62,7 +62,6 @@ var pending=0;
 
 app.use(express.static('/var/www/grassworld/html/'));
 
-
 app.post("/DB/",(request, response) => db_post(request, response));
 app.put("/DB/",(request, response) => db_put(request, response));
 app.get("/DB/",(request, response) => db_get(request, response));
@@ -77,8 +76,6 @@ app.get("/SI/ID/:SCid/TK/:token",(request, response) => si_get(request, response
 
 app.post("/U/",(request, response) => u_post(request, response));
 app.put("/U/",(request, response) => u_put(request, response));
-app.get("/U/ID/:SCid/TK/:token",(request, response) => u_get(request, response));
-
 
 app.get("/debug/",(request, response) => db_dbg(request, response));
 app.listen(port, () => console.log(`STARTED on port ${port}`));
@@ -114,7 +111,6 @@ async function db_get(request, response) {
 
     async function tget_things_multiple(mobile, Tz) {
         var r;
-//         console.log("SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile="+ mobile);
         await dbms.query(
             "SELECT * FROM things JOIN genus ON things.Tgenus=genus.Gid WHERE Gmobile="+ (dbms.escape(mobile)) + " AND Tz="+(dbms.escape(Tz)))
           .then( results => {
@@ -245,7 +241,7 @@ async function db_get(request, response) {
         cgi.Tz=0;
     }
     if (lib.isdefined(cgi.name)) {
-      reply=await tget_single_by_name(cgi.name);
+      reply=await tget_single_by_name(cgi.name,cgi.Tz);
     }
     else if (lib.isdefined(cgi.cat)) {
       if (cgi.cat == 'fauna') {
@@ -356,7 +352,28 @@ async function db_put(request, response) {
       .catch( err => {
         console.log(err);
       });
-      console.log('D');
+      return r;
+    }
+    async function tupdate(Tid, Tname, Tcreator, Tstatus, Tcontent, Tgenus, Tx, Ty, Tz, Tteam, Tkeypressfunc) {
+        var r;
+        await dbms.query(
+            "UPDATE things SET Tname="+(dbms.escape(Tname))+", Tcreator="+(dbms.escape(Tcreator))+", Tstatus="+(dbms.escape(Tstatus))+", Tcontent="+(dbms.escape(Tcontent))+", Tgenus="+(dbms.escape(Tgenus))+ ", Tx="+(dbms.escape(Tx))+", Ty="+(dbms.escape(Ty))+", Tz="+(dbms.escape(Tz))+", Tteam="+(dbms.escape(Tteam))+", Tkeypressfunc="+(dbms.escape(Tkeypressfunc)) + " WHERE Tid="+(dbms.escape(Tid)) )
+          .then( results => {
+          if(results.length < 1){
+            console.log(r);
+            console.log(results);
+            r='error b370';
+          }
+          else {
+            console.log(results);
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
       return r;
     }
     async function tgenuschange(Tid, newGenus) {
@@ -378,7 +395,6 @@ async function db_put(request, response) {
       });
       return r;
     }
-
   console.log( nowIs());
   console.log('CONNECT -> DB -> '+request.method + ' ' + String(request.url));
   fs.appendFile(debugfile, 'CONNECT\n', () => {});
@@ -403,6 +419,11 @@ async function db_put(request, response) {
         reply=await gupdate(
           request.body.Gid,request.body.Gname, request.body.Gdescription, request.body.Gmobile, 
           request.body.Ganimated, request.body.Ginteracts, request.body.Gcansleep, request.body.Gliving);
+      }
+      else if (cgi.a == 'upd'){
+        reply=await tupdate(
+          request.body.Tid,request.body.Tname, request.body.Tcreator, request.body.Tstatus, 
+          request.body.Tcontent, request.body.Tgenus, request.body.Tx, request.body.Ty, request.body.Tz, request.body.Tteam, request.body.Tkeypressfunc);
       }
     }
     response.write(String(reply));
@@ -451,7 +472,6 @@ async function db_post(request, response) {
       });
       return r;
     }
-    
   console.log( nowIs());
   console.log('CONNECT -> DB -> '+request.method + ' ' + String(request.url));
   fs.appendFile(debugfile, 'CONNECT\n', () => {});
@@ -509,7 +529,6 @@ async function db_del(request, response) {
     if ((cgi.t == 'thing') && (lib.isdefined(cgi.Tid))) {
       reply=await tdelete(cgi.Tid);
     }
-      
   }
   console.log('POST RESPONSE -> ' + reply);
   response.write(String(reply));
@@ -556,21 +575,15 @@ async function si_post(request, response) {
       });
       return r;
     }
-
   console.log( nowIs() );
   console.log('CONNECT -> SI -> '+request.method + ' ' + String(request.url));
   response.writeHead(200, {'Content-Type': 'text/html'});
   var cgi = url.parse(request.url, true).query;
-//   console.log('-> '+request.body);
-
   var TK=request.body.TK;
-//   console.log('TK: '+TK);
   var SIcode=unescape(request.body.SIcode) ;
   console.log('Code: '+unescape(SIcode) );
   var SIname=request.body.SIname;
-//   console.log('NM: '+SIname);
   reply=await SIcreate(SIname, SIcode);
-  
   console.log('POST RESPONSE -> ' + reply);
   response.write(String(reply));
   response.end();
@@ -627,7 +640,6 @@ async function si_get(request, response) {
           }
           else {
             r=JSON.stringify(results);
-//             console.log('R '+r);
           }
           return r;
         }
@@ -654,9 +666,6 @@ async function si_get(request, response) {
   response.end();
 }
 
-async function u_get(request, response) {
-  
-}
 async function u_post(request, response) {
   var reply='';
 
@@ -678,13 +687,10 @@ async function u_post(request, response) {
       });
       return r;
     }
-
   console.log( nowIs() );
   console.log('CONNECT -> U -> '+request.method + ' ' + String(request.url));
   response.writeHead(200, {'Content-Type': 'text/html'});
   var cgi = url.parse(request.url, true).query;
-//   console.log('-> '+request.body);
-
   var Uname=request.body.Uname;
   var Uemail=unescape(request.body.Uemail) ;
   var Upassword=request.body.Upassword;
@@ -695,5 +701,31 @@ async function u_post(request, response) {
   response.end();
 }
 async function u_put(request, response) {
+    var reply='';
+
+  async function Ulogin(Uemail, Upassword) {
+        var r;
+        await dbms.query(
+            "SELECT COUNT(*) FROM users WHERE Uemail="+dbms.escape(Uemail)+" AND Upassword="+dbms.escape(Upassword))
+          .then( results => {
+            r=JSON.stringify(results);
+            return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+  console.log( nowIs() );
+  console.log('CONNECT -> U -> '+request.method + ' ' + String(request.url));
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  var Uemail=unescape(request.body.Uemail) ;
+  var Upassword=request.body.Upassword;
+  console.log('UL '+Uemail+' '+Upassword);
+  reply=await Ulogin(Uemail, Upassword);
   
+  console.log('U PUT RESPONSE -> ' + reply);
+  response.write(String(reply));
+  response.end();
 }

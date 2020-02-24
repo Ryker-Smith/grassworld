@@ -1,152 +1,67 @@
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" href="TE_StyleSheet.CSS">
 <head>
+<!-- make the list rows clickable, -->
+<link rel="stylesheet" href="TE_StyleSheet.CSS">
+<link rel="stylesheet" href="/assets/css/w3.css">
+
     <title>TeamRed Thing</title>
 <script src="/assets/js/jquery-3.4.1.min.js"></script>
 <script src="../grassworld-classes.js"></script>
-<script>
-// https://grassworld.fachtnaroe.net/DB/?t=thing&cat=
-// fauna
-// flora
-// object
-
-window.onload=r1thingstart();
-
-function r1thingstart() {
-  console.log();
-  //**--Uncomment When rest of program works---**
-  //var catbit ="";
-  // for (var x=1; x <= 3; x++) {
-  // switch (x) {
-  // case 1:
-  //       catbit="fauna";
-  //       console.log('L23');
-  //       break;
-  // case 2:
-  //       catbit="flora";
-  //       console.log('L27');
-  //       break;
-  // case 3:
-  //       catbit="object";
-  //       console.log('L31');
-  //       break;
-  //   }
-  //   getT(catbit);
-  // }
-  // **--Uncomment When rest of program works---**
-
-  //--temporary(Delete when you become good at javascript)--
-  getT("fauna");
-}
-
-function r1token() {
-  return '&TK=a1b2c3d4';
-}
-//to do-> call url above 3 times, parse json data and display, edit and save a Thing
-// (1) Call url ->https://grassworld.fachtnaroe.net/DB/?t=thing&cat=fauna ,and displayed
-//(**This is for later**)(Remember)-> Post and Put in url to save a thing
-
-function getT(catbit) {
-  let url='https://grassworld.fachtnaroe.net/DB/?a=get&t=thing'+r1token();;
-  console.log("url: "+url);
-
-  var req = new XMLHttpRequest();
-  console.log("b");
-  req.open('GET', url);
-  req.send();
-
-  req.onload = function() {
-
-       if (req.status == 200) {
-        let r=req.response;
-        r=JSON.parse(r);
-        var table = document.getElementById("listtable");
-        for (var i=0; i< r.length; i++) {
-
-            console.log( r[i].Tname );
-
-            var row = table.insertRow();
-            var cell0 = row.insertCell(0);
-            var cell1 = row.insertCell(1);
-            var cell2 = row.insertCell(2);
-            var cell3 = row.insertCell(3);
-            var cell4 = row.insertCell(4);
-            var cell5 = row.insertCell(5);
-            var cell6 = row.insertCell(6);
-            var cell7 = row.insertCell(7);
-            var cell8 = row.insertCell(8)
-            var cell9 = row.insertCell(9)
-            var cell10 = row.insertCell(10)
-            var cell11 = row.insertCell(11)
-            var cell12 = row.insertCell(12)
-            cell0.innerHTML = r[i].Tid;
-            cell1.innerHTML = r[i].Tname;
-            cell2.innerHTML = r[i].Tcreator;
-            cell3.innerHTML = r[i].Tstatus;
-            cell4.innerHTML = r[i].Tcontent;
-            cell5.innerHTML = r[i].Tgenus;
-            cell6.innerHTML = r[i].Tx;
-            cell7.innerHTML = r[i].Ty;
-            cell8.innerHTML = r[i].Tz;
-            cell9.innerHTML = r[i].Ts;
-            cell10.innerHTML = r[i].Tteam;
-            cell11.innerHTML = r[i].Tkeypressfunc;
-            cell12.innerHTML = r[i].Gid;
-           document.getElementById('Tid').innerHTML=r.Tid;
-}
-
-      }
-      else {
-          console.log(req.response);
-        console.log('Error c187');
-      }
-    };
-}
-
-
-
-</script>
+<script src="/thingedit/thingedit.js"></script>
 </head>
 <body>
+<div id="StolenMenu"></div>
+<div id="ThingHeader">
 <h1>Thing Editor</h1>
-<button id='NewthingButton'>New</button>
+</div>
+<!-- <button id='NewthingButton'>New</button> -->
 <!-- input type and value need to be checked in form, I guessed them.... -->
+<h2 id="EditOrCreate"></h2>
+
+<!-- <input type="button" id="FormButton" value="New" onclick="newThingClick()"> -->
+<button id="FormButton" onclick="newThingClick()">New</button>
 <form id="editThingform">
-  <input type="hidden" id="POSTorPUTflag" value="1">
-  Thing ID:&nbsp;<input type="text" id="Tid" name="Tid" readonly="true"  size="5"><br>
+  <input type="hidden" id="POSTorPUTflag" value="0">
+
+  Thing ID:&nbsp;<input type="text" id="Tid" name="Tid" readonly="true" size="5"><br>
   Thing name:&nbsp;<input type="text" id="Tname" name="Tname" value=""><br>
   Thing Creator:&nbsp;<input type="text" id="Tcreator" name="Tcreator"  readonly="true"  size="5"><br>
-  Thing Status:&nbsp;<input type="input" id="Tstatus" name="Tstatus"  readonly="true"  size="5"><br>
-  Thing Content:&nbsp;<input type="input" id="Tcontent" name="Tcontent"  readonly="true"  size="5"><br>
-  Thing Genus:&nbsp;<input type="text" id="Tgenus"  readonly="true"  size="5"><br>
-  Thing x :&nbsp;<input type="text" id="tx" name="tx"  readonly="true"  size="5"><br>
-  Thing y :&nbsp;<input type="text" id="ty" name="ty"  readonly="true"  size="5"><br>
+  Thing Status:&nbsp;<input type="input" id="Tstatus" name="Tstatus" size="5"><br>
+  Thing Content:&nbsp;<input type="input" id="Tcontent" name="Tcontent" size="5"><br>
+  Thing Genus:&nbsp;<input type="text" id="Tgenus" size="5"><br>
+  Thing x :&nbsp;<input type="text" id="tx" name="tx"    size="5"><br>
+  Thing y :&nbsp;<input type="text" id="ty" name="ty"    size="5"><br>
   Thing z :&nbsp;<input type="text" id="tz" name="tz"  readonly="true"  size="5"><br>
-  Thing s :&nbsp;<input type="text" id="ts" name="ts"  readonly="true"  size="5"><br>
+  <!-- Thing s :&nbsp;<input type="text" id="ts" name="ts"  readonly="true"  size="5"><br> -->
   Thing Team :&nbsp;<input type="input" id="Tteam" name="Tteam"  readonly="true"  size="5"><br>
   Thing Keypress Function:&nbsp;<input type="input" id="Tkeypressfunc" name="Tkeypressfunc"  readonly="true"  size="5"><br>
-  Genus ID :&nbsp;<input type="text" id="Gid" name="Gid" readonly="true"  size="5"><br>
-  <!-- <input type="button" value="Save" onclick="savethis()"> -->
+  <!-- Genus ID :&nbsp;<input type="text" id="Gid" name="Gid" readonly="true"  size="5"><br> -->
+  <input type="button" id="FormButton" value="Save" onclick="saveButtonClick()">
 </form>
-<button id='SavethingButton'>Save</button>
+<!-- <button id="FormButton" onclick="newThingClick()">New</button>
+<button id="FormButton" onclick="saveButtonClick()">Save</button> -->
 <table id="listtable">
-<thead><tr>
-  <td>Tid</td>
-  <td>Tname</td>
-  <td>Tcreator</td>
-  <td>Tstatus</td>
-  <td>Tcontent</td>
-  <td>Tgenus</td>
-  <td>Tx</td>
-  <td>Ty</td>
-  <td>Tz</td>
-  <td>Ts</td>
-  <td>Tteam</td>
-  <td>Tkeypressfunc</td>
-  <td>Gid</td>
+<thead><tr id="NoInteract">
+  <th>Tid</th>
+  <th>Tname</th>
+  <th>Tcreator</th>
+  <th>Tstatus</th>
+  <th>Tcontent</th>
+  <th>Tgenus</th>
+  <th>Tx</th>
+  <th>Ty</th>
+  <th>Tz</th>
+  <!-- <th>Ts</th> -->
+  <th>Tteam</th>
+  <th>Tkeypressfunc</th>
+  <!-- <th>Gid</th> -->
 </tr></thead>
 <tbody></tbody>
 </table>
 </body>
+<script>
+menu = new Yoke('StolenMenu','mainmenu');
+menu.ygetState();
+</script>
 </html>

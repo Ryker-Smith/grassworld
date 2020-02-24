@@ -8,12 +8,10 @@
  * https://javascript.info/xmlhttprequest
  */
 
-var field;
+var field, menu;
 let thingmap= new Map();
 
-function token() {
-  return '&TK=a1b2c3d4';
-}
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -67,8 +65,9 @@ isundefined=function (thing){
 }()); 
 
 async function grassworld() {
-
-  field=new World('grassworld-body','grassworld','');
+  menu = new Yoke('menupos','mainmenu');
+  menu.ygetState();
+  field=new World('grassworld','grassworld','');
   field.ygetState();
   await field.getCategory('flora',field);
   await field.getCategory('fauna',field);

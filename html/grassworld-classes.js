@@ -10,7 +10,7 @@ let genus_Schplágen_g3 = 11;
 let genus_Schplágen_b1 = 10;
 let genus_Schplágen_b2 = 12;
 let genus_Schplágen_b3 = 9;
-let genus_blueSamuari = 20;
+let genus_blueSamurai = 20;
 let genus_teleport = 16;
 let genus_Leader  = 20;
 let emptyimage={
@@ -45,6 +45,9 @@ explode={
         "ticks" : 5,
         "scale" : .2  
 };
+function token() {
+  return '&TK=a1b2c3d4';
+}
 function grandom(upper){
   return Math.floor(Math.random() * upper) + 1;
 }
@@ -86,7 +89,7 @@ function imageremovepath(img) {
   return img.substring(img.lastIndexOf('/'), img.length-1);
 }
 class Yoke {
-    constructor(parent, name, genus){
+    constructor(parent, name){
       this.parent=parent;
       this.Tname=name;
       this.Tid=undefined;
@@ -112,7 +115,7 @@ class Yoke {
       };
     };
     static parentUpdate(p, h) {
-      document.getElementById(p).text=h;
+        document.getElementById(p).innerHTML=h;
     }
     ygetState(){
       let url=grassworld_db+'name='+this.Tname + token();
@@ -164,6 +167,7 @@ class Thing extends Yoke {
     this.Tz=0;
     this.Tteam=undefined;
     this.living=false;
+    this.Tkeypressfunc=escape("console.log('hello world');"); // for testing only
   }
   tgenuschange(plf) {
     // should change the genus in the instantiated object first, then call this function
@@ -274,7 +278,26 @@ class Thing extends Yoke {
         }
       };
   }
-  
+
+  square_get(thething) {
+      let url=grassworld_db+'t=square&a=get&='+this.Tid + token();
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', url);
+      xhr.send();
+      xhr.onload = function() {
+        if (xhr.status == 200) {
+          let r=xhr.response;
+          r=r.replace(/\[/g,'');
+          r=r.replace(/\]/g,'');
+          Thing.tplfget(JSON.parse(r), thething);
+        }
+        else { 
+          console.log(xhr.response);
+          console.log('Error c187');
+        }
+      };
+  }
+
   tsetimages(plf, imagesJSON) {
     // not done
       let url=grassworld_db+'t=thing&a=sij&Tid='+this.Tid + '&j='+ imagesJSON + token();
@@ -308,11 +331,10 @@ class Thing extends Yoke {
       xhr.send();
       xhr.onload = function() {
         if (xhr.status == 200) { // OK?
-//           plf(JSON.parse(xhr.response));
         }
         else { 
           console.log(xhr.response);
-//           plf('Error c64');
+          console.log('Error c335');
         }
       };
     }
@@ -322,7 +344,38 @@ class Thing extends Yoke {
     gkeypress(){
       return false;
     }
-    tsaveState() {
+    tput(plf) {
+      // not finished
+      // uses optional post-load-function called plf
+      let url=grassworld_db+'t=thing&a=upd&Tid='+this.Tid + token();
+      let xhr = new XMLHttpRequest();
+      let message= JSON.stringify({
+          TK : 'a1b2c3d4',
+          Tid : this.Tid,
+          Tname : this.name,
+          Tcreator : this.Tcreator,
+          Tstatus : this.Tstatus,
+          Tcontent : this.Tcontent,
+          Tgenus : this.Tgenus,
+          Tx :  this.Tx,
+          Ty : this.Ty,
+          Tz : 0,
+          Tteam : this.Tteam,
+          Tkeypressfunc: this.Tkeypressfunc
+      });
+      xhr.open('PUT', url);
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.send(message);
+      xhr.onload = function() {
+        if (xhr.status == 200) { 
+          if (isdefined(plf)) {
+            plf(JSON.parse(xhr.response));
+          }
+        }
+        else { 
+            console.log('Error c358: '+xhr.response);
+        }
+      };
     }
 }
 
@@ -557,28 +610,6 @@ class charactersprite {
               }
             break;
           }
-// 		   case genus_blueSamuari : { // the killing machine!!
-//               let killzone=99;
-//               for (key of thingmap.keys()) {
-//                   if (key == this.Tid) {
-//                     continue;
-//                   }
-//                   let dist = distance({
-//                     left: (thingmap.get(key).sprite.left + (thingmap.get(key).sprite.sprite_width / 2)),
-//                     top: (thingmap.get(key).sprite.top + (thingmap.get(key).sprite.sprite_height / 2))
-//                   }, {
-//                     left: this.left + Math.floor(this.sprite_width/2),
-//                     top: this.top + Math.floor(this.sprite_height/2)
-//                   });
-//                   if (dist < killzone) {
-//                     if (thingmap.get(key).o.Tstatus != 'p') {
-//                       charactersprite.pffft(key);
-//                     }
-//                   }
-//               }
-//             break;
-//           }
-		  
           default : {
             break;
           }
@@ -592,13 +623,8 @@ class charactersprite {
       thingmap.get( thingmap.get(Tid).o.tdelete('shockperson.wav') );
       console.log('pffft: '+Tid);
       thingmap.delete(Tid);
-//       console.log('IN3');
     }
     directionChange() {
-//       character.sprite_width = Math.floor(
-//           (things[character.thingnum].o.images.default.w / things[character.thingnum].o.numberOfFrames) * things[character.thingnum].o.images.default.scale
-//       );
-//       character.sprite_height = Math.floor(things[character.thingnum].o.images.default.height * things[character.thingnum].o.images.default.scale);
     }
     update (){
       // if this not an animated sprite, return

@@ -1,0 +1,2 @@
+class BelieverSchplágen extends Schplágen {
+}
