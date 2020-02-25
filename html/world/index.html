@@ -1,46 +1,39 @@
 <html>
 <head>
-  <title>loading...</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/assets/css/w3.css">
-  <style>
-    * {
-     margin: 0;
-     padding: 0;
-    }
-    .smallish {
-      font-size: 10px;
-      line-height: 14px;
-      margin: 0;
-      padding: 0;
-    }
-    .underline-none {
-      text-decoration: none;
-    }
-  </style>
+<title>loading...</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/assets/css/w3.css">
+<style>
+* {
+ margin: 0;
+ padding: 0;
+}
+.smallish {
+  font-size: 10px;
+  line-height: 14px;
+  margin: 0;
+  padding: 0;
+}
+.underline-none {
+  text-decoration: none;
+}
+</style>
 </head>
 <body>
 <div id="menupos">
 </div>
 <div id="grassworld-body">
-  <canvas id="world"><h1>Loading</h1></canvas> 
+<canvas id="world"><h1>Loading</h1></canvas> 
 </div>
 </body>
 <script src="../grassworld-classes.js"></script>
+<script src="../grassworld-worldview.js"></script>
 <script>
 canvas = document.getElementById('world');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-let maxXY=100;
-for (var y=(maxXY*-1); y< maxXY; y++) {
-  for (var x=(maxXY*-1); x< maxXY; x++) {
-    sq=new Thing();
-    sq.Tx=x;
-    sq.Ty=y;
-  }
-}
 menu = new Yoke('menupos','mainmenu');
 menu.ygetState();
-
+doodootheworldview(canvas);
 </script>
 </html>

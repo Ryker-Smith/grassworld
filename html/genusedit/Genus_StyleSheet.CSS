@@ -1,47 +1,63 @@
 body{
-	background-color: ;
+	background-image: url(grass_txtr1.png);
+  text-align: center;
+  margin:0;
+  padding:0;
 }
 h1{
-  text-align: center;
   font-size: 50px;
-  color: #2BAE66FF;
   margin:0;
+  color: #222629;
 }
 #editform {
-    border: 1px solid blue;
+	 margin-left:auto;
+  margin-right:auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+	padding: 10px;
+    border: 2px solid #222629;
+    border-radius: 10px;
     visibility: hidden;
     height: 0;
-    background-color:  #FCF6F5FF;
+    background-color: #FCF6F5FF;
+    text-align: center;
+    width: 60%;
 }
 #listtable {
-    margin: 0;
-    border: 0.5px solid blue;
+     margin-left:auto;
+  margin-right:auto;
+    border: 2px solid #222629;
     width: 100%;
 	border-collapse: collapse;
-	background-color:  #FCF6F5FF;
+	background-color: #FCF6F5FF;
+	width: 90%;
 }
 #Ganimated, #Ginteracts, #Gmobile {
-  
+
 }
 #listtable tr, td {
     margin: 0;
-    border: 0.5px solid blue;
+    border: 1px solid #222629;
 	border-collapse: collapse;
-	background-color:  #FCF6F5FF;
+	background-color: #FCF6F5FF;
 }
 #newgenusbut{
-	font-size: 25px;
+	font-size: 18px;
   background-color: #FCF6F5FF;
   cursor:pointer;
-  color:#2BAE66FF;
+  color:#222629;
+  width: 150px;
 
-  border: 2px solid #2BAE66FF;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border: 2px solid #222629;
+  border-radius: 10px;
 }
 #newgenusbut:hover{
-  background-color: #2BAE66FF;
+  background-color: #222629;
   color: #FCF6F5FF;
+}
+#toprow {
+	font-size: 18px;
+}
+#warning {
+  color: #FF0000;
 }

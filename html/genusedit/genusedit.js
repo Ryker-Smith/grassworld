@@ -1,8 +1,8 @@
 
 function ThingDataToForm(){
-  console.log("THis is working thats great huh ");
+  console.log("hm.");
 
-  document.getElementById('Gid').value = document.getElementById('Gid'+this.id).textContent;
+//   document.getElementById('Gid').value = document.getElementById('Gid'+this.id).textContent;
   document.getElementById('Gname').value = document.getElementById('Gname'+this.id).textContent;
   document.getElementById('Gdescription').value = document.getElementById('Gdescription'+this.id).textContent;
   document.getElementById('Gmobile').value = document.getElementById('Gmobile'+this.id).textContent;
@@ -10,12 +10,13 @@ function ThingDataToForm(){
   document.getElementById('Ginteracts').value = document.getElementById('Ginteracts'+this.id).textContent;
   document.getElementById('Gcansleep').value = document.getElementById('Gcansleep'+this.id).textContent;
   document.getElementById('Gliving').value = document.getElementById('Gliving'+this.id).textContent;
+  document.getElementById('GimagesJSON').value = document.getElementById('GimagesJSON'+this.id).textContent;
   document.getElementById('editform').style.visibility = 'visible';
   document.getElementById('editform').style.height = 'auto';
   // document.getElementById('EditOrCreate').style.visibility = 'visible';
   // document.getElementById('EditOrCreate').style.height = 'auto';
   // document.getElementById('EditOrCreate').innerHTML = "Editing A Genus";
-  // document.getElementById('POSTorPUTflag').value='2';
+  document.getElementById('POSTorPUTflag').value='2';
   window.scrollTo(0, 0);
 }
 
@@ -37,13 +38,14 @@ function ThingDataToForm(){
   }
   function getdata (Gid, l) {
     document.getElementById('Gid').value=Gid;
-    document.getElementById('Gname').value=l;
-    document.getElementById('Gdescription').value=document.getElementById('Gdescription_'+Gid).innerHTML;
-    document.getElementById('Gmobile').checked=(document.getElementById('Gmobile_'+Gid).innerHTML == 'Y');
-    document.getElementById('Ganimated').checked=(document.getElementById('Ganimated_'+Gid).innerHTML == 'Y');
-    document.getElementById('Ginteracts').checked=(document.getElementById('Ginteracts_'+Gid).innerHTML == 'Y');
-    document.getElementById('Gcansleep').checked=(document.getElementById('Gcansleep_'+Gid).innerHTML == 'Y');
-    document.getElementById('Gliving').checked=(document.getElementById('Gliving_'+Gid).innerHTML == 'Y');
+    document.getElementById('Gname').value=1;
+    document.getElementById('Gdescription').value=document.getElementById('Gdescription'+Gid).innerHTML;
+    document.getElementById('Gmobile').checked=(document.getElementById('Gmobile'+Gid).innerHTML == 'Y');
+    document.getElementById('Ganimated').checked=(document.getElementById('Ganimated'+Gid).innerHTML == 'Y');
+    document.getElementById('Ginteracts').checked=(document.getElementById('Ginteracts'+Gid).innerHTML == 'Y');
+    document.getElementById('Gcansleep').checked=(document.getElementById('Gcansleep'+Gid).innerHTML == 'Y');
+    document.getElementById('Gliving').checked=(document.getElementById('Gliving'+Gid).innerHTML == 'Y');
+    document.getElementById('GimagesJSON').value=document.getElementById('GimagesJSON'+Gid).innerHTML;
     document.getElementById('editform').style.visibility='visible';
     document.getElementById('editform').style.height='auto';
   }
@@ -79,10 +81,11 @@ function ThingDataToForm(){
   }
   function newGenusClick() {
   document.getElementById('Gname').value = '';
-  document.getElementById('Gmobile').value = '';
+  document.getElementById('Gmobile').value = '';  
   document.getElementById('Ganimated').value = '';
   document.getElementById('Ginteracts').value = '';
   document.getElementById('Gcansleep').value = '';
+  document.getElementById('GimagesJSON').value = '';
   document.getElementById('Gdescription').value = '';
   document.getElementById('Gliving').value = '';
   document.getElementById('editform').style.visibility = 'visible';
@@ -92,11 +95,11 @@ function ThingDataToForm(){
 }
 
   function savethis() {
-    let Gid = document.getElementById('Gid').value ;
-    let url=grassworld_db+'t=genus&a=sv&gid='+Gid + token();
+    //let Gid = document.getElementById('Gid').value ;
+    let url=grassworld_db+'t=genus&a=sv&' + token(); //toke out &gid=
     let xhr = new XMLHttpRequest();
     let message= JSON.stringify({
-          Gid: Gid,
+      //    Gid: Gid,
           Gname: document.getElementById('Gname').value,
           Gmobile: oneorzero(document.getElementById('Gmobile').checked),
           Ginteracts: oneorzero(document.getElementById('Ginteracts').checked),
@@ -110,11 +113,11 @@ function ThingDataToForm(){
     }
     else {
       xhr.open('PUT', url);
-      yesornofromchecks('Gmobile',Gid);
-      yesornofromchecks('Ginteracts',Gid);
-      yesornofromchecks('Ganimated',Gid);
-      yesornofromchecks('Gcansleep',Gid);
-      yesornofromchecks('Gliving',Gid);
+      yesornofromchecks('Gmobile'); // toke out ,Gid
+      yesornofromchecks('Ginteracts');
+      yesornofromchecks('Ganimated');
+      yesornofromchecks('Gcansleep');
+      yesornofromchecks('Gliving');
       document.getElementById('Gdescription_'+Gid).innerHTML=document.getElementById('Gdescription').value;
       document.getElementById('Gname_'+Gid).innerHTML=makelink(Gid, document.getElementById('Gname').value);
 
@@ -137,7 +140,7 @@ function ThingDataToForm(){
           r=JSON.parse(r);
           console.log(r)
           var table = document.getElementById("listtable");
-          
+    
           
 		  for (var i=0; i< r.length; i++) {
 		  var row = table.insertRow();
@@ -149,23 +152,26 @@ function ThingDataToForm(){
           var cell5 = row.insertCell(5);
           var cell6 = row.insertCell(6);
           var cell7 = row.insertCell(7);
-		  row.id=i;
+          var cell8 = row.insertCell(8);
+		      row.id=i;
           cell0.innerHTML = r[i].Gid;
-          cell0.id='Gid_'+i;
+          cell0.id='Gid'+i;
           cell1.innerHTML = r[i].Gname;
-          cell1.id="Gname_"+i;
+          cell1.id="Gname"+i;
           cell2.innerHTML = yesorno(r[i].Gmobile);
-          cell2.id='Gmobile_'+i;
+          cell2.id='Gmobile'+i;
           cell3.innerHTML = yesorno(r[i].Ganimated);
-          cell3.id='Ganimated_'+i;
+          cell3.id='Ganimated'+i;
           cell4.innerHTML = yesorno(r[i].Ginteracts);
-          cell4.id='Ginteracts_'+i;
+          cell4.id='Ginteracts'+i;
           cell5.innerHTML = yesorno(r[i].Gcansleep);
-          cell5.id='Gcansleep_'+i;
+          cell5.id='Gcansleep'+i;
           cell6.innerHTML = yesorno(r[i].Gliving);
-          cell6.id='Gliving_'+i;
+          cell6.id='Gliving'+i;
           cell7.innerHTML = r[i].Gdescription;
-          cell7.id='Gdescription_'+i;
+          cell7.id='Gdescription'+i;
+          cell8.innerHTML = r[i].GimagesJSON;
+          cell8.id='GimagesJSON'+i;
           document.getElementById(i).addEventListener("click", ThingDataToForm);
         }
 		}

@@ -15,25 +15,27 @@
 <button id="newgenusbut" onclick="newGenusClick()">New</button>
 <form id="editform">
   <input type="hidden" id="POSTorPUTflag" value="1">
- <tr>
- <td>Genus name:&nbsp;<input type="text" id="Gname" name="Gname" value=""></td><br>
- <td>Genus description:&nbsp;<textarea id="Gdescription" name="Gdescription" rows="3" columns="40" ></textarea></tr>
- </tr><br>
+ Genus name:&nbsp;<input type="text" id="Gname" name="Gname" value=""><br>
+ Genus description:&nbsp;<br><textarea id="Gdescription" name="Gdescription" rows="3" columns="40" ></textarea><br>
   Mobile:&nbsp;<input type="checkbox" id="Gmobile" name="Gmobile" checked>
   Animated:&nbsp;<input type="checkbox" id="Ganimated" name="Ganimated" checked>
   Interacts:&nbsp;<input type="checkbox" id="Ginteracts" name="Ginteracts" checked>
   Can sleep:&nbsp;<input type="checkbox" id="Gcansleep" name="Gcansleep" checked>
   Living:&nbsp;<input type="checkbox" id="Gliving" name="Gliving" checked><br>
+  <label style="color: red">
+  Warning!!!&nbsp;<br></label>
+  GimagesJSON:&nbsp;<br><textarea id="GimagesJSON" name="GimagesJSON" rows="10" columns="80" ></textarea><br>
   <input type="button" id="newgenusbut" value="Save" onclick="savethis()">
 </form>
 <table id="listtable">
-<thead><tr><td>Gid</td><td>Gname</td>
-<td>Mobile</td>
-<td>Animated</td>   
-<td>Interacts</td>
-<td>Can sleep</td>
-<td>Living</td>
-<td>Desc.</td>
+<thead><tr><td id="toprow">Gid</td><td id="toprow">Gname</td>
+<td id="toprow">Mobile</td>
+<td id="toprow">Animated</td>   
+<td id="toprow">Interacts</td>
+<td id="toprow">Can sleep</td>
+<td id="toprow">Living</td>
+<td id="toprow">Desc.</td>
+<td id="toprow">SpriteSheets</td>
 </tr></thead>
 <tbody></tbody>
 </table>
