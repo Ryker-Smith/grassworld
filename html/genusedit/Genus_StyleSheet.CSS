@@ -57,7 +57,12 @@ h1{
 }
 #toprow {
 	font-size: 18px;
+  font-style: bold;
 }
 #warning {
   color: #FF0000;
+}
+#spritestable {
+  margin: auto;
+  border-collapse: collapse;
 }

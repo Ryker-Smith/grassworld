@@ -706,7 +706,7 @@ async function u_put(request, response) {
   async function Ulogin(Uemail, Upassword) {
         var r;
         await dbms.query(
-            "SELECT COUNT(*) AS `loginOK` FROM users WHERE Uemail="+dbms.escape(Uemail)+" AND Upassword="+dbms.escape(Upassword))
+            "SELECT COUNT(*) AS `loginOK`,UToken FROM users WHERE Uemail="+dbms.escape(Uemail)+" AND Upassword="+dbms.escape(Upassword))
           .then( results => {
             r=JSON.stringify(results);
             return r;

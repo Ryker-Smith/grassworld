@@ -2,13 +2,25 @@
 // fauna
 // flora
 // object
-
+}
 window.onload=rThingstart();
 
 function rThingstart() {
   getT();
 }
-
+// class onerow {
+//     constructor (tab,id) {
+//       this.cells={}
+//       this.row=document.getElementById(tab).insertRow();
+//       this.rowId=id;
+//     }
+//     newcell(d, n){
+//       let temp = this.row.insertCell();
+//       temp.innerHTML=d
+//       temp.id=n+'_'+this.rowId; // must get this
+//       this.cells.push(temp);
+//     }
+// }
 function rToken() {
   return '&TK=a1b2c3d4';
 }
@@ -157,10 +169,8 @@ function getT() {
             var cell6 = row.insertCell(6);
             var cell7 = row.insertCell(7);
             var cell8 = row.insertCell(8)
-            // var cell9 = row.insertCell(9)
             var cell9 = row.insertCell(9)
             var cell10 = row.insertCell(10)
-            // var cell12 = row.insertCell(12)
             row.id=i;
             cell0.innerHTML = r[i].Tid;
             cell0.id = 'Tid'+i;
@@ -180,16 +190,24 @@ function getT() {
             cell7.id = 'Ty'+i;
             cell8.innerHTML = r[i].Tz;
             cell8.id = 'Tz'+i;
-            // cell9.innerHTML = r[i].Ts;
-            // cell9.id = 'Ts'+i;
             cell9.innerHTML = r[i].Tteam;
             cell9.id = 'Tteam'+i;
             cell10.innerHTML = r[i].Tkeypressfunc;
             cell10.id = 'Tkeypressfunc'+i;
-            // cell12.innerHTML = r[i].Gid;
-            // cell12.id = 'Gid'+i
             document.getElementById(i).addEventListener("click", ThingDataToForm);
-            }
+            // m=new onerow('listtable', r[i].Tid);
+            // m.newcell(r[i].Tid,'Tid');
+            // m.newcell(r[i].Tname,'Tname');
+            // m.newcell(r[i].Tcreator,'Tcreator');
+            // m.newcell(r[i].Tstatus,'Tstatus');
+            // m.newcell(r[i].Tcontent,'Tcontent');
+            // m.newcell(r[i].Tgenus,'Tgenus');
+            // m.newcell(r[i].Tx,'Tx');
+            // m.newcell(r[i].Ty,'Ty');
+            // m.newcell(r[i].Tx,'Tx');
+            // m.newcell(r[i].Tz,'Tz');
+            // m.newcell(r[i].Tkeypressfunc,'Tkeypressfunc');
+            // }
       }
       else {
           console.log(req.response);

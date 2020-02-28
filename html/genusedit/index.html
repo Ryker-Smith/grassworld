@@ -16,17 +16,22 @@
 <form id="editform">
   <input type="hidden" id="POSTorPUTflag" value="1">
  Genus name:&nbsp;<input type="text" id="Gname" name="Gname" value=""><br>
- Genus description:&nbsp;<br><textarea id="Gdescription" name="Gdescription" rows="3" columns="40" ></textarea><br>
+ Genus description:&nbsp;<br><textarea id="Gdescription" name="Gdescription" rows="3" cols="40" ></textarea><br>
   Mobile:&nbsp;<input type="checkbox" id="Gmobile" name="Gmobile" checked>
+  <label><font size="0" style="color: transparent;">Empty1</font></label>
   Animated:&nbsp;<input type="checkbox" id="Ganimated" name="Ganimated" checked>
+  <label><font size="0" style="color: transparent;">Empty2</font></label>
   Interacts:&nbsp;<input type="checkbox" id="Ginteracts" name="Ginteracts" checked>
+  <label><font size="0" style="color: transparent;">Empty3</font></label>
   Can sleep:&nbsp;<input type="checkbox" id="Gcansleep" name="Gcansleep" checked>
+  <label><font size="0" style="color: transparent;">Empty4</font></label>           <!--- added empty labels just for now --->
   Living:&nbsp;<input type="checkbox" id="Gliving" name="Gliving" checked><br>
-  <label style="color: red">
-  Warning!!!&nbsp;<br></label>
-  GimagesJSON:&nbsp;<br><textarea id="GimagesJSON" name="GimagesJSON" rows="10" columns="80" ></textarea><br>
+  <label><font size="5" style="color: red">Warning!!!<br></font></label>
+  <table id="GimagesJSON"  name="GimagesJSON" rows="10" cols="80" ></table>
+  <table id="spritestable"></table>
   <input type="button" id="newgenusbut" value="Save" onclick="savethis()">
 </form>
+<p id="demo"></p>
 <table id="listtable">
 <thead><tr><td id="toprow">Gid</td><td id="toprow">Gname</td>
 <td id="toprow">Mobile</td>

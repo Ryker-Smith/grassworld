@@ -52,7 +52,7 @@ class Reg {
         }
         console.log("["+result.loginOK+"]");//Yoke.parentUpdate(myparent, xhr.response);
         if (result.loginOK) {
-          
+          location.assign("https://grassworld.fachtnaroe.net");
         }
       }
       else {
@@ -63,7 +63,7 @@ class Reg {
 
 }
 
-function submit_tobackend(b) {
+function submit_tobackend (b){
   var n;
   if (b==1) {
       // new user
@@ -71,6 +71,8 @@ function submit_tobackend(b) {
         document.getElementById("rusername").value,
         document.getElementById("remail").value,
         document.getElementById("rpassword").value);
+        console.log("registered");
+        location.assign("https://grassworld.fachtnaroe.net");
       n.register();
   }
   else if(b==2) {
