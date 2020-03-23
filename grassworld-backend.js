@@ -332,10 +332,10 @@ async function db_put(request, response) {
       return r;
     }
 
-    async function gupdate(Gid, Gname, Gdescription, Gmobile, Ganimated, Ginteracts, Gcansleep, Gliving) {
+    async function gupdate(Gid, Gname, Gdescription, Gmobile, Ganimated, Ginteracts, Gcansleep, Gliving, GimagesJSON) {
         var r;
         await dbms.query(
-            "UPDATE genus SET Gname="+(dbms.escape(Gname))+", Gdescription="+(dbms.escape(Gdescription))+", Gmobile="+(dbms.escape(Gmobile))+", Ginteracts="+(dbms.escape(Ginteracts))+", Ganimated="+(dbms.escape(Ganimated))+ ", Gcansleep="+(dbms.escape(Gcansleep))+", Gliving="+(dbms.escape(Gliving))+ " WHERE Gid="+(dbms.escape(Gid)))
+            "UPDATE genus SET Gname="+(dbms.escape(Gname))+", Gdescription="+(dbms.escape(Gdescription))+", Gmobile="+(dbms.escape(Gmobile))+", Ginteracts="+(dbms.escape(Ginteracts))+", Ganimated="+(dbms.escape(Ganimated))+ ", Gcansleep="+(dbms.escape(Gcansleep))+", Gliving="+(dbms.escape(Gliving))+", GimagesJSON="+(dbms.escape(GimagesJSON))+ " WHERE Gid="+(dbms.escape(Gid)))
           .then( results => {
           if(results.length < 1){
             console.log(r);
@@ -418,7 +418,7 @@ async function db_put(request, response) {
       else if (cgi.a == 'sv'){
         reply=await gupdate(
           request.body.Gid,request.body.Gname, request.body.Gdescription, request.body.Gmobile, 
-          request.body.Ganimated, request.body.Ginteracts, request.body.Gcansleep, request.body.Gliving);
+          request.body.Ganimated, request.body.Ginteracts, request.body.Gcansleep, request.body.Gliving, request.body.GimagesJSON);
       }
       else if (cgi.a == 'upd'){
         reply=await tupdate(
@@ -457,7 +457,7 @@ async function db_post(request, response) {
         var r;
         var x=0,y=0,z=0;
         await dbms.query(
-            "INSERT INTO genus (Gname, Gmobile, Ganimated, Ginteracts, Gcansleep, Gliving) VALUES ("+dbms.escape(Gname)+","+dbms.escape(Gmobile)+","+dbms.escape(Ganimated)+","+dbms.escape(Ginteracts)+","+dbms.escape(Gcansleep)+","+dbms.escape(Gliving)+")")
+            "INSERT INTO genus (Gname, Gmobile, Ganimated, Ginteracts, Gcansleep, Gliving, GimagesJSON) VALUES ("+dbms.escape(Gname)+","+dbms.escape(Gmobile)+","+dbms.escape(Ganimated)+","+dbms.escape(Ginteracts)+","+dbms.escape(Gcansleep)+","+dbms.escape(Gliving)+","+dbms.escape(GimagesJSON)+")")
           .then( results => {
             r=JSON.stringify(results);
             console.log(r.warningCount);

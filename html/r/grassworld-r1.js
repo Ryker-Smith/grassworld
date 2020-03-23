@@ -1,5 +1,5 @@
 //List Of Names
-var listOfBirdNames = ["Fun Uncle ", "Bad Uncle ","Tim From Spain ","Buff Mama ","Pigeon ","Brian ","Small Ostrich ","David(RIP) ","Jack(RIP) ", "Chris(RIP) "];
+var listOfBirdNames = ["Fun Uncle ", "Bad Uncle ","Tim From Spain ","Buff Mama ","Pigeon ","Beans ","Small Ostrich ","David(RIP) ","Jack(RIP) ", "Chris(RIP) "];
 //Uses random function to pick a random name from name list and a random number thats not bigger than 1000
 var newBirdName = listOfBirdNames[ grandom(listOfBirdNames.length) - 1 ] + grandom(1000);
 //instantiate vaariable for Schplágen
@@ -65,7 +65,8 @@ function runNextForBird(RedOne) {
 function onload_r1() {
   console.log("r1: Bird Onload function");
   //Instantiate   MySchplágen_r1 as MovingThing Schplágen, 15 is genus of my Schplágen
-      MySchplágen_r1= new MovingThing(null,newBirdName, null, 15, 1);
-    //calls tcreate method and passes runNextForBird
+      // MySchplágen_r1= new MovingThing(null,newBirdName, null, 8, 1);
+      MySchplágen_r1= new MovingThing(null,newBirdName, null, 15, 1); //calls tcreate method and passes runNextForBird
       MySchplágen_r1.tcreate(runNextForBird);
+       onload_red_classes();
 }

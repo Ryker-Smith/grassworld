@@ -2,25 +2,34 @@
 // fauna
 // flora
 // object
-}
+
 window.onload=rThingstart();
 
 function rThingstart() {
   getT();
 }
-// class onerow {
-//     constructor (tab,id) {
-//       this.cells={}
-//       this.row=document.getElementById(tab).insertRow();
-//       this.rowId=id;
-//     }
-//     newcell(d, n){
-//       let temp = this.row.insertCell();
-//       temp.innerHTML=d
-//       temp.id=n+'_'+this.rowId; // must get this
-//       this.cells.push(temp);
-//     }
-// }
+class  thingRow {
+  constructor(r,num) {
+    this.id = r[num].Tid;
+    this.name =r[num].Tname;
+    this.creator = r[num].Tcreator;
+    this.status = r[num].Tstatus;
+    this.content = r[num].Tcontent;
+    this.genus = r[num].Tgenus;
+    this.x = r[num].Tx;
+    this.y = r[num].Ty;
+    this.z = r[num].Tz
+    this.team = r[num].Tteam;
+    this.keypressfunc = r[num].Tkeypressfunc;
+    this.number = num;
+  }
+  thingCell(){
+    console.log("poopy");
+    return "<tr><td id =\"Tid"+this.number+"\">"+this.id+"</td><td id =\"Tname"+this.number+"\">"+this.name+"</td><td id =\"Tcreator"+this.number+"\">"+this.creator+"</td><td id=\"Tstatus"+this.number+"\">"+this.status+"</td><td id =\"Tcontent"+this.number+"\">"+this.content+
+              "</td><td id =\"Tgenus"+this.number+"\">"+this.genus+"</td><td id =\"Tx"+this.number+"\">"+this.x+"</td><td id =\"Ty"+this.number+"\">"+this.y+
+              "</td><td id =\"Tz"+this.number+"\">"+this.z+"</td><td id =\"Tteam"+this.number+"\">"+this.team+"</td><td id =\"Tkeypressfunc"+this.number+"\">"+this.keypressfunc+"</td></tr>";
+  }
+}
 function rToken() {
   return '&TK=a1b2c3d4';
 }
@@ -130,7 +139,8 @@ function saveButtonClick() {
       UpdateRequest.send(message);
      // console.log("UpdateThing Status: "+UpdateRequest.status);
      alert("Thing Edit Saved!");
-     location.reload();
+     console.log("Thing Edit has been successful");
+     // location.reload();
     break;
     case '2':
       let Tname = document.getElementById('Tname').value;
@@ -146,7 +156,7 @@ function saveButtonClick() {
   }
 }
 function getT() {
-  let url = grassworld_db+'a=get&t=thing'+rToken();;
+  let url = grassworld_db+'a=get&t=thing'+rToken();
   console.log("url: "+url);
   var req = new XMLHttpRequest();
   console.log("b");
@@ -155,59 +165,17 @@ function getT() {
   req.onload = function() {
        if (req.status == 200) {
         let r=req.response;
+        console.log("bean "+r);
         r=JSON.parse(r);
          console.log( r );
         var table = document.getElementById("listtable");
         for (var i=0; i< r.length; i++) {
+            var n = new thingRow(r,i);
             var row = table.insertRow();
-            var cell0 = row.insertCell(0);
-            var cell1 = row.insertCell(1);
-            var cell2 = row.insertCell(2);
-            var cell3 = row.insertCell(3);
-            var cell4 = row.insertCell(4);
-            var cell5 = row.insertCell(5);
-            var cell6 = row.insertCell(6);
-            var cell7 = row.insertCell(7);
-            var cell8 = row.insertCell(8)
-            var cell9 = row.insertCell(9)
-            var cell10 = row.insertCell(10)
+            row.innerHTML =  n.thingCell();
             row.id=i;
-            cell0.innerHTML = r[i].Tid;
-            cell0.id = 'Tid'+i;
-            cell1.innerHTML = r[i].Tname;
-            cell1.id = 'Tname'+i;
-            cell2.innerHTML = r[i].Tcreator;
-            cell2.id = 'Tcreator'+i;
-            cell3.innerHTML = r[i].Tstatus;
-            cell3.id = 'Tstatus'+i;
-            cell4.innerHTML = r[i].Tcontent;
-            cell4.id = 'Tcontent'+i;
-            cell5.innerHTML = r[i].Tgenus;
-            cell5.id = 'Tgenus'+i;
-            cell6.innerHTML = r[i].Tx;
-            cell6.id = 'Tx'+i;
-            cell7.innerHTML = r[i].Ty;
-            cell7.id = 'Ty'+i;
-            cell8.innerHTML = r[i].Tz;
-            cell8.id = 'Tz'+i;
-            cell9.innerHTML = r[i].Tteam;
-            cell9.id = 'Tteam'+i;
-            cell10.innerHTML = r[i].Tkeypressfunc;
-            cell10.id = 'Tkeypressfunc'+i;
             document.getElementById(i).addEventListener("click", ThingDataToForm);
-            // m=new onerow('listtable', r[i].Tid);
-            // m.newcell(r[i].Tid,'Tid');
-            // m.newcell(r[i].Tname,'Tname');
-            // m.newcell(r[i].Tcreator,'Tcreator');
-            // m.newcell(r[i].Tstatus,'Tstatus');
-            // m.newcell(r[i].Tcontent,'Tcontent');
-            // m.newcell(r[i].Tgenus,'Tgenus');
-            // m.newcell(r[i].Tx,'Tx');
-            // m.newcell(r[i].Ty,'Ty');
-            // m.newcell(r[i].Tx,'Tx');
-            // m.newcell(r[i].Tz,'Tz');
-            // m.newcell(r[i].Tkeypressfunc,'Tkeypressfunc');
-            // }
+            }
       }
       else {
           console.log(req.response);
