@@ -1,5 +1,6 @@
 var LeaderSchplagen;
-var cultFollower = [];
+// var cultFollower = [];
+var cultFollower;
 var followPoint;
 var lsNames=["Jim Jones ","Charles Manson ","David Koresh ","Shoko Asahara ","Joseph Di Mambro ","Marshall Applewhite ","Bonnie Lu Nettles ","Bhagwan Shree Rajneesh "];
 //Uses random function to pick a random name from name list and a random number thats not bigger than 1000
@@ -25,7 +26,7 @@ function replaceWithCultist(RedData,cultId,n) {
   r.Tid = n.Tid;
   r.Tname = n.Tname;
   r.selected = false;
-  r.o =  cultFollower[cultId];
+  r.o =  cultFollower;
   r.o.Tid =  n.Tid;
 
 
@@ -45,8 +46,8 @@ function replaceWithCultist(RedData,cultId,n) {
   thingmap.set(r.Tid, r);
   r.o.tget(thingmap.get(r.Tid));
   r.o.tgetimages(thingmap.get(r.Tid));
-  thingmap.get(n.Tid).o.Tx =  cultFollower[cultId].left;
-  thingmap.get(n.Tid).o.Ty =  cultFollower[cultId].top;
+  thingmap.get(n.Tid).o.Tx =  cultFollower.left;
+  thingmap.get(n.Tid).o.Ty =  cultFollower.top;
   //Sets a parameter that allows Schplágen to move
   thingmap.get(n.Tid).o.Gcanmove = true;
   //Sets a parameter that allows Schplágen to be animated from spritesheet
@@ -175,8 +176,8 @@ function onload_red_classes() {
                 xhr.send();
 
                 //step 3 create new cultistschplagen in same position with new genus
-                cultFollower[leadercount] = new BelieverSchplágen(null,n.Tname,0, 8, 1);
-                cultFollower[leadercount].tcreate(replaceWithCultist,leadercount,n);
+                cultFollower = new BelieverSchplágen(null,n.Tname,0, 8, 1);
+                cultFollower.tcreate(replaceWithCultist,leadercount,n);
                 leadercount++;
               }
               // genuspick = 20;
