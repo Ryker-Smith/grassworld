@@ -1,72 +1,64 @@
-
-var SchplágenNames=["1 ","2 ","3 ","4 ","5 ","6 ","7 ","8 ","9 ","10 "]; // names for Schplágen
-
-var newName=SchplágenNames[grandom(SchplágenNames.length)-1 ]+ grandom(1000); //Generates a random name from the list and adds a random number to the end.
-
-var CBSchplagen;
-
-/*
-function randomNum(upper){ // random number generator
-return Math.floor(Math.random() * upper) + 1;
+//Names of the schplagens.
+var g2names = ["El Sheriffo ", "Mr Steal Your Gun ", "Gunna ", "Glock ", "ZorroKiller ", "Muzzle ", "Rusty ", "Bo ", "Twin1 ", "Twin2 "];
+//Picks a random name from the list.
+var cbnewname = g2names[grandom(g2names.length) - 1] + grandom(1000);
+// gets the name for a newly created schplagen.
+var cbschplagen;
+function onload_green_classes() {
+  console.log('Cowboy!');
+  //This is to get the Genus of my Schplagen.
+  cbschplagen = new MovingThing(null, cbnewname, null, 17, 1);
+  cbschplagen.tcreate(DoThisNext);
 }
-
-
-
-// Produces random number 'r' which is positive when 'c' is even and negative when 'c' is odd.
-function randomNumRange(upper){	
-  let r= Math.floor(Math.random() * upper) + 1;
-  let c= Math.floor(Math.random() * upper) + 1;
-  if ((c % 2) == 0) {
-    r *= -1; 
+//Gives the schplágen properties.
+function DoThisNext(r) {
+  console.log('New Cowboy was created! ' + r.insertId);
+  var Tid = r.insertId;
+  var t = {};
+  var keychar
+  t.Tid = Tid;
+  t.Tname = cbnewname;
+  t.selected = false;
+  t.o = cbschplagen;
+  t.o.Tid = Tid;
+  //This is the spawn location for the schplagen.
+  let myspriteinfo = {
+    Tid: Tid,
+    Ganimated: true,
+    //When a schplagen is spawning they can spawn on the x-axis at: 491-511.
+    left: 501 + grandomrange(10),
+    // on the y-axis they can spawn at: 492-512.
+    top: 502 + grandomrange(10)
   }
-  return r;
-}
-*/
-
-function placeOnScreen(r) {
-  console.log('New character with Tid ' + r.insertId);
-  var Tid=r.insertId;
-  var fnt={};
-  
-  fnt.Tid=Tid;
-  fnt.Tname=newName;
-  fnt.selected=false;
-  fnt.o=blueSamuari_b1;
-  fnt.o.Tid=Tid;
-  
-  let spritedetail= {
-          Tid: Tid,
-          Ganimated: true,
-          spLeft:5 + r,
-          spTop: 510 + r
-  }
-  
-  fnt.sprite = new charactersprite(spritedetail);
-  // because there are two network retrievals to complete the process, the
-  // ready flag starts with a value of 2 and as each step completes the flag
-  // is decremented. Only when the ready flag is 0 does the charactersprite
-  // class get to update and/or render. The gameloop won't call the charactersprite
-  // methods on an object with non-zero ready flag.
-  fnt.ready=2;
-  thingmap.set(fnt.Tid, fnt);
-  fnt.o.tget(thingmap.get(fnt.Tid));
-  fnt.o.tgetimages(thingmap.get(fnt.Tid));
-  thingmap.get(Tid).o.spLeft;
-  thingmap.get(Tid).o.spTop;
-  thingmap.get(Tid).o.Gcanmove=true;
-  thingmap.get(Tid).o.Ganimated=true;
+  // creates a new spritesheet.
+  t.sprite = new charactersprite(myspriteinfo);
+  console.log('Cowboy created!');
+  t.ready = 2;
+  // Gives the spritesheet a Tid.
+  thingmap.set(t.Tid, t);
+  // Gets the spritesheet.
+  t.o.tget(thingmap.get(t.Tid));
+  t.o.tgetimages(thingmap.get(t.Tid));
+  //Gets current spritesheets coortinates.
+  thingmap.get(Tid).o.Tx = myspriteinfo.left;
+  thingmap.get(Tid).o.Ty = myspriteinfo.top;
+  //allowing the sprite to move and allows to animate it.
+  thingmap.get(Tid).o.Gcanmove = true;
+  thingmap.get(Tid).o.Ganimated = true;
+  //If browser is refreshed it will save to location of all the objects.
   thingmap.get(Tid).o.msaveLocation();
-  thingmap.get(Tid).o.tkeypress = (function(keycode) {
-      let keychar=String.fromCharCode(keycode);
-      console.log("I'm new Schplágen. I don't do anything yet");
-      if ((keychar=='S') || (keychar=='s')) {
-          thingmap.get(thing_selected).o.sleepnow(); // activates Sleep function
-      }
-      console.log(" cb sleeping ");
-      if ((keychar=='W') || (keychar=='w')) {
-        thingmap.get(thing_selected).o.wakenow(); // activates Wake function
-      }
-      console.log(" cb wake up");
+  thingmap.get(Tid).o.tkeypress = (function (keycode) {
+    keychar = String.fromCharCode(keycode);
+    // If 'S' is pressed on the keyboard the sphlagen will go to sleep and they turn into a bush.
+    if (keychar == 'S') {
+      thingmap.get(Tid).o.sleepnow()
+      console.log("*spits* imma take a nap now boys")
+    }
+    // If 'W' is pressed on the keyboard the schplagen will wake up and start moving again.
+    else if (keychar == 'W') {
+      thingmap.get(Tid).o.wakenow()
+      console.log("I feel like a new man!")
+    }
   });
-  console.log('cb created '+ Tid);
+  console.log('Newcreature made ' + Tid + 'cb');
 }

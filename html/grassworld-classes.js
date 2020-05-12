@@ -257,6 +257,7 @@ class Thing extends Yoke {
     this.Tz=response.Tz;
     this.Gcanmove=(response.Gcanmove == 1);
     this.Ganimated=(response.Ganimated == 1);
+    //this.keypress=;
     Thing.tplfimages(response.GimagesJSON, thething);
   };
 

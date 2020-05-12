@@ -364,6 +364,8 @@ function game(game_canvas) {
       }
     }
     fting.o.Tid = fting.Tid;
+    fting.tkeypress=field.all[j].tkeypress;
+    
     fting.o.Gcanmove = (field.all[j].Gmobile == 1);
     fting.o.Ganimated = (field.all[j].Ganimated == 1);
     fting.o.Ginteracts = (field.all[j].Ginteracts == 1);
