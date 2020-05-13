@@ -4,7 +4,11 @@ var cultFollower;
 var followPoint;
 var lsNames=["Jim Jones ","Charles Manson ","David Koresh ","Shoko Asahara ","Joseph Di Mambro ","Marshall Applewhite ","Bonnie Lu Nettles ","Bhagwan Shree Rajneesh "];
 //Uses random function to pick a random name from name list and a random number thats not bigger than 1000
-var lsnewname="Cultist-" + lsNames[ grandom(lsNames.length)-1 ]+ grandom(1000);
+var lsnewname="Cultist-" + lsNames[ grandom(lsNames.length)-1 ] + grandom(1000);
+var followPointName = "Pointer " + grandom(1000);
+var lsId="";
+var TheX = 0;
+var TheY = 0;
 
 function redToken() {
   return '&TK=a1b2c3d4';
@@ -15,11 +19,112 @@ class BelieverSchplágen extends Schplágen {
     super (parent, name, content, genus, legs);
     this.genus = this.genus;
   }
+ followMe(){
+    console.log("X position: "+thingmap.get(lsId).o.Tx + " Y position: "+thingmap.get(lsId).o.Ty);
+
+    if(!((TheX == thingmap.get(lsId).o.Tx) && (TheY == thingmap.get(lsId).o.Ty))) {
+      TheX = thingmap.get(lsId).o.Tx;
+      TheY = thingmap.get(lsId).o.Ty;
+      let poopi = placePointer();
+      console.log(poopi);
+    }
+    else{
+      console.log("SamePositionMate");
+    }
+    let url = grassworld_db+'a=get&t=thing'+redToken();
+    var req3 = new XMLHttpRequest();
+    req3.open('GET', url);
+    req3.send();
+
+    req3.onload = function() {
+         if (req3.status == 200) {
+          let r=req3.response;
+          r=JSON.parse(r);
+          console.log( r.length);
+          for (var i=0; i< r.length; i++) {
+            let  n = r[i];
+            if(n.Tgenus==8){
+            thingmap.get(n.Tid).sprite.setdestination(n.Tid, TheX, TheY);
+            }
+          }
+        }
+        else {
+          console.log(req3.response);
+          console.log('Error c187');
+        }
+      };
+  }
 }
+
+function placePointer(){
+  console.log("LS 38: :)");
+  // check for pointers then delete
+  let url = grassworld_db+'a=get&t=thing'+redToken();
+  var req2 = new XMLHttpRequest();
+  req2.open('GET', url);
+  req2.send();
+  var lscount = 0;
+  var Pcount = 0;
+  var pId = 2;
+  req2.onload = function() {
+       if (req2.status == 200) {
+        let r=req2.response;
+        r=JSON.parse(r);
+        console.log( r.length);
+        // var lscount = 0;
+        // var Pcount = 0;
+        // var pId = 0;
+        for (var i=0; i< r.length; i++) {
+          let  n = r[i];
+          if(n.Tgenus==19){
+            pId = n.Tid;
+            console.log("A Pointer that must die "+Pcount+" "+n.Tname);
+              //Remove any pointer
+              // let url=grassworld_db+'t=thing&Tid='+n.Tid + redToken();
+              // let xhr = new XMLHttpRequest();
+              // xhr.open('DELETE', url);
+              // xhr.send();
+
+              Pcount++;
+            }
+          if(n.Tgenus==20){
+            lscount++;
+          }
+        }
+        if(lscount==0){
+          console.log("Where is our Leader? :'(");
+          // LeaderSchplagen.tcreate(RedClassFunc);
+          return;
+        }
+        if(Pcount==0){
+          let xp = thingmap.get(lsId).o.Tx;
+          let yp = thingmap.get(lsId).o.Ty;
+          followPoint = new MovingThing(null,followPointName,0,19,1);
+          followPoint.tcreate(followPointFunc, xp, yp);
+        }
+        else{
+          thingmap.get(pId).sprite.left_destination = thingmap.get(lsId).o.Tx;
+          thingmap.get(pId).sprite.top_destination = thingmap.get(lsId).o.Ty;
+          thingmap.get(pId).o.Gcanmove = false;
+        }
+      }
+      else {
+        console.log(req2.response);
+        console.log('Error c187');
+      }
+    };
+  //place pointer
+
+  // let xp = thingmap.get(lsId).o.Tx;
+  // let yp = thingmap.get(lsId).o.Ty;
+  // followPoint = new MovingThing(null,followPointName,0,19,1);
+  // followPoint.tcreate(followPointFunc, xp, yp);
+  return pId;
+}
+
 function replaceWithCultist(RedData,cultId,n) {
 // console.log("*ls75");
   console.log('RED CLASS: LeaderSchplagen Demoted to cultist, with Tid ' + n.Tid + " " + n.Tname);
-
   var lsTid = RedData.insertId;
   var r = {};
 
@@ -70,7 +175,6 @@ function replaceWithCultist(RedData,cultId,n) {
           break;
         case 'K':
           console.log("K Press");
-          // this.followMe(lsTid,ChosenOne.Tx,ChosenOne.Ty);
           break;
       }
   });
@@ -81,6 +185,9 @@ function RedClassFunc(RedData) {
   console.log('RED CLASS: New LeaderSchplagen with Tid ' + RedData.insertId + " " + lsnewname);
 
   var lsTid = RedData.insertId;
+  //assign tid so i can access LeaderSchplagen tid later
+  lsId = lsTid;
+  console.log("Pp: "+lsId);
   var r = {};
 
   r.Tid = lsTid;
@@ -130,13 +237,66 @@ function RedClassFunc(RedData) {
           break;
         case 'K':
           console.log("K Press");
-          // this.followMe(lsTid,ChosenOne.Tx,ChosenOne.Ty);
           break;
       }
   });
   // console.log("ls127");
 }
-
+//function for setting properties of Schplágen
+function followPointFunc(RedOne,xPos,yPos) {
+  console.log('followPoint: New followPoint with Tid ' + RedOne.insertId + " " + followPointName);
+  //Getting Tid
+  var followPointTid = RedOne.insertId;
+  var r1 = {};
+  //sets Tid
+  r1.Tid = followPointTid;
+  //sets Tname
+  r1.Tname = followPointName;
+  //sets selected
+  r1.selected = false;
+  //sets o
+  r1.o =  MySchplágen_r1;
+  //sets o.Tid
+  r1.o.Tid = followPointTid;
+  //'moves' the Schplágen
+  let followPointSpriteDetail = {
+          Tid: followPointTid,
+          Ganimated: true,
+          left: 400 + grandomrange(50),
+          top: 400 + grandomrange(50)
+  }
+  //Instantiates charactersprite, new spritesheet for character
+  r1.sprite = new charactersprite(followPointSpriteDetail);
+  r1.ready = 2;
+  //gets the spritesheet
+  thingmap.set(r1.Tid, r1);
+  r1.o.tget(thingmap.get(r1.Tid));
+  r1.o.tgetimages(thingmap.get(r1.Tid));
+  thingmap.get(followPointTid).o.Tx =  followPoint.left;
+  thingmap.get(followPointTid).o.Ty =  followPoint.top;
+  //Sets a parameter that allows Schplágen to move  **changed to false**
+  thingmap.get(followPointTid).o.Gcanmove = false;
+  //Sets a parameter that allows Schplágen to be animated from spritesheet
+  thingmap.get(followPointTid).o.Ganimated = true;
+  //Saves location
+  thingmap.get(followPointTid).o.msaveLocation();
+  //function to detect key presses
+  thingmap.get(followPointTid).o.tkeypress = (function(keycode) {
+      keychar=String.fromCharCode(keycode);
+      switch (keychar) {
+        //If S key is pressed Schplágen will 'sleep' with sleepnow() function
+        case 'S':
+          thingmap.get(followPointTid).o.sleepnow();
+          console.log("r1: Bird- " + followPointName + " Is Asleep");
+          break;
+        //If W key is pressed Schplágen will 'Awake' with wakenow() function
+        case 'W':
+          thingmap.get(followPointTid).o.wakenow();
+          console.log("r1: Bird- " + followPointName + " Is Awake");
+          break;
+      }
+  });
+}
 function onload_red_classes() {
     console.log("Red Team Classes loaded");
   // make 1 leader of cultists
@@ -188,11 +348,13 @@ function onload_red_classes() {
         else {
             console.log(req.response);
           console.log('Error c187');
-          genuspick = 19;
+          genuspick = 8;
         }
         // console.log("147 "+genuspick);
         LeaderSchplagen= new BelieverSchplágen(null,lsnewname,0, 20, 1);
         LeaderSchplagen.tcreate(RedClassFunc);
+
         // window.setInterval(LeaderSchplagen.testo, 1000);
+        window.setInterval(LeaderSchplagen.followMe, 2500);
       };
   }

@@ -168,6 +168,7 @@ class Thing extends Yoke {
     this.Tteam=undefined;
     this.living=false;
     this.Tkeypressfunc=escape("console.log('hello world');"); // for testing only
+    this.tkeypress=function(){};
   }
   tgenuschange(plf) {
     // should change the genus in the instantiated object first, then call this function
@@ -339,12 +340,13 @@ class Thing extends Yoke {
         }
       };
     }
-    tkeypress(keycode) {
-      // You should *assign* function code to tkeypress, based on 
-    }
-    gkeypress(){
-      return false;
-    }
+    tkeypress(keycode){}
+    gkeypress(keycode){}
+//     tsavekeys(){
+//       let url=grassworld_db+'t=thing&a=upd&Tid='+this.Tid + token();
+//       let xhr = new XMLHttpRequest();
+//       let message= JSON.stringify({});
+//     }
     tput(plf) {
       // not finished
       // uses optional post-load-function called plf
@@ -362,7 +364,7 @@ class Thing extends Yoke {
           Ty : this.Ty,
           Tz : 0,
           Tteam : this.Tteam,
-          Tkeypressfunc: this.Tkeypressfunc
+          Tkeypressfunc: escape(this.o.tkeypress)
       });
       xhr.open('PUT', url);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");

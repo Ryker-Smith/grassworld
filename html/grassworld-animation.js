@@ -330,7 +330,9 @@ function game(game_canvas) {
 
   //========================================Starts here ======================
   count = 0;
-//   console.clear();
+  //   console.clear();
+  //  Iterate all the things in the world, unpack and/or
+  //  prepare them for use in our world; get any extras required.
   for (j = 0; j < field.all.length; j++) {
     var fting = {};
     fting.Tid = field.all[j].Tid;
@@ -364,7 +366,7 @@ function game(game_canvas) {
       }
     }
     fting.o.Tid = fting.Tid;
-    fting.tkeypress=field.all[j].tkeypress;
+//     fting.tkeypress=field.all[j].tkeypress;
     
     fting.o.Gcanmove = (field.all[j].Gmobile == 1);
     fting.o.Ganimated = (field.all[j].Ganimated == 1);
@@ -388,44 +390,64 @@ function game(game_canvas) {
     fting.sprite = new charactersprite(spritedetail);
     thingmap.set(fting.Tid, fting);
     Thing.tplfimages((field.all[j]).GimagesJSON, thingmap.get(fting.Tid));
-    fting.o.tkeypress = (function(keycode) {
-      keychar=String.fromCharCode(keycode);
-      if (keychar =='V') {
-        let thisthingtype=thingmap.get(this.Tid).o.constructor.name;
-        if (thisthingtype == 'MovingThing') {
-          console.log('Saving');
-          thingmap.get(this.Tid).o.msaveLocation();
+    // keyboard customisation, or standard responses here
+    var innerbit=fting.o.tkeypress.toString();
+    innerbit=innerbit.slice(innerbit.indexOf('{')+1, innerbit.lastIndexOf('}'));
+    innerbit=innerbit.trim();
+//     console.log('x['+ innerbit + ']');
+//     console.log('y['+ field.all[j].Tkeypressfunc + ']');
+    if ((innerbit == '') && (field.all[j].Tkeypressfunc == null)) {
+      // nothing in keypress from DB, provide standard stuff
+//       console.log('EMPTY KEYS BEHAVIOUR');
+      fting.o.tkeypress = (function(keycode) {
+        keychar=String.fromCharCode(keycode);
+        if (keychar =='V') {
+          let thisthingtype=thingmap.get(this.Tid).o.constructor.name;
+          if (thisthingtype == 'MovingThing') {
+            console.log('Saving');
+            thingmap.get(this.Tid).o.msaveLocation();
+          }
+          else {
+            console.log('NOT MOVING THING ');
+          }
+        }
+        else if (keychar =='I') {
+          console.log('Info dump');
+          console.log( spriteInfoDump(thing_selected) );
+        }
+        else if (keychar =='J') {
+          console.log('JSON dump');
+          thingmap.get(thing_selected).sprite.imagesJSON ;
+        }
+        else if (keychar =='S') {
+          console.log('Sleep');
+          thingmap.get(thing_selected).o.sleepnow();
+        }
+        else if (keychar =='W') {
+          console.log('Waking');
+          thingmap.get(thing_selected).o.wakenow();  
+        }
+        else if (keychar =='.') {
+          console.log('DELETE');
+          if (thingmap.get(thing_selected).o.Tstatus != 'p') {
+            thingmap.get(thing_selected).o.tdelete();
+            thingmap.delete(thing_selected);
+          }
+          else {
+            console.log('PERMANENT');
+          }
         }
         else {
-          console.log('NOT MOVING THING ');
+          console.log('*>f0 KeyCode handler got: ' + keychar + ' but presently does nothing with it');
         }
-      }
-      else if (keychar =='I') {
-        console.log( spriteInfoDump(thing_selected) );
-      }
-      else if (keychar =='J') {
-        thingmap.get(thing_selected).sprite.imagesJSON ;
-      }
-      else if (keychar =='S') {
-        thingmap.get(thing_selected).o.sleepnow();
-      }
-      else if (keychar =='W') {
-        thingmap.get(thing_selected).o.wakenow();  
-      }
-      else if (keychar =='.') {
-        console.log('DELETE');
-        if (thingmap.get(thing_selected).o.Tstatus != 'p') {
-          thingmap.get(thing_selected).o.tdelete();
-          thingmap.delete(thing_selected);
-        }
-        else {
-          console.log('PERMANENT');
-        }
-      }
-      else {
-        console.log('*>f0 KeyCode handler got: ' + keychar + ' but presently does nothing with it');
-      }
-    })
+      });
+    }
+    else if ((field.all[j].Tkeypressfunc != null)) {
+      console.log('FROM DB KEYS BEHAVIOUR ['+fting.Tid+']');
+      fting.o.tkeypress= field.all[j].Tkeypressfunc;
+      console.log('Got['+field.all[j].Tkeypressfunc+']');
+      console.log('Bhv['+fting.o.tkeypress+']');
+    }
     //  thingmap.image.addEventListener('load', eventDispatcher);
     count++;
   }
