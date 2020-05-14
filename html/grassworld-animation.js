@@ -54,6 +54,8 @@ function spriteInfoDump(t) {
       txt += '**Sleeping**\n';
   }
   txt += 'WSM: '+world_speed_multiplier+'\n';
+  txt += 'Keypress code: '+ thingmap.get(t).o.tkeypress+'\n';
+  txt += 'Interact code: '+thingmap.get(t).o.interact+'\n';
   txt += '==================\n';
   return txt;
 }
@@ -113,12 +115,15 @@ function keypress(event) {
         thing_selected = -1;
       }
       break;
-    default:
-      if (!thingmap.get(thing_selected).o.gkeypress(event.keyCode)) {
-        if (!thingmap.get(thing_selected).o.tkeypress(event.keyCode)) {
-            console.log('Unknown key: ' + event.keyCode);
-        }
+    default: {
+      thingmap.get(thing_selected).o.gkeypress(event.keyCode);
+      thingmap.get(thing_selected).o.tkeypress(event.keyCode);
     }
+//       if (!thingmap.get(thing_selected).o.gkeypress(event.keyCode)) {
+//         if (!thingmap.get(thing_selected).o.tkeypress(event.keyCode)) {
+//             console.log('Unknown key: ' + event.keyCode);
+//         }
+//     }
   }
 }
 
@@ -181,7 +186,8 @@ function leftclick(event) {
     thing_selected = -1;
   }
   if (thing_selected > 0) {
-      console.log('Selected '+thing_selected+'\nTgenus='+thingmap.get(thing_selected).o.Tgenus);
+      console.log( spriteInfoDump(thing_selected) );
+//       console.log('Selected '+thing_selected+'\nTgenus='+thingmap.get(thing_selected).o.Tgenus);
   }
 }
 
@@ -398,7 +404,6 @@ function game(game_canvas) {
 //     console.log('y['+ field.all[j].Tkeypressfunc + ']');
     if ((innerbit == '') && (field.all[j].Tkeypressfunc == null)) {
       // nothing in keypress from DB, provide standard stuff
-//       console.log('EMPTY KEYS BEHAVIOUR');
       fting.o.tkeypress = (function(keycode) {
         keychar=String.fromCharCode(keycode);
         if (keychar =='V') {
@@ -441,12 +446,14 @@ function game(game_canvas) {
           console.log('*>f0 KeyCode handler got: ' + keychar + ' but presently does nothing with it');
         }
       });
+      fting.o.tsavekeys();
     }
     else if ((field.all[j].Tkeypressfunc != null)) {
-      console.log('FROM DB KEYS BEHAVIOUR ['+fting.Tid+']');
-      fting.o.tkeypress= field.all[j].Tkeypressfunc;
-      console.log('Got['+field.all[j].Tkeypressfunc+']');
-      console.log('Bhv['+fting.o.tkeypress+']');
+//       console.log('FROM DB KEYS BEHAVIOUR ['+fting.Tid+']');
+      fting.o.tkeypress= new Function('a',innerbit);//unescape(field.all[j].Tkeypressfunc));
+      console.log('Got['+innerbit+']');
+//       console.log('Got['+field.all[j].Tkeypressfunc+']');
+//       console.log('Bhv['+fting.o.tkeypress+']');
     }
     //  thingmap.image.addEventListener('load', eventDispatcher);
     count++;

@@ -1,5 +1,5 @@
 
-var SchplágenNames=["Fester ","Inky ","Pinky ","Stinky ","Brain ","WeeMan ","Jimmy ","SeeYouPal ","Gombeen ","Ted "]; // names for Schplágen
+/*var SchplágenNames=["Fester ","Inky ","Pinky ","Stinky ","Brain ","WeeMan ","Jimmy ","SeeYouPal ","Gombeen ","Ted "]; // names for Schplágen
 
 var newName=SchplágenNames[grandom(SchplágenNames.length)-1 ]+ grandom(1000); //Generates a random name from the list and adds a random number to the end.
 
@@ -21,7 +21,7 @@ function randomNumRange(upper){
   }
   return r;
 }
-*/
+
 
 function placeOnScreen(r) {
   console.log('New character with Tid ' + r.insertId);
@@ -79,3 +79,5 @@ function onload_b1() {
 	blueSamuari_b1= new MovingThing(null,newname, null, 25, 1); // 25 = blueSamuari genus from classes.js
 	blueSamuari_b1.tcreate(placeOnScreen);
 }
+*/
+

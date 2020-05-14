@@ -39,7 +39,7 @@ function run_this_next(r) {
   thingmap.get(myTid).o.tkeypress = (function(keycode) {
       keychar=String.fromCharCode(keycode);
       if (keychar == 'S') {
-        
+        console.log('elephants');
       }
       else if (keychar == 'W') {
         
@@ -52,6 +52,6 @@ function run_this_next(r) {
 }
 function onload_f0() {
   console.log('onLoad');
-  thisschplágen= new Schplágen(null,newname, null, 1, 1);
+  thisschplágen= new Schplágen(null,newname, null, 28, 1);
   thisschplágen.tcreate(run_this_next);
 }

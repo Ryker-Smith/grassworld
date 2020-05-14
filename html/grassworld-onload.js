@@ -6,7 +6,7 @@ window.onload=(function(){
   onload_g1();
   onload_g2();
   onload_g3();
-  onload_b1();
+//   onload_b1();
   onload_b2();
   onload_b3();
   onload_f0();

@@ -1,4 +1,4 @@
-let genus_Schplágen_f0 = 0;
+/*let genus_Schplágen_f0 = 0;
 let genus_Schplágen = 1;
 let genus_Twig=2;
 let genus_SchplágenAlso = 3;
@@ -734,3 +734,4 @@ class charactersprite {
       }
     }
 }
+*/

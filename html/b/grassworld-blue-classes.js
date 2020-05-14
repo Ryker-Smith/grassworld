@@ -1,10 +1,46 @@
 
-class bluesamuaricharactersprite extends charactersprite {
+class bluesamuraicharactersprite extends charactersprite {
+    fighting() {
+      this.sleeping = false;
+      let d='fight';
+      let fightingspritesheet='bluesamurai.png';
+      let newbehavior={
+        d : {
+        "spritesheet" : fightingspritesheet,
+        "framecount" : "8",
+        "rowcount" : "1",
+        "w" : "1600",
+        "h" : "200",
+        "ticks" : "30",
+        "scale" : "0.2"
+        }
+      }
+      this.sprite.directions.set(d,JSON.parse(newbehavior)['fight']);
+      this.sprite.directions.get(d).spritesheet=new Image();
+      this.sprite.directions.get(d).spritesheet.src=imagewithfullpath(fightingspritesheet);
+      this.sprite.directions.get(d).ticks=Math.floor(thething.sprite.directions.get(d).ticks/world_speed_multiplier);
+      thingmap.get(this.Tid).sprite.frameIndex=0;
+      thingmap.get(this.Tid).sprite.tickCount=0;
+      thingmap.get(this.Tid).o.Gcanmove=false;
+      thingmap.get(this.Tid).o.ismoving=false;
+      thingmap.get(this.Tid).sprite.left_destination=thingmap.get(this.Tid).sprite.left;
+      thingmap.get(this.Tid).sprite.top_destination=thingmap.get(this.Tid).sprite.top;
+      thingmap.get(this.Tid).sprite.heading='fight';
+    }
+    peaceing() {
+      this.sleeping=false;
+      thingmap.get(this.Tid).sprite.heading='default';
+      thingmap.get(this.Tid).sprite.frameIndex=0;
+      thingmap.get(this.Tid).sprite.tickCount=0;
+      thingmap.get(this.Tid).o.Gcanmove=true;
+    }
   interact(){
+    
+    console.log("interacting blue");
     if (thingmap.get(this.Tid).o.Ginteracts) {
     switch (thingmap.get(this.Tid).o.Tgenus) {
-      case blueSamuari : { 
-              let somearbitraryvalue=51;
+      case genus_blueSamurai : { 
+              let fightradius=51;
               for (key of thingmap.keys()) {
                   if (key == this.Tid) {
                     continue;
@@ -16,15 +52,19 @@ class bluesamuaricharactersprite extends charactersprite {
                     left: this.left + Math.floor(this.sprite_width/2),
                     top: this.top + Math.floor(this.sprite_height/2)
                   });
-                  if (dist < somearbitraryvalue) {
-                    if (thingmap.get(key).o.Tstatus != 'p') {
-                      charactersprite.pffft(key);
-            }
-          }
-                }
-    break;
-          
-    
+                  if (dist < fightradius) {
+                    // do the fight with the first character in range
+                    console.log("fight");
+                    this.o.Gcanmove=true;  
+                    this.o.fighting=true;
+                    this.o.Tstatus='somethingidonttknowwhat';
+                    break;
+                  }
+              }
+              
+        }
+        default : {
+           break;
         }
       }
     }
@@ -40,11 +80,12 @@ class bluesamuaricharactersprite extends charactersprite {
     }
   }
 
-  var list_of_names=["Samuari ", "Samuari ","Samuari ","Samuari ","Samuari ","Samuari ","Samuari "]; // array with list of names
+  var list_of_names=["Samurai ", "Samurai ","Samurai ","Samurai ","Samurai ","Samurai ","Samurai "]; // array with list of names
   var addnames=list_of_names[ grandom(list_of_names.length)-1 ]+ grandom(1000); // gets a new random name from the list of names.
-  var blueSamuari; // variable name for our Samuari schplagen.
+  var blueSamurai; // variable name for our Samuari schplagen.
 
 function next_execute(r) {          // next executable to give schplagen properties and methods.
+  console.log('BLUE create 222');
   console.log('b2' + r.insertId); // r.insertId gets the Tid. 
   var Tid=r.insertId;
   var kr={};
@@ -52,7 +93,7 @@ function next_execute(r) {          // next executable to give schplagen propert
   kr.Tid=Tid; // adds random Tid for random names and resets onload.  
   kr.Tname=addnames;
   kr.selected=false;
-  kr.o=blueSamuari;
+  kr.o=blueSamurai;
   kr.o.Tid=Tid;
   
   let myspritedetail= {         // sprite info.
@@ -62,15 +103,15 @@ function next_execute(r) {          // next executable to give schplagen propert
           top: 502 + grandomrange(10) // the schplagen can spawna t a random y-axis co-ordinate between 492 and 512.
   }
    
-  kr.sprite = new characterspritee(myspritedetail); // creates a new spritesheet.
+  kr.sprite = new bluesamuraicharactersprite(myspritedetail); // creates a new spritesheet.
   kr.ready=2;
   //gets a Tid and images from the objects.
   thingmap.set(kr.Tid, kr);
   kr.o.tget(thingmap.get(kr.Tid));
   kr.o.tgetimages(thingmap.get(kr.Tid));
   // gets the spritesheet
-  thingmap.get(Tid).o.Tx=blueSamuari.left;
-  thingmap.get(Tid).o.Ty=blueSamuari.top;
+  thingmap.get(Tid).o.Tx=blueSamurai.left;
+  thingmap.get(Tid).o.Ty=blueSamurai.top;
   // allows the schplagen to move with multple frames and save location.
   thingmap.get(Tid).o.Gcanmove=true;
   thingmap.get(Tid).o.Ganimated=true;
@@ -92,7 +133,7 @@ function next_execute(r) {          // next executable to give schplagen propert
   });
 }   
 function onload_b2() { // When page reloads it creates a new schplagen.
-        console.log('b2');
-        blueSamuari= new MovingThing(null,addnames, null, 25, 1); // 12 = genus from classes.js which is my penguin.
-      blueSamuari.tcreate(next_execute);
+        console.log('BLUE create');
+        blueSamurai= new MovingThing(null,addnames, null, 25, 1); // 12 = genus from classes.js which is my penguin.
+        blueSamurai.tcreate(next_execute);
     }

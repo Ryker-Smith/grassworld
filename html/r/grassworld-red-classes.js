@@ -20,7 +20,7 @@ class BelieverSchplágen extends Schplágen {
     this.genus = this.genus;
   }
  followMe(){
-    console.log("X position: "+thingmap.get(lsId).o.Tx + " Y position: "+thingmap.get(lsId).o.Ty);
+//     console.log("X position: "+thingmap.get(lsId).o.Tx + " Y position: "+thingmap.get(lsId).o.Ty);
 
     if(!((TheX == thingmap.get(lsId).o.Tx) && (TheY == thingmap.get(lsId).o.Ty))) {
       TheX = thingmap.get(lsId).o.Tx;
@@ -29,7 +29,7 @@ class BelieverSchplágen extends Schplágen {
       console.log(poopi);
     }
     else{
-      console.log("SamePositionMate");
+//       console.log("SamePositionMate");
     }
     let url = grassworld_db+'a=get&t=thing'+redToken();
     var req3 = new XMLHttpRequest();
@@ -40,16 +40,16 @@ class BelieverSchplágen extends Schplágen {
          if (req3.status == 200) {
           let r=req3.response;
           r=JSON.parse(r);
-          console.log( r.length);
+//           console.log( r.length);
           for (var i=0; i< r.length; i++) {
             let  n = r[i];
             if(n.Tgenus==8){
-            thingmap.get(n.Tid).sprite.setdestination(n.Tid, TheX, TheY);
+//             thingmap.get(n.Tid).sprite.setdestination(n.Tid, TheX, TheY);
             }
           }
         }
         else {
-          console.log(req3.response);
+//           console.log(req3.response);
           console.log('Error c187');
         }
       };
@@ -109,7 +109,7 @@ function placePointer(){
         }
       }
       else {
-        console.log(req2.response);
+//         console.log(req2.response);
         console.log('Error c187');
       }
     };
@@ -298,7 +298,7 @@ function followPointFunc(RedOne,xPos,yPos) {
   });
 }
 function onload_red_classes() {
-    console.log("Red Team Classes loaded");
+//     console.log("Red Team Classes loaded");
   // make 1 leader of cultists
     let url = grassworld_db+'a=get&t=thing'+redToken();
     var req = new XMLHttpRequest();
@@ -315,7 +315,7 @@ function onload_red_classes() {
             let  n = r[i];
             if(n.Tgenus==20){
                 //save name position then delete and create same but with new genus
-                console.log("ChIcky Check this out------>>>>> "+n.Tname+" //also this>> "+leadercount);
+//                 console.log("ChIcky Check this out------>>>>> "+n.Tname+" //also this>> "+leadercount);
                 //step 1 save data
                 // let id = n.Tid ;
                 // let name = n.Tname;
@@ -346,7 +346,7 @@ function onload_red_classes() {
 
         }
         else {
-            console.log(req.response);
+//             console.log(req.response);
           console.log('Error c187');
           genuspick = 8;
         }

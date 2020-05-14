@@ -10,7 +10,7 @@ let genus_Schplágen_g3 = 11;
 let genus_Schplágen_b1 = 10;
 let genus_Schplágen_b2 = 12;
 let genus_Schplágen_b3 = 9;
-let genus_blueSamurai = 20;
+let genus_blueSamurai = 25;
 let genus_teleport = 16;
 let genus_Leader  = 20;
 let emptyimage={
@@ -168,7 +168,7 @@ class Thing extends Yoke {
     this.Tteam=undefined;
     this.living=false;
     this.Tkeypressfunc=escape("console.log('hello world');"); // for testing only
-    this.tkeypress=function(){};
+//     this.tkeypress=(function(){});
   }
   tgenuschange(plf) {
     // should change the genus in the instantiated object first, then call this function
@@ -342,11 +342,30 @@ class Thing extends Yoke {
     }
     tkeypress(keycode){}
     gkeypress(keycode){}
-//     tsavekeys(){
-//       let url=grassworld_db+'t=thing&a=upd&Tid='+this.Tid + token();
-//       let xhr = new XMLHttpRequest();
-//       let message= JSON.stringify({});
-//     }
+    tsavekeys(plf) {
+      // not finished
+      console.log('SAVE KEYS');
+      let url=grassworld_db+'t=thing&a=upd_keys&Tid='+this.Tid + token();
+      let xhr = new XMLHttpRequest();
+      let message= JSON.stringify({
+          TK : 'a1b2c3d4',
+          Tid : this.Tid,
+          Tkeypressfunc: escape(this.tkeypress)
+      });
+      xhr.open('PUT', url);
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.send(message);
+      xhr.onload = function() {
+        if (xhr.status == 200) { 
+          if (isdefined(plf)) {
+            plf(JSON.parse(xhr.response));
+          }
+        }
+        else { 
+            console.log('Error c365: '+xhr.response);
+        }
+      };
+    }
     tput(plf) {
       // not finished
       // uses optional post-load-function called plf
@@ -598,13 +617,16 @@ class charactersprite {
                   if (key == this.Tid) {
                     continue;
                   }
-                  let dist = distance({
-                    left: (thingmap.get(key).sprite.left + (thingmap.get(key).sprite.sprite_width / 2)),
-                    top: (thingmap.get(key).sprite.top + (thingmap.get(key).sprite.sprite_height / 2))
-                  }, {
-                    left: this.left + Math.floor(this.sprite_width/2),
-                    top: this.top + Math.floor(this.sprite_height/2)
-                  });
+                  let dist = distance(
+                    {
+                      left: (thingmap.get(key).sprite.left + (thingmap.get(key).sprite.sprite_width / 2)),
+                      top: (thingmap.get(key).sprite.top + (thingmap.get(key).sprite.sprite_height / 2))
+                    },
+                    {
+                      left: this.left + Math.floor(this.sprite_width/2),
+                      top: this.top + Math.floor(this.sprite_height/2)
+                    }
+                  );
                   if (dist < somearbitraryvalue) {
                     if (thingmap.get(key).o.Tstatus != 'p') {
                       charactersprite.pffft(key);
@@ -664,36 +686,36 @@ class charactersprite {
           this.frameIndex = 0;
         }
         // some random actions
-        if ((thingmap.get(this.Tid).o.Gcansleep) && (!thingmap.get(this.Tid).ismoving)){
-          if (oneinNchance(20)) {
-            if (thingmap.get(this.Tid).o.isasleep) {
-              thingmap.get(this.Tid).o.wakenow();
-            }
-            else {
-              thingmap.get(this.Tid).o.sleepnow();
-            }
-          }
-        }
-        if (thingmap.get(this.Tid).o.Gcanmove) {
-          if (oneinNchance(10)) {
-            if (oneinNchance(2)) {
-              this.setdestination(
-                this.Tid,
-                this.left + grandom(screen.width),
-                this.top + grandom(screen.height)
-              );
-              this.heading='right';
-            }
-            else {
-              this.setdestination(
-                this.Tid,
-                this.left - grandom(screen.width),
-                this.top - grandom(screen.height)
-              );
-              this.heading='left';
-            }
-          }
-        }
+//         if ((thingmap.get(this.Tid).o.Gcansleep) && (!thingmap.get(this.Tid).ismoving)){
+//           if (oneinNchance(20)) {
+//             if (thingmap.get(this.Tid).o.isasleep) {
+//               thingmap.get(this.Tid).o.wakenow();
+//             }
+//             else {
+//               thingmap.get(this.Tid).o.sleepnow();
+//             }
+//           }
+//         }
+//         if (thingmap.get(this.Tid).o.Gcanmove) {
+//           if (oneinNchance(50)) {
+//             if (oneinNchance(2)) {
+//               this.setdestination(
+//                 this.Tid,
+//                 this.left + grandom(screen.width),
+//                 this.top + grandom(screen.height)
+//               );
+//               this.heading='right';
+//             }
+//             else {
+//               this.setdestination(
+//                 this.Tid,
+//                 this.left - grandom(screen.width),
+//                 this.top - grandom(screen.height)
+//               );
+//               this.heading='left';
+//             }
+//           }
+//         }
         // end of random actions
       }
       if (
