@@ -338,12 +338,29 @@ async function db_put(request, response) {
             "UPDATE genus SET Gname="+(dbms.escape(Gname))+", Gdescription="+(dbms.escape(Gdescription))+", Gmobile="+(dbms.escape(Gmobile))+", Ginteracts="+(dbms.escape(Ginteracts))+", Ganimated="+(dbms.escape(Ganimated))+ ", Gcansleep="+(dbms.escape(Gcansleep))+", Gliving="+(dbms.escape(Gliving))+", GimagesJSON="+(dbms.escape(GimagesJSON))+ " WHERE Gid="+(dbms.escape(Gid)))
           .then( results => {
           if(results.length < 1){
-//             console.log(r);
-//             console.log(results);
             r='error b226';
           }
           else {
-//             console.log(results);
+            console.log(results);
+            r=JSON.stringify(results);
+          }
+          return r;
+        }
+      )
+      .catch( err => {
+        console.log(err);
+      });
+      return r;
+    }
+   async function tupdate_interacts(Tid, Tinteractfunc) {
+        var r;
+        await dbms.query(
+            "UPDATE things SET Tinteractfunc="+(dbms.escape(Tinteractfunc)) + " WHERE Tid="+(dbms.escape(Tid)) )
+          .then( results => {
+          if(results.length < 1){
+            r='error b365';
+          }
+          else {
             r=JSON.stringify(results);
           }
           return r;
@@ -360,12 +377,9 @@ async function db_put(request, response) {
             "UPDATE things SET Tkeypressfunc="+(dbms.escape(Tkeypressfunc)) + " WHERE Tid="+(dbms.escape(Tid)) )
           .then( results => {
           if(results.length < 1){
-//             console.log(r);
-//             console.log(results);
             r='error b365';
           }
           else {
-//             console.log(results);
             r=JSON.stringify(results);
           }
           return r;
@@ -376,18 +390,15 @@ async function db_put(request, response) {
       });
       return r;
     }
-    async function tupdate(Tid, Tname, Tcreator, Tstatus, Tcontent, Tgenus, Tx, Ty, Tz, Tteam, Tkeypressfunc) {
+    async function tupdate(Tid, Tname, Tcreator, Tstatus, Tcontent, Tgenus, Tx, Ty, Tz, Tteam, Tkeypressfunc, Tinteractfunc) {
         var r;
         await dbms.query(
-            "UPDATE things SET Tname="+(dbms.escape(Tname))+", Tcreator="+(dbms.escape(Tcreator))+", Tstatus="+(dbms.escape(Tstatus))+", Tcontent="+(dbms.escape(Tcontent))+", Tgenus="+(dbms.escape(Tgenus))+ ", Tx="+(dbms.escape(Tx))+", Ty="+(dbms.escape(Ty))+", Tz="+(dbms.escape(Tz))+", Tteam="+(dbms.escape(Tteam))+", Tkeypressfunc="+(dbms.escape(Tkeypressfunc)) + " WHERE Tid="+(dbms.escape(Tid)) )
+            "UPDATE things SET Tname="+(dbms.escape(Tname))+", Tcreator="+(dbms.escape(Tcreator))+", Tstatus="+(dbms.escape(Tstatus))+", Tcontent="+(dbms.escape(Tcontent))+", Tgenus="+(dbms.escape(Tgenus))+ ", Tx="+(dbms.escape(Tx))+", Ty="+(dbms.escape(Ty))+", Tz="+(dbms.escape(Tz))+", Tteam="+(dbms.escape(Tteam))+", Tkeypressfunc="+(dbms.escape(Tkeypressfunc)) +", Tinteractfunc="+(dbms.escape(Tinteractfunc))+ " WHERE Tid="+(dbms.escape(Tid)) )
           .then( results => {
           if(results.length < 1){
-//             console.log(r);
-//             console.log(results);
             r='error b370';
           }
           else {
-//             console.log(results);
             r=JSON.stringify(results);
           }
           return r;
@@ -417,11 +428,6 @@ async function db_put(request, response) {
       });
       return r;
     }
-//   console.log( nowIs());
-//   console.log('CONNECT -> DB -> '+request.method + ' ' + String(request.url));
-//   fs.appendFile(debugfile, 'CONNECT\n', () => {});
-//   fs.appendFile(debugfile, nowIs() + "\n", () => {});
-//   fs.appendFile(debugfile, 'Method: ' + request.method + '\n', () => {});
   for (var key in request.headers) {
       fs.appendFile(debugfile,key + " -> " + request.headers[key] + "\n", () => {});
   }
@@ -442,6 +448,10 @@ async function db_put(request, response) {
           request.body.Gid,request.body.Gname, request.body.Gdescription, request.body.Gmobile, 
           request.body.Ganimated, request.body.Ginteracts, request.body.Gcansleep, request.body.Gliving, request.body.GimagesJSON);
       }
+      else if (cgi.a == 'upd_interacts'){
+        reply=await tupdate_interacts(
+          request.body.Tid, request.body.Tinteractfunc);
+      }
       else if (cgi.a == 'upd_keys'){
         reply=await tupdate_keys(
           request.body.Tid, request.body.Tkeypressfunc);
@@ -449,7 +459,7 @@ async function db_put(request, response) {
       else if (cgi.a == 'upd'){
         reply=await tupdate(
           request.body.Tid,request.body.Tname, request.body.Tcreator, request.body.Tstatus, 
-          request.body.Tcontent, request.body.Tgenus, request.body.Tx, request.body.Ty, request.body.Tz, request.body.Tteam, request.body.Tkeypressfunc);
+          request.body.Tcontent, request.body.Tgenus, request.body.Tx, request.body.Ty, request.body.Tz, request.body.Tteam, request.body.Tkeypressfunc, request.body.Tinteractfunc);
       }
     }
     response.write(String(reply));
@@ -466,7 +476,6 @@ async function db_post(request, response) {
             "INSERT INTO things (Tname, Tgenus) VALUES ("+dbms.escape(Tname)+","+dbms.escape(Tgenus)+")")
           .then( results => {
             r=JSON.stringify(results);
-//             console.log(r.warningCount);
             if (r.insertId > 0) {
                 r=r;
             }
@@ -486,7 +495,6 @@ async function db_post(request, response) {
             "INSERT INTO genus (Gname, Gmobile, Ganimated, Ginteracts, Gcansleep, Gliving, GimagesJSON) VALUES ("+dbms.escape(Gname)+","+dbms.escape(Gmobile)+","+dbms.escape(Ganimated)+","+dbms.escape(Ginteracts)+","+dbms.escape(Gcansleep)+","+dbms.escape(Gliving)+","+dbms.escape(GimagesJSON)+")")
           .then( results => {
             r=JSON.stringify(results);
-//             console.log(r.warningCount);
             if (r.insertId > 0) {
                 r=r;
             }
@@ -498,11 +506,6 @@ async function db_post(request, response) {
       });
       return r;
     }
-//   console.log( nowIs());
-//   console.log('CONNECT -> DB -> '+request.method + ' ' + String(request.url));
-//   fs.appendFile(debugfile, 'CONNECT\n', () => {});
-//   fs.appendFile(debugfile, nowIs() + "\n", () => {});
-//   fs.appendFile(debugfile, 'Method: ' + request.method + '\n', () => {});
   for (var key in request.headers) {
       fs.appendFile(debugfile,key + " -> " + request.headers[key] + "\n", () => {});
   }
@@ -518,7 +521,6 @@ async function db_post(request, response) {
         }
       }
   }
-//   console.log('POST RESPONSE -> ' + reply);
   response.write(String(reply));
   response.end();
 }
@@ -541,11 +543,6 @@ async function db_del(request, response) {
       return r;
     }
 
-//   console.log( nowIs());
-//   console.log('DELETE CONNECT -> DB -> '+request.method + ' ' + String(request.url));
-//   fs.appendFile(debugfile, 'CONNECT\n', () => {});
-//   fs.appendFile(debugfile, nowIs() + "\n", () => {});
-//   fs.appendFile(debugfile, 'Method: ' + request.method + '\n', () => {});
   for (var key in request.headers) {
       fs.appendFile(debugfile,key + " -> " + request.headers[key] + "\n", () => {});
   }
@@ -556,16 +553,12 @@ async function db_del(request, response) {
       reply=await tdelete(cgi.Tid);
     }
   }
-//   console.log('POST RESPONSE -> ' + reply);
   response.write(String(reply));
   response.end();
 }
 //========================================================================================
 async function db_dbg(request, response) {
     var reply='';
-
-//   console.log( nowIs());
-//   console.log('CONNECT -> DBG -> '+request.method + ' ' + String(request.url));
 
   for (var key in request.headers) {
       fs.appendFile(debugfile,key + " -> " + request.headers[key] + "\n", () => {});
@@ -589,7 +582,6 @@ async function si_post(request, response) {
             "INSERT INTO scripts (SCname, SCscript) VALUES ("+dbms.escape(SCname)+","+dbms.escape(SCscript)+")")
           .then( results => {
             r=JSON.stringify(results);
-//             console.log(r.warningCount);
             if (r.insertId > 0) {
                 r=r;
             }
@@ -601,16 +593,12 @@ async function si_post(request, response) {
       });
       return r;
     }
-//   console.log( nowIs() );
-//   console.log('CONNECT -> SI -> '+request.method + ' ' + String(request.url));
   response.writeHead(200, {'Content-Type': 'text/html'});
   var cgi = url.parse(request.url, true).query;
   var TK=request.body.TK;
   var SIcode=unescape(request.body.SIcode) ;
-//   console.log('Code: '+unescape(SIcode) );
   var SIname=request.body.SIname;
   reply=await SIcreate(SIname, SIcode);
-//   console.log('POST RESPONSE -> ' + reply);
   response.write(String(reply));
   response.end();
 }
@@ -639,13 +627,10 @@ async function si_put(request, response) {
       return r;
     }
     
-//   console.log( nowIs() );
-//   console.log('CONNECT -> SI -> '+request.method + ' ' + String(request.url));
   response.writeHead(200, {'Content-Type': 'text/html'});
   var TK=request.body.TK;
   var SCid=request.body.SIid;
   var SCscript=unescape(request.body.SIcode) ;
-//   console.log('ID: '+SCid);
   reply=await SIwrite(SCid, SCscript);
   console.log('PUT RESPONSE -> ' + reply);
   response.write(String(reply));
@@ -676,15 +661,10 @@ async function si_get(request, response) {
       return r;
     }
     
-//   console.log( nowIs() );
-//   console.log('CONNECT -> SI -> '+request.method + ' ' + String(request));
   response.writeHead(200, {'Content-Type': 'text/html'});
   var cgi = url.parse(request.url, true).query;
   var TK=request.params.token;
-//   console.log('TK: '+TK);
   var SCid=request.params.SCid;
-//   console.log('ID: '+SCid);
-//   console.log('B '+JSON.stringify(request.body));
   reply=await SIread(SCid);
   
   console.log('GET RESPONSE -> ' + reply);

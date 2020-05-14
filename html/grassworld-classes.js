@@ -366,6 +366,29 @@ class Thing extends Yoke {
         }
       };
     }
+    tsaveinteract(plf) {
+      console.log('SAVE INTERACTIONS');
+      let url=grassworld_db+'t=thing&a=upd_interacts&Tid='+this.Tid + token();
+      let xhr = new XMLHttpRequest();
+      let message= JSON.stringify({
+          TK : 'a1b2c3d4',
+          Tid : this.Tid,
+          Tinteractfunc: escape(this.tkeypress)
+      });
+      xhr.open('PUT', url);
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.send(message);
+      xhr.onload = function() {
+        if (xhr.status == 200) { 
+          if (isdefined(plf)) {
+            plf(JSON.parse(xhr.response));
+          }
+        }
+        else { 
+            console.log('Error c365: '+xhr.response);
+        }
+      };
+    }
     tput(plf) {
       // not finished
       // uses optional post-load-function called plf
