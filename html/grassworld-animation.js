@@ -186,8 +186,8 @@ function leftclick(event) {
     thing_selected = -1;
   }
   if (thing_selected > 0) {
-      console.log( spriteInfoDump(thing_selected) );
-//       console.log('Selected '+thing_selected+'\nTgenus='+thingmap.get(thing_selected).o.Tgenus);
+      //console.log( spriteInfoDump(thing_selected) );
+      console.log('Selected: '+thing_selected+' of Tgenus '+thingmap.get(thing_selected).o.Tgenus+'\n (press I for data dump)');
   }
 }
 
@@ -397,11 +397,9 @@ function game(game_canvas) {
     thingmap.set(fting.Tid, fting);
     Thing.tplfimages((field.all[j]).GimagesJSON, thingmap.get(fting.Tid));
     // keyboard customisation, or standard responses here
-    var innerbit=fting.o.tkeypress.toString();
+    var innerbit=unescape(field.all[j].Tkeypressfunc);//fting.o.tkeypress.toString();
     innerbit=innerbit.slice(innerbit.indexOf('{')+1, innerbit.lastIndexOf('}'));
     innerbit=innerbit.trim();
-//     console.log('x['+ innerbit + ']');
-//     console.log('y['+ field.all[j].Tkeypressfunc + ']');
     if ((innerbit == '') && (field.all[j].Tkeypressfunc == null)) {
       // nothing in keypress from DB, provide standard stuff
       fting.o.tkeypress = (function(keycode) {
@@ -449,11 +447,8 @@ function game(game_canvas) {
       fting.o.tsavekeys();
     }
     else if ((field.all[j].Tkeypressfunc != null)) {
-//       console.log('FROM DB KEYS BEHAVIOUR ['+fting.Tid+']');
-      fting.o.tkeypress= new Function('a',innerbit);//unescape(field.all[j].Tkeypressfunc));
+      fting.o.tkeypress=new Function('keycode',innerbit); 
       console.log('Got['+innerbit+']');
-//       console.log('Got['+field.all[j].Tkeypressfunc+']');
-//       console.log('Bhv['+fting.o.tkeypress+']');
     }
     //  thingmap.image.addEventListener('load', eventDispatcher);
     count++;

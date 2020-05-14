@@ -644,9 +644,8 @@ class charactersprite {
     static pffft(Tid) {
       // unfinished
       // delete/explode the character
-      console.log('OUT');
       thingmap.get( thingmap.get(Tid).o.tdelete('shockperson.wav') );
-      console.log('pffft: '+Tid);
+//      console.log('pffft: '+Tid);
       thingmap.delete(Tid);
     }
     directionChange() {
