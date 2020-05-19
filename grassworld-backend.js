@@ -12,6 +12,7 @@ app.use(bodyParser.json());
 var port = 81;
 var events = require('events');
 var eventEmitter = new events.EventEmitter();
+var defaults = require('./grassworld-defaults.js');
 var config = require('./grassworld-pw.js');
 var debugfile=config.debugfile;
 
@@ -49,7 +50,7 @@ var dbms=new Database({
   database: config.dbname
 });
 
-function nowIs() { 
+function nowIs() {
 	function pad(n) {
 		return n<10 ? '0'+n : n
 	}
@@ -229,11 +230,6 @@ async function db_get(request, response) {
       return r;
     }
 	
-//   console.log( nowIs());
-//   console.log('CONNECT -> DB -> '+request.method + ' ' + String(request.url));
-//   fs.appendFile(debugfile, 'CONNECT\n', () => {});
-//   fs.appendFile(debugfile, nowIs() + "\n", () => {});
-//   fs.appendFile(debugfile, 'Method: ' + request.method + '\n', () => {});
   response.writeHead(200, {'Content-Type': 'text/html'});
   if (request.method || 'GET') { // unnecessary
     var cgi = url.parse(request.url, true).query;
@@ -297,7 +293,6 @@ async function db_put(request, response) {
     
     async function saveLocation(Tid, Tx, Ty, Tz) {
         var r;
-//         console.log("UPDATE things SET Tx=" +Tx+ ", Ty="+Ty+", Tz="+Tz+" WHERE Tid="+Tid);
         await dbms.query(
             "UPDATE things SET Tx=" +dbms.escape(Tx)+ ", Ty="+dbms.escape(Ty)+", Tz="+dbms.escape(Tz)+" WHERE Tid=" + dbms.escape(Tid))
           .then( results => {
@@ -473,7 +468,7 @@ async function db_post(request, response) {
         var r;
         var x=0,y=0,z=0;
         await dbms.query(
-            "INSERT INTO things (Tname, Tgenus) VALUES ("+dbms.escape(Tname)+","+dbms.escape(Tgenus)+")")
+            "INSERT INTO things (Tname, Tgenus, Tkeypressfunc, Tinteractfunc) VALUES ("+dbms.escape(Tname)+","+dbms.escape(Tgenus)+","+dbms.escape(defaults.keypress_behaviour)+","+dbms.escape(defaults.interact_behaviour)+")")
           .then( results => {
             r=JSON.stringify(results);
             if (r.insertId > 0) {

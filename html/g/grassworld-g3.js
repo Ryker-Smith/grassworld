@@ -1,9 +1,10 @@
 //Names of the schplagens.
-var cbnames = ["El Sheriffo ", "Mr Steal Your Gun ", "Gunna ", "Glock ", "ZorroKiller ", "Muzzle ", "Rusty ", "Bo ", "Twin1 ", "Twin2 "];
+var cbnames = ["El Sheriffo ", "Mr Steal Your Gun ", "Choppa ", "Glock ", "ZorroKiller ", "Muzzle ", "Rusty ", "Bo ", "Twin1 ", "Twin2 "];
 //Picks a random name from the list.
 var cbnewname = cbnames[grandom(cbnames.length) - 1] + grandom(1000);
 // gets the name for a newly created schplagen.
 var cbschplagen;
+var bullet;
 var cbposX, cbposY;
 
 function onload_g3() {
@@ -16,11 +17,11 @@ function onload_g3() {
 function shoot() {
   cbposX = cbschplagen.Tx;
   cbposY = cbschplagen.Ty;
-  
+
   bullet = new MovingThing(null, 'stevemcqueen', null, 29, 1);
   bullet.tcreate(FireBullet);
-  bullet.left_destination=500;
-  bullet.top_destination=500;
+  bullet.left_destination = 500;
+  bullet.top_destination = 500;
 
   console.log("I'm shooting!");
 }
@@ -111,8 +112,8 @@ function DoThisNext(r) {
       console.log("I feel like a new man!")
     }
     else if (keychar == 'K') {
-      shoot();
-      console.log("I'm shooting!");
+      shoot()
+      console.log("Pew Pew");
     }
   });
   console.log('New creature made ' + Tid + 'cb');

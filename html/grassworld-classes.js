@@ -36,6 +36,95 @@ var audioenabled = false;
 var thingstep = 1;
 var world_speed_multiplier=5;
 var explode=emptyimage;
+
+default_keypress_function = (function(keycode) {
+  keychar=String.fromCharCode(keycode);
+  if (keychar =='V') {
+    let thisthingtype=thingmap.get(this.Tid).o.constructor.name;
+    if (thisthingtype == 'MovingThing') {
+      console.log('Saving');
+      thingmap.get(this.Tid).o.msaveLocation();
+    }
+    else {
+      console.log('NOT MOVING THING ');
+    }
+  }
+  else if (keychar =='I') {
+    console.log('Info dump');
+    console.log( spriteInfoDump(thing_selected) );
+  }
+  else if (keychar =='J') {
+    console.log('JSON sprite data dump');
+    thingmap.get(thing_selected).sprite.imagesJSON ;
+  }
+  else if (keychar =='S') {
+    console.log('Sleep');
+    thingmap.get(thing_selected).o.sleepnow();
+  }
+  else if (keychar =='W') {
+    console.log('Waking');
+    thingmap.get(thing_selected).o.wakenow();  
+  }
+  else if (keychar =='X') {
+    console.log('DELETE');
+    if (thingmap.get(thing_selected).o.Tstatus != 'p') {
+      thingmap.get(thing_selected).o.tdelete();
+      thingmap.delete(thing_selected);
+    }
+    else {
+      console.log('PERMTHING');
+    }
+  }
+  else {
+    console.log('<KeyCode: ' + keychar + ' does nothing>');
+  }
+});
+
+default_interact_function=(function(myId,otherId) {
+  console.log('def['+myId +'::'+ otherId+']');
+})
+// (function(keycode) {
+//         keychar=String.fromCharCode(keycode);
+//         if (keychar =='V') {
+//           let thisthingtype=thingmap.get(this.Tid).o.constructor.name;
+//           if (thisthingtype == 'MovingThing') {
+//             console.log('Saving');
+//             thingmap.get(this.Tid).o.msaveLocation();
+//           }
+//           else {
+//             console.log('NOT MOVING THING ');
+//           }
+//         }
+//         else if (keychar =='I') {
+//           console.log('Info dump');
+//           console.log( spriteInfoDump(thing_selected) );
+//         }
+//         else if (keychar =='J') {
+//           console.log('JSON sprite data dump');
+//           thingmap.get(thing_selected).sprite.imagesJSON ;
+//         }
+//         else if (keychar =='S') {
+//           console.log('Sleep');
+//           thingmap.get(thing_selected).o.sleepnow();
+//         }
+//         else if (keychar =='W') {
+//           console.log('Waking');
+//           thingmap.get(thing_selected).o.wakenow();  
+//         }
+//         else if (keychar =='x') {
+//           console.log('DELETE');
+//           if (thingmap.get(thing_selected).o.Tstatus != 'p') {
+//             thingmap.get(thing_selected).o.tdelete();
+//             thingmap.delete(thing_selected);
+//           }
+//           else {
+//             console.log('PERMANENT');
+//           }
+//         }
+//         else {
+//           console.log('<KeyCode: ' + keychar + ' does nothing>');
+//         }
+//       });
 explode={
         "spritesheet" : "explosions-20-t1.png",
         "framecount" : 20,
@@ -168,7 +257,7 @@ class Thing extends Yoke {
     this.Tteam=undefined;
     this.living=false;
     this.Tkeypressfunc=escape("console.log('hello world');"); // for testing only
-//     this.tkeypress=(function(){});
+    this.Tinteractfunc=escape("console.log('hello world');"); // for testing only
   }
   tgenuschange(plf) {
     // should change the genus in the instantiated object first, then call this function
@@ -316,7 +405,7 @@ class Thing extends Yoke {
         }
       };
     }
-    tdelete(af){
+  tdelete(af){
       if (thingmap.get(this.Tid).sprite.audioenabled) {
         var audio;
         if (isdefined(af)){
@@ -340,9 +429,9 @@ class Thing extends Yoke {
         }
       };
     }
-    tkeypress(keycode){}
-    gkeypress(keycode){}
-    tsavekeys(plf) {
+  tkeypress(keycode){}
+  gkeypress(keycode){}
+  tsavekeys(plf) {
       // not finished
       console.log('SAVE KEYS');
       let url=grassworld_db+'t=thing&a=upd_keys&Tid='+this.Tid + token();
@@ -366,6 +455,11 @@ class Thing extends Yoke {
         }
       };
     }
+    tinteract(key) {
+      // for this depth of data, the
+      // general reference to a thing is of CHECK THIS AGAIN form: thingmap.get(key).o.Tgenus
+    }
+
     tsaveinteract(plf) {
       console.log('SAVE INTERACTIONS');
       let url=grassworld_db+'t=thing&a=upd_interacts&Tid='+this.Tid + token();
@@ -373,7 +467,7 @@ class Thing extends Yoke {
       let message= JSON.stringify({
           TK : 'a1b2c3d4',
           Tid : this.Tid,
-          Tinteractfunc: escape(this.tkeypress)
+          Tinteractfunc: escape(this.interact)
       });
       xhr.open('PUT', url);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -406,7 +500,8 @@ class Thing extends Yoke {
           Ty : this.Ty,
           Tz : 0,
           Tteam : this.Tteam,
-          Tkeypressfunc: escape(this.o.tkeypress)
+          Tkeypressfunc: escape(this.o.tkeypress),
+          Tinteractfunc: escape(this.o.tinteract)
       });
       xhr.open('PUT', url);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -631,44 +726,48 @@ class charactersprite {
         thingmap.get(t).sprite.top_destination = canvas.height;
       }
     }
-    interact(){
+
+    withinrange(key, distance, range) {
+      if (distance < range) {
+//         thingmap.get(key).o.tinteract(key);
+        return true;
+      }
+      return false;
+    }
+    interact() { return true; }
+    interaction_decider(){
       if (thingmap.get(this.Tid).o.Ginteracts) {
-        switch (thingmap.get(this.Tid).o.Tgenus) {
-          case genus_teleport : { // the teleport device
-              let somearbitraryvalue=51;
-              for (key of thingmap.keys()) {
-                  if (key == this.Tid) {
-                    continue;
-                  }
-                  let dist = distance(
+         let somearbitraryvalue=51;
+         var otherkey=0;
+         for (otherkey of thingmap.keys()) {
+           if (otherkey != this.Tid) {  // no sense testing against self
+             let dist = distance(
                     {
-                      left: (thingmap.get(key).sprite.left + (thingmap.get(key).sprite.sprite_width / 2)),
-                      top: (thingmap.get(key).sprite.top + (thingmap.get(key).sprite.sprite_height / 2))
+                      left: (thingmap.get(otherkey).sprite.left + (thingmap.get(otherkey).sprite.sprite_width / 2)),
+                      top: (thingmap.get(otherkey).sprite.top + (thingmap.get(otherkey).sprite.sprite_height / 2))
                     },
                     {
                       left: this.left + Math.floor(this.sprite_width/2),
                       top: this.top + Math.floor(this.sprite_height/2)
-                    }
-                  );
-                  if (dist < somearbitraryvalue) {
-                    if (thingmap.get(key).o.Tstatus != 'p') {
-                      charactersprite.pffft(key);
-                    }
-                  }
-              }
-            break;
-          }
-          default : {
-            break;
-          }
+                    });
+             // if within range ...
+             if (this.withinrange(otherkey, dist, somearbitraryvalue)) {
+//                console.log('['+this.Tid +'::'+ otherkey+']');
+               // and an interact has been defined, 
+               if (typeof(this.interact)=== typeof(Function)) {
+                 // do it
+                 thingmap.get(key).o.tinteract(this.Tid, otherkey);
+               }
+             }
+           }
         }
-      }
+      }  
     }
     static pffft(Tid) {
       // unfinished
       // delete/explode the character
+      console.log('pffft: '+Tid);
       thingmap.get( thingmap.get(Tid).o.tdelete('shockperson.wav') );
-//      console.log('pffft: '+Tid);
       thingmap.delete(Tid);
     }
     directionChange() {
@@ -756,7 +855,8 @@ class charactersprite {
       let msgh=14;
       ctx.font = msgh+'px Arial';
       // +thingmap.get(this.Tid).Tname
-      let msg=thingmap.get(this.Tid).Tname;
+//       let msg=thingmap.get(this.Tid).Tname;
+      let msg=thingmap.get(this.Tid).Tid;
       let msgw=Math.floor(ctx.measureText(msg).width /2);
       let tl=Math.floor(l + w/2 - msgw);
       let tt=(t+h+10);

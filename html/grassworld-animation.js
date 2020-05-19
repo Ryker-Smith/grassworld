@@ -55,7 +55,7 @@ function spriteInfoDump(t) {
   }
   txt += 'WSM: '+world_speed_multiplier+'\n';
   txt += 'Keypress code: '+ thingmap.get(t).o.tkeypress+'\n';
-  txt += 'Interact code: '+thingmap.get(t).o.interact+'\n';
+  txt += 'Interact code: '+thingmap.get(t).o.tinteract+'\n';
   txt += '==================\n';
   return txt;
 }
@@ -119,11 +119,6 @@ function keypress(event) {
       thingmap.get(thing_selected).o.gkeypress(event.keyCode);
       thingmap.get(thing_selected).o.tkeypress(event.keyCode);
     }
-//       if (!thingmap.get(thing_selected).o.gkeypress(event.keyCode)) {
-//         if (!thingmap.get(thing_selected).o.tkeypress(event.keyCode)) {
-//             console.log('Unknown key: ' + event.keyCode);
-//         }
-//     }
   }
 }
 
@@ -155,7 +150,6 @@ function leftclick(event) {
 
   location.left = Math.floor((tapX - pos.left) * canvasScaleRatio);
   location.top = Math.floor((tapY - pos.top) * canvasScaleRatio);
-  //     console.log('Clk '+location.left+','+location.top);
   var clickedonsprite = 0;
   for (key of thingmap.keys()) {
     // Distance between user screen tap and thing
@@ -166,8 +160,6 @@ function leftclick(event) {
       left: location.left,
       top: location.top
     });
-    //       console.log('Dist '+thingmap.get(key).sprite.left+','+thingmap.get(key).sprite.top+' '+key+'->'+dist);
-    //       console.log(' Count '+count);
     if (dist < thingmap.get(key).sprite.sprite_width) {
       // Check for tap on the thing
       if (thing_selected == key) {
@@ -181,13 +173,11 @@ function leftclick(event) {
     }
     count++;
   }
-  //     console.log('D '+ thingmap.size);
   if (clickedonsprite == 0) {
     thing_selected = -1;
   }
   if (thing_selected > 0) {
-      //console.log( spriteInfoDump(thing_selected) );
-      console.log('Selected: '+thing_selected+' of Tgenus '+thingmap.get(thing_selected).o.Tgenus+'\n (press I for data dump)');
+    console.log('Selected: '+thing_selected+' of Tgenus '+thingmap.get(thing_selected).o.Tgenus+'\n (press I for data dump)');
   }
 }
 
@@ -300,9 +290,7 @@ function game(game_canvas) {
     window.requestAnimationFrame(gameLoop);
     // clear the field
     ctx = canvas.getContext('2d');
-//     ctx.fillStyle = 'green';
-//     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
+   
     var img = new Image();
     img.src='https://grassworld.fachtnaroe.net/assets/img/grass_txtr1.png';
     var pat = ctx.createPattern(img, 'repeat');
@@ -311,23 +299,22 @@ function game(game_canvas) {
     ctx.fill();
     
     let treadycount=0;
+    var key;
     for (key of thingmap.keys()) {
       if (thingmap.get(key).ready == 0) {
-        thingmap.get(key).sprite.update()
-        thingmap.get(key).sprite.render()
+        thingmap.get(key).sprite.update();
+        thingmap.get(key).sprite.render();
         try {
-          if (thingmap.get(key).o.Ginteracts) {
-            thingmap.get(key).sprite.interact();
-          }
+            thingmap.get(key).sprite.interaction_decider();
         }
         catch(e) {
-          console.log('ERR: '+key);
+          console.log('GLOOP ERR: '+key + ' ~> '+e);
         }
         sleep(1);
         treadycount++;
       }
       else {
-          console.log('Not ready '+key+ ' ('+thingmap.get(key).ready+')');
+//           console.log('Not ready '+key+ ' ('+thingmap.get(key).ready+')');
       }
     }
     gameStatus(treadycount);
@@ -372,8 +359,6 @@ function game(game_canvas) {
       }
     }
     fting.o.Tid = fting.Tid;
-//     fting.tkeypress=field.all[j].tkeypress;
-    
     fting.o.Gcanmove = (field.all[j].Gmobile == 1);
     fting.o.Ganimated = (field.all[j].Ganimated == 1);
     fting.o.Ginteracts = (field.all[j].Ginteracts == 1);
@@ -397,59 +382,37 @@ function game(game_canvas) {
     thingmap.set(fting.Tid, fting);
     Thing.tplfimages((field.all[j]).GimagesJSON, thingmap.get(fting.Tid));
     // keyboard customisation, or standard responses here
-    var innerbit=unescape(field.all[j].Tkeypressfunc);//fting.o.tkeypress.toString();
+    var innerbit=unescape(field.all[j].Tkeypressfunc);
+//     console.log('R['+innerbit+']');
     innerbit=innerbit.slice(innerbit.indexOf('{')+1, innerbit.lastIndexOf('}'));
     innerbit=innerbit.trim();
-    if ((innerbit == '') && (field.all[j].Tkeypressfunc == null)) {
-      // nothing in keypress from DB, provide standard stuff
-      fting.o.tkeypress = (function(keycode) {
-        keychar=String.fromCharCode(keycode);
-        if (keychar =='V') {
-          let thisthingtype=thingmap.get(this.Tid).o.constructor.name;
-          if (thisthingtype == 'MovingThing') {
-            console.log('Saving');
-            thingmap.get(this.Tid).o.msaveLocation();
-          }
-          else {
-            console.log('NOT MOVING THING ');
-          }
-        }
-        else if (keychar =='I') {
-          console.log('Info dump');
-          console.log( spriteInfoDump(thing_selected) );
-        }
-        else if (keychar =='J') {
-          console.log('JSON dump');
-          thingmap.get(thing_selected).sprite.imagesJSON ;
-        }
-        else if (keychar =='S') {
-          console.log('Sleep');
-          thingmap.get(thing_selected).o.sleepnow();
-        }
-        else if (keychar =='W') {
-          console.log('Waking');
-          thingmap.get(thing_selected).o.wakenow();  
-        }
-        else if (keychar =='.') {
-          console.log('DELETE');
-          if (thingmap.get(thing_selected).o.Tstatus != 'p') {
-            thingmap.get(thing_selected).o.tdelete();
-            thingmap.delete(thing_selected);
-          }
-          else {
-            console.log('PERMANENT');
-          }
-        }
-        else {
-          console.log('*>f0 KeyCode handler got: ' + keychar + ' but presently does nothing with it');
-        }
-      });
+    if (field.all[j].Tkeypressfunc == null) {
+      // if there's nothing in keypress from DB, provide standard operations
+      fting.o.tkeypress = default_keypress_function;
       fting.o.tsavekeys();
     }
     else if ((field.all[j].Tkeypressfunc != null)) {
-      fting.o.tkeypress=new Function('keycode',innerbit); 
-      console.log('Got['+innerbit+']');
+      fting.o.tkeypress=new Function("keycode",innerbit); 
     }
+    else {
+        console.log("Problem: None of the above");
+    }
+//=======================================Generalisation to a function reqd    
+    // INTERACTION customisation, or standard responses here
+    var innerbit=unescape(field.all[j].Tinteractfunc);
+    innerbit=innerbit.slice(innerbit.indexOf('{')+1, innerbit.lastIndexOf('}'));
+    innerbit=innerbit.trim();
+//     if ((innerbit == '') && (field.all[j].Tinteractfunc == null)) {
+    if (field.all[j].Tinteractfunc == null) {
+      // nothing in keypress from DB, provide standard stuff
+      fting.o.tinteract = default_interact_function;
+      fting.o.tsaveinteract();
+    }
+    else if ((field.all[j].Tinteractfunc != null)) {
+      fting.o.tinteract=new Function ('myId','otherId',innerbit); 
+    }
+//==============================================
+    
     //  thingmap.image.addEventListener('load', eventDispatcher);
     count++;
   }
