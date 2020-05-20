@@ -81,8 +81,9 @@ default_keypress_function = (function(keycode) {
 });
 
 default_interact_function=(function(myId,otherId) {
-  console.log('def['+myId +'::'+ otherId+']');
-})
+  // does nothing presently but you can use the
+  // variables myId and otherId in the code you provide.
+});
 // (function(keycode) {
 //         keychar=String.fromCharCode(keycode);
 //         if (keychar =='V') {
@@ -256,8 +257,9 @@ class Thing extends Yoke {
     this.Tz=0;
     this.Tteam=undefined;
     this.living=false;
-    this.Tkeypressfunc=escape("console.log('hello world');"); // for testing only
-    this.Tinteractfunc=escape("console.log('hello world');"); // for testing only
+    this.Tkeypressfunc=undefined;
+    this.Tinteractfunc=undefined;
+    this.tinteract=undefined;
   }
   tgenuschange(plf) {
     // should change the genus in the instantiated object first, then call this function
@@ -455,10 +457,11 @@ class Thing extends Yoke {
         }
       };
     }
-    tinteract(key) {
-      // for this depth of data, the
-      // general reference to a thing is of CHECK THIS AGAIN form: thingmap.get(key).o.Tgenus
-    }
+//     tinteract(myId, otherId) {
+//       for this depth of data, the
+//       general reference to a thing is of CHECK THIS AGAIN form: thingmap.get(key).o.Tgenus
+//       return false;
+//     }
 
     tsaveinteract(plf) {
       console.log('SAVE INTERACTIONS');
@@ -734,8 +737,8 @@ class charactersprite {
       }
       return false;
     }
-    interact() { return true; }
-    interaction_decider(){
+//     interact() { return true; }
+    interaction_decider(key){
       if (thingmap.get(this.Tid).o.Ginteracts) {
          let somearbitraryvalue=51;
          var otherkey=0;
@@ -754,9 +757,13 @@ class charactersprite {
              if (this.withinrange(otherkey, dist, somearbitraryvalue)) {
 //                console.log('['+this.Tid +'::'+ otherkey+']');
                // and an interact has been defined, 
-               if (typeof(this.interact)=== typeof(Function)) {
+//                if (typeof(this.o.tinteract)=== typeof(Function)) {
+               if (isdefined(thingmap.get(key).o.tinteract)) {
                  // do it
-                 thingmap.get(key).o.tinteract(this.Tid, otherkey);
+                 thingmap.get(key).o.tinteract( thingmap.get(key).Tid, otherkey);
+               }
+               else {
+                  console.log(key + " says no interaction function provided");
                }
              }
            }

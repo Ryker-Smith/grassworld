@@ -55,7 +55,7 @@ class BelieverSchplágen extends Schplágen {
       };
   }
 }
-
+// this whole function is not needed, just visualizing so i can see if code is working
 function placePointer(){
   console.log("LS 38: :)");
   // check for pointers then delete

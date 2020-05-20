@@ -34,8 +34,7 @@ class bluesamuraicharactersprite extends charactersprite {
       thingmap.get(this.Tid).sprite.tickCount=0;
       thingmap.get(this.Tid).o.Gcanmove=true;
     }
-  interact(){
-    
+    interact(){
     console.log("interacting blue");
     if (thingmap.get(this.Tid).o.Ginteracts) {
     switch (thingmap.get(this.Tid).o.Tgenus) {

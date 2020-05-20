@@ -27,7 +27,7 @@ canvas.height = window.innerHeight;
 function spriteInfoDump(t) {
   let txt = '==================\nSprite Data Dump\n';
   txt += 'ID: '+thingmap.get(t).Tid + '\n';
-  txt += 'Genus: '+thingmap.get(t).Tid +'('+thingmap.get(t).o.Gname+')\n';
+  txt += 'Genus: '+thingmap.get(t).o.Tgenus +'('+thingmap.get(t).o.Gname+')\n';
   txt += 'Name: '+thingmap.get(t).Tname +'\n';
   txt += 'Tx: '+thingmap.get(t).o.Tx +'\n';
   txt += 'Ty: '+thingmap.get(t).o.Ty +'\n';
@@ -305,10 +305,15 @@ function game(game_canvas) {
         thingmap.get(key).sprite.update();
         thingmap.get(key).sprite.render();
         try {
-            thingmap.get(key).sprite.interaction_decider();
+            thingmap.get(key).sprite.interaction_decider(key);
         }
         catch(e) {
-          console.log('GLOOP ERR: '+key + ' ~> '+e);
+          if (isdefined(key)) {
+            console.log('GLOOP ERR: '+key + ' ~> '+e);
+          }
+          else {
+            console.log('GLOOP ERR ~> '+e);
+          }
         }
         sleep(1);
         treadycount++;
@@ -404,13 +409,14 @@ function game(game_canvas) {
     innerbit=innerbit.trim();
 //     if ((innerbit == '') && (field.all[j].Tinteractfunc == null)) {
     if (field.all[j].Tinteractfunc == null) {
-      // nothing in keypress from DB, provide standard stuff
+      // if nothing in keypress from DB, provide standard stuff
       fting.o.tinteract = default_interact_function;
       fting.o.tsaveinteract();
     }
     else if ((field.all[j].Tinteractfunc != null)) {
       fting.o.tinteract=new Function ('myId','otherId',innerbit); 
     }
+    
 //==============================================
     
     //  thingmap.image.addEventListener('load', eventDispatcher);
