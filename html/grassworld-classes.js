@@ -260,6 +260,7 @@ class Thing extends Yoke {
     this.Tkeypressfunc=undefined;
     this.Tinteractfunc=undefined;
     this.tinteract=undefined;
+    this.tkeypress=default_keypress_function;
   }
   tgenuschange(plf) {
     // should change the genus in the instantiated object first, then call this function
@@ -467,10 +468,11 @@ class Thing extends Yoke {
       console.log('SAVE INTERACTIONS');
       let url=grassworld_db+'t=thing&a=upd_interacts&Tid='+this.Tid + token();
       let xhr = new XMLHttpRequest();
+      console.log();
       let message= JSON.stringify({
           TK : 'a1b2c3d4',
           Tid : this.Tid,
-          Tinteractfunc: escape(this.interact)
+          Tinteractfunc: escape(this.tinteract)
       });
       xhr.open('PUT', url);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -757,7 +759,6 @@ class charactersprite {
              if (this.withinrange(otherkey, dist, somearbitraryvalue)) {
 //                console.log('['+this.Tid +'::'+ otherkey+']');
                // and an interact has been defined, 
-//                if (typeof(this.o.tinteract)=== typeof(Function)) {
                if (isdefined(thingmap.get(key).o.tinteract)) {
                  // do it
                  thingmap.get(key).o.tinteract( thingmap.get(key).Tid, otherkey);

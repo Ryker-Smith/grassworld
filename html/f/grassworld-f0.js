@@ -4,7 +4,7 @@ var newname=names[ grandom(names.length)-1 ]+ grandom(1000);
 var thisschplágen;
 
 function run_this_next(r) {
-  console.log('New character with Tid ' + r.insertId);
+  console.log('New FR character with Tid ' + r.insertId);
   var myTid=r.insertId;
   var fnt={};
   
@@ -36,22 +36,25 @@ function run_this_next(r) {
   thingmap.get(myTid).o.Gcanmove=true;
   thingmap.get(myTid).o.Ganimated=true;
   thingmap.get(myTid).o.msaveLocation();
-  thingmap.get(myTid).o.tkeypress = (function(keycode) {
-      keychar=String.fromCharCode(keycode);
-      if (keychar == 'S') {
-        console.log('elephants');
-      }
-      else if (keychar == 'W') {
-        
-      }
-      else {
-        doTheDefaultFunction(keycode); 
-      }
-      console.log("I'm new schplágen. I don't do anything yet");
-  });
+  var myinteractcode="if (thingmap.get(myId).o.Tgenus != thingmap.get(otherId).o.Tgenus){\n  console.log('na na na na na batmaaan');\n}\nelse {\n  console.log('You\\'re not batman; I\\'m batman!');\n} ";
+  console.log("DBG: "+myinteractcode);
+  thingmap.get(myTid).o.tinteract = new Function('myId', 'otherId', myinteractcode);
+  thingmap.get(myTid).o.tsaveinteract();
+  
 }
 function onload_f0() {
   console.log('onLoad');
   thisschplágen= new Schplágen(null,newname, null, 28, 1);
   thisschplágen.tcreate(run_this_next);
+  
+//   for (mykey of thingmap.keys()) {
+//     console.log('FR '+mykey);
+//       if (thingmap.get(mykey).o.Tgenus == 28) {
+//         thingmap.get(mykey).o.tinteract=(function(){console.log('na na na na na batmaaan');});
+//         thingmap.get(mykey).o.tsaveinteract();
+//       }
+//       else {
+//         console.log('s '+thingmap.get(mykey).o.Tgenus); 
+//       }
+//   }
 }
