@@ -116,8 +116,10 @@ function keypress(event) {
       }
       break;
     default: {
-      thingmap.get(thing_selected).o.gkeypress(event.keyCode);
-      thingmap.get(thing_selected).o.tkeypress(event.keyCode);
+//       thingmap.get(thing_selected).o.gkeypress(event.keyCode);
+      if (isdefined(thingmap.get(thing_selected).o)) {
+        thingmap.get(thing_selected).o.tkeypress(event.keyCode);
+      }
     }
   }
 }
@@ -186,6 +188,16 @@ function hoverinfo(event) {
   //     console.log(arguments.callee.name);
   event.preventDefault();
   // needs to be re-done
+//   console.log('hover');
+}
+
+function draginfo(event) {
+  // intended to provide information about the character when we hover
+  //     console.log(arguments.callee.name);
+  console.log('drag');
+  event.preventDefault();
+  // needs to be re-done
+   console.log('drag');
 }
 
 function rightclick(event) {
@@ -238,6 +250,12 @@ function eventDispatcher(event, d) {
   switch (event.type) {
     case 'load':
       gameLoop(event);
+      break;
+    case 'drag':
+      draginfo(event);
+      break;
+    case 'dragstart':
+      draginfo(event);
       break;
     case 'mousedown':
       leftclick(event);
@@ -301,18 +319,25 @@ function game(game_canvas) {
     let treadycount=0;
     var key;
     for (key of thingmap.keys()) {
-      if (thingmap.get(key).ready == 0) {
-        thingmap.get(key).sprite.update();
-        thingmap.get(key).sprite.render();
-        try {
-            thingmap.get(key).sprite.interaction_decider(key);
-        }
-        catch(e) {
-          if (isdefined(key)) {
-            console.log('GLOOP ERR: '+key + ' ~> '+e);
+      if ((thingmap.get(key).ready == 0) && (thingmap.get(key).o.Tstatus != 'html')) {
+        if (thingmap.get(key).sprite.visible) {
+          thingmap.get(key).sprite.update();
+          thingmap.get(key).sprite.render();
+          try {
+              thingmap.get(key).sprite.interaction_decider(key);
           }
-          else {
-            console.log('GLOOP ERR ~> '+e);
+          catch(e) {
+            if (isdefined(key)) {
+              console.log('GLOOP ERR: '+key + ' ~> '+e);
+            }
+            else {
+              console.log('GLOOP ERR ~> '+e);
+            }
+          }
+          // save to back end?
+          if ((thingmap.get(key).o.Gcanmove) && (!thingmap.get(key).o.locationCurrent)) {
+            thingmap.get(key).o.msaveLocation();
+            thingmap.get(key).o.locationCurrent=true;
           }
         }
         sleep(1);
@@ -425,11 +450,13 @@ function game(game_canvas) {
 
   document.addEventListener('keydown', eventDispatcher);
   document.addEventListener('keyup', eventDispatcher);
-  document.addEventListener('mousedown', eventDispatcher);
+  
   document.addEventListener('contextmenu', eventDispatcher);
   document.addEventListener('mouseover', eventDispatcher);
   document.addEventListener('wheel', eventDispatcher);
-
+  document.addEventListener('drag', eventDispatcher);
+  document.addEventListener('dragstart', eventDispatcher);
+document.addEventListener('mousedown', eventDispatcher);
   gameLoop();
 }
 document.title = 'grassworld';

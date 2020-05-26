@@ -22,7 +22,7 @@ let emptyimage={
         "ticks" : 0,
         "scale" : 0
       };
-let activities=['default', 'left', 'right', 'up', 'down', 'hover','sleep'];
+let activities=['fight','default', 'left', 'right', 'up', 'down', 'hover','sleep'];
 let sillydeletesounds=['cri-d-effroi-scream.wav','Ouche.wav','scream4.wav','scream6.wav','screamwhat.wav',
 'shockperson.wav'];
 var grassworld_url="https://grassworld.fachtnaroe.net/";
@@ -84,48 +84,6 @@ default_interact_function=(function(myId,otherId) {
   // does nothing presently but you can use the
   // variables myId and otherId in the code you provide.
 });
-// (function(keycode) {
-//         keychar=String.fromCharCode(keycode);
-//         if (keychar =='V') {
-//           let thisthingtype=thingmap.get(this.Tid).o.constructor.name;
-//           if (thisthingtype == 'MovingThing') {
-//             console.log('Saving');
-//             thingmap.get(this.Tid).o.msaveLocation();
-//           }
-//           else {
-//             console.log('NOT MOVING THING ');
-//           }
-//         }
-//         else if (keychar =='I') {
-//           console.log('Info dump');
-//           console.log( spriteInfoDump(thing_selected) );
-//         }
-//         else if (keychar =='J') {
-//           console.log('JSON sprite data dump');
-//           thingmap.get(thing_selected).sprite.imagesJSON ;
-//         }
-//         else if (keychar =='S') {
-//           console.log('Sleep');
-//           thingmap.get(thing_selected).o.sleepnow();
-//         }
-//         else if (keychar =='W') {
-//           console.log('Waking');
-//           thingmap.get(thing_selected).o.wakenow();  
-//         }
-//         else if (keychar =='x') {
-//           console.log('DELETE');
-//           if (thingmap.get(thing_selected).o.Tstatus != 'p') {
-//             thingmap.get(thing_selected).o.tdelete();
-//             thingmap.delete(thing_selected);
-//           }
-//           else {
-//             console.log('PERMANENT');
-//           }
-//         }
-//         else {
-//           console.log('<KeyCode: ' + keychar + ' does nothing>');
-//         }
-//       });
 explode={
         "spritesheet" : "explosions-20-t1.png",
         "framecount" : 20,
@@ -350,7 +308,10 @@ class Thing extends Yoke {
     this.Tz=response.Tz;
     this.Gcanmove=(response.Gcanmove == 1);
     this.Ganimated=(response.Ganimated == 1);
-    //this.keypress=;
+    this.Tkeypressfunc=(response.Tkeypressfunc);  //??
+    this.tkeypress=(response.Tkeypressfunc);      // ??
+    this.Tinteractfunc=(response.Tinteractfunc);  //??
+    this.tinteract=(response.Tinteractfunc);      // ??
     Thing.tplfimages(response.GimagesJSON, thething);
   };
 
@@ -436,7 +397,7 @@ class Thing extends Yoke {
   gkeypress(keycode){}
   tsavekeys(plf) {
       // not finished
-      console.log('SAVE KEYS');
+//       console.log('SAVE KEYS');
       let url=grassworld_db+'t=thing&a=upd_keys&Tid='+this.Tid + token();
       let xhr = new XMLHttpRequest();
       let message= JSON.stringify({
@@ -458,14 +419,9 @@ class Thing extends Yoke {
         }
       };
     }
-//     tinteract(myId, otherId) {
-//       for this depth of data, the
-//       general reference to a thing is of CHECK THIS AGAIN form: thingmap.get(key).o.Tgenus
-//       return false;
-//     }
 
     tsaveinteract(plf) {
-      console.log('SAVE INTERACTIONS');
+//       console.log('SAVE INTERACTIONS');
       let url=grassworld_db+'t=thing&a=upd_interacts&Tid='+this.Tid + token();
       let xhr = new XMLHttpRequest();
       console.log();
@@ -482,6 +438,9 @@ class Thing extends Yoke {
           if (isdefined(plf)) {
             plf(JSON.parse(xhr.response));
           }
+          else {
+            console.log('SAVE i: no plf'); 
+          }
         }
         else { 
             console.log('Error c365: '+xhr.response);
@@ -492,29 +451,35 @@ class Thing extends Yoke {
       // not finished
       // uses optional post-load-function called plf
       let url=grassworld_db+'t=thing&a=upd&Tid='+this.Tid + token();
+//       console.log('>> ['+url+' ]');
       let xhr = new XMLHttpRequest();
       let message= JSON.stringify({
           TK : 'a1b2c3d4',
           Tid : this.Tid,
-          Tname : this.name,
+          Tname : this.Tname,
           Tcreator : this.Tcreator,
-          Tstatus : this.Tstatus,
+          Tstatus : '',
           Tcontent : this.Tcontent,
           Tgenus : this.Tgenus,
           Tx :  this.Tx,
           Ty : this.Ty,
           Tz : 0,
-          Tteam : this.Tteam,
-          Tkeypressfunc: escape(this.o.tkeypress),
-          Tinteractfunc: escape(this.o.tinteract)
+          Tteam : 'NA',
+          Tkeypressfunc: escape(this.tkeypress),
+          Tinteractfunc: escape(this.tinteract)
       });
+      
+//       for (var p in message) {
+//         console.log('pre: '+ p + '=' + message[p]);
+//       }
+//       console.log('SENDING: '+message);
       xhr.open('PUT', url);
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       xhr.send(message);
       xhr.onload = function() {
         if (xhr.status == 200) { 
           if (isdefined(plf)) {
-            plf(JSON.parse(xhr.response));
+            plf(xhr.response);
           }
         }
         else { 
@@ -561,9 +526,14 @@ class MovingThing extends LivingThing {
     this.legs=legs;
     this.Gcanmove=true;
     this.ismoving=false;
+    this.locationCurrent=true;
   }
   msaveLocation() {
+//     console.log('save');
       let url=grassworld_db+'t=thing&a=sl&Tid='+this.Tid;
+      if (!isdefined(thingmap.get(this.Tid))) {
+        return;
+      }
       this.Tx=thingmap.get(this.Tid).sprite.left;
       this.Ty=thingmap.get(this.Tid).sprite.top;
 //       console.log('SK '+thingmap.get(this.Tid).o.tkeypress);
@@ -676,11 +646,14 @@ class charactersprite {
       this.tickCount=0;
       this.heading='default';
       this.audioenabled=false;
+      this.visible=true;
       this.tempticks=0;
       this.directions=new Map();
       for (const i of activities) {
         this.directions.set(i,emptyimage);
       }
+      this.mycoin=0;
+      this.isfighting=false;
     }
     get sprite_width(){
       return (
@@ -716,14 +689,18 @@ class charactersprite {
     setdestination(t, dx, dy) { // make this static?
       if (!thingmap.get(t).o.Gcanmove) return;
       thingmap.get(t).o.ismoving = true;
-      this.left_destination = Math.floor(dx - (this.sprite_width/2));
+//       console.log('Id: '+t+' ('+dx+', '+dy+')');
+//       console.log(']> '+thingmap.get(t).sprite.sprite_width);
+      thingmap.get(t).sprite.left_destination= dx;// - Math.floor(thingmap.get(t).sprite.sprite_width.valueOf()*0.5);
+//       console.log('Dst: ('+thingmap.get(t).sprite.left_destination+', '+dy+')');
       if (thingmap.get(t).sprite.left_destination < 0) {
         thingmap.get(t).sprite.left_destination = 0;
       }
       else if (thingmap.get(t).sprite.left_destination > canvas.width) {
         thingmap.get(t).sprite.left_destination = canvas.width;
       }
-      thingmap.get(t).sprite.top_destination = Math.floor(dy - (thingmap.get(t).sprite.sprite_height/2));
+      thingmap.get(t).sprite.top_destination = dy; // - Math.floor((thingmap.get(t).sprite.sprite_height/2));
+//       console.log('Dst: ('+thingmap.get(t).sprite.left_destination+', '+thingmap.get(t).sprite.top_destination+')');
       if (thingmap.get(t).sprite.top_destination < 0) {
         thingmap.get(t).sprite.top_destination = 0;
       }
@@ -734,16 +711,16 @@ class charactersprite {
 
     withinrange(key, distance, range) {
       if (distance < range) {
-//         thingmap.get(key).o.tinteract(key);
         return true;
       }
       return false;
     }
-//     interact() { return true; }
+
     interaction_decider(key){
       if (thingmap.get(this.Tid).o.Ginteracts) {
          let somearbitraryvalue=51;
          var otherkey=0;
+         var isnearby=0;
          for (otherkey of thingmap.keys()) {
            if (otherkey != this.Tid) {  // no sense testing against self
              let dist = distance(
@@ -757,6 +734,7 @@ class charactersprite {
                     });
              // if within range ...
              if (this.withinrange(otherkey, dist, somearbitraryvalue)) {
+               isnearby++;
 //                console.log('['+this.Tid +'::'+ otherkey+']');
                // and an interact has been defined, 
                if (isdefined(thingmap.get(key).o.tinteract)) {
@@ -768,6 +746,9 @@ class charactersprite {
                }
              }
            }
+        }
+        if (isnearby==0) {
+          thingmap.get(key).sprite.heading='default'; 
         }
       }  
     }
@@ -789,18 +770,22 @@ class charactersprite {
       if (this.left != this.left_destination) {
         if (this.left < this.left_destination) {
           this.left+=thingstep;
+          this.locationCurrent=false;
         }
         else {
           this.left-=thingstep;
+          this.locationCurrent=false;
         }
       }
       // are we moving on Y axis
       if (this.top != this.top_destination) {
         if (this.top < this.top_destination) {
           this.top+=thingstep;
+          this.locationCurrent=false;
         }
         else {
           this.top-=thingstep;
+          this.locationCurrent=false;
         }
       }
       // housekeeping ticks for sprite frames
@@ -896,7 +881,7 @@ class charactersprite {
       catch (e) {
         console.log('Render '+this.Tid+' error c488\n'+e);
         thingmap.delete(this.Tid);
-        console.log(key+' '+spritedata.spritesheet);
+        console.log('AR: '+this.Tid+' '+spritedata.spritesheet);
         console.log('WARNING! '+this.Tid+' removed from World map');
       }
       if (thing_selected == this.Tid) {

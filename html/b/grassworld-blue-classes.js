@@ -1,5 +1,8 @@
+var list_of_names=["Samurai ", "Samurai ","Samurai ","Samurai ","Samurai ","Samurai ","Samurai "]; // array with list of names
+var addnames=list_of_names[ grandom(list_of_names.length)-1 ]+ grandom(1000); // gets a new random name from the list of names.
+var blueSamurai; // variable name for our Samuari schplagen.
 
-class bluesamuraicharactersprite extends charactersprite {
+/* class bluesamuraicharactersprite extends charactersprite {
     fighting() {
       this.sleeping = false;
       let d='fight';
@@ -69,55 +72,51 @@ class bluesamuraicharactersprite extends charactersprite {
     }
   }
 
-  static pffft(Tid) {
-      // unfinished
-      // delete/explode the character
-      // console.log('KR');
-      // thingmap.get( thingmap.get(Tid).o.tdelete('shockperson.wav') );
-      console.log('pfffttt: '+Tid);
-      thingmap.delete(Tid);
-    }
-  }
+  } */
 
-  var list_of_names=["Samurai ", "Samurai ","Samurai ","Samurai ","Samurai ","Samurai ","Samurai "]; // array with list of names
-  var addnames=list_of_names[ grandom(list_of_names.length)-1 ]+ grandom(1000); // gets a new random name from the list of names.
-  var blueSamurai; // variable name for our Samuari schplagen.
+function thisthingplf(r){
+   for (var p in r.keys) {
+    console.log('tput: '+ p + '=' + r[p]);
+  }
+  
+}
 
 function next_execute(r) {          // next executable to give schplagen properties and methods.
-  console.log('BLUE create 222');
-  console.log('b2' + r.insertId); // r.insertId gets the Tid. 
-  var Tid=r.insertId;
+//   console.log('BLUE create 222');
+  console.log('b2 [' + r.insertId+']'); // r.insertId gets the Tid. 
+  var myTid=r.insertId;
   var kr={};
   
-  kr.Tid=Tid; // adds random Tid for random names and resets onload.  
+  kr.Tid=myTid; // adds random Tid for random names and resets onload.  
   kr.Tname=addnames;
   kr.selected=false;
   kr.o=blueSamurai;
-  kr.o.Tid=Tid;
+  kr.o.Tid=myTid;
   
   let myspritedetail= {         // sprite info.
-          Tidkey: "value", Tid,
+          Tid: myTid,
           Ganimated: true, // animates your schplagen so its not 1 frame.
           left: 501 + grandomrange(10), // the schplagen can spawn at a random x-axis co-ordinate between 491 and 511.
           top: 502 + grandomrange(10) // the schplagen can spawna t a random y-axis co-ordinate between 492 and 512.
   }
    
-  kr.sprite = new bluesamuraicharactersprite(myspritedetail); // creates a new spritesheet.
+  //kr.sprite = new bluesamuraicharactersprite(myspritedetail); // creates a new spritesheet.
+  kr.sprite = new charactersprite(myspritedetail); // creates a new spritesheet.
   kr.ready=2;
   //gets a Tid and images from the objects.
   thingmap.set(kr.Tid, kr);
   kr.o.tget(thingmap.get(kr.Tid));
   kr.o.tgetimages(thingmap.get(kr.Tid));
   // gets the spritesheet
-  thingmap.get(Tid).o.Tx=blueSamurai.left;
-  thingmap.get(Tid).o.Ty=blueSamurai.top;
+  thingmap.get(myTid).o.Tx=thingmap.get(myTid).sprite.left
+  thingmap.get(myTid).o.Ty=thingmap.get(myTid).sprite.top;;
   // allows the schplagen to move with multple frames and save location.
-  thingmap.get(Tid).o.Gcanmove=true;
-  thingmap.get(Tid).o.Ganimated=true;
-  thingmap.get(Tid).o.msaveLocation();
+  thingmap.get(myTid).o.Gcanmove=true;
+  thingmap.get(myTid).o.Ganimated=true;
+  thingmap.get(myTid).o.msaveLocation();
   //thingmap.get(Tid).o.delete();
   // gets the tkeypress from classes to be used as pressing keychars.
-  thingmap.get(Tid).o.tkeypress = (function(keycode) { //keycode is used to get letters from numbers.
+/*   thingmap.get(myTid).o.tkeypress = (function(keycode) { //keycode is used to get letters from numbers.
       keychar=String.fromCharCode(keycode); 
       if (keychar=='S') {
           thingmap.get(thing_selected).o.sleepnow();  // if "S" key is pressed, gets the function from classes, passes it on and then is called to run
@@ -129,8 +128,55 @@ function next_execute(r) {          // next executable to give schplagen propert
                                                   // wakenow.
       }
       console.log(" b2 wake")
-  });
-}   
+    });
+  thingmap.get(myTid).o.tsavekeypress();  */
+
+  var samuraiinteractioncode=`
+    if (thingmap.get(myId).o.Tgenus != thingmap.get(otherId).o.Tgenus){
+        console.log("NOT ONE OF US");
+       thingmap.get(myId).sprite.heading='default';
+    }
+    else {
+          if (!thingmap.get(myId).sprite.isfighting) {
+              thingmap.get(myId).sprite.heading='fight';
+              thingmap.get(myId).sprite.mycoin=grandom(100);
+              thingmap.get(myId).sprite.isfighting=true;
+          }
+          else {
+              if (thingmap.get(myId).sprite.mycoin==grandom(100)) {
+                 // charactersprite.pffft(otherId);
+                  thingmap.get(myId).sprite.heading='fight';
+                  thingmap.get(otherId).o.Tgenus=27;
+                  thingmap.get(otherId).o.tput(thisthingplf);
+                  thingmap.get(myId).sprite.isfighting=false;
+                  thingmap.get(otherId).o.tget();
+
+              }
+              else {
+              }
+          }
+    }
+  `;
+  
+/*                  Thing.tplfimages(thingmap.get(otherId).GimagesJSON, thingmap.get(otherId).sprite);
+                  for (const d of activities) {
+      try {
+        thingmap.get(otherId).sprite.directions.set(d,JSON.parse(thingmap.get(otherId).GimagesJSON)[d]);
+        thingmap.get(otherId).sprite.directions.get(d).spritesheet=new Image();
+        thingmap.get(otherId).sprite.directions.get(d).spritesheet.src=imagewithfullpath(JSON.parse(response)[d].spritesheet);
+        thingmap.get(otherId).sprite.directions.get(d).ticks=Math.floor(thingmap.get(otherId).sprite.directions.get(d).ticks/world_speed_multiplier);
+      }
+      catch(e){}
+    }    
+    */
+    
+  // or this:
+//   myinteractcode="if (thingmap.get(myId).o.Tgenus != thingmap.get(otherId).o.Tgenus){\n  console.log('na na na na na batmaaan');\n}\nelse {\n  console.log('You\\'re not batman; I\\'m batman!');\n} ";
+  console.log(samuraiinteractioncode);
+  thingmap.get(myTid).o.tinteract = new Function('myId', 'otherId', samuraiinteractioncode);
+  thingmap.get(myTid).o.tsaveinteract();
+}
+
 function onload_b2() { // When page reloads it creates a new schplagen.
         console.log('BLUE create');
         blueSamurai= new MovingThing(null,addnames, null, 25, 1); // 12 = genus from classes.js which is my penguin.

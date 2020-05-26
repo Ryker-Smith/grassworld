@@ -31,18 +31,6 @@ function runNext(r) { // function for setting object parameters
   thingmap.get(Tid).o.Gcanmove=true; // allows object to move
   thingmap.get(Tid).o.Ganimated=true; // allows object to be animated from spritesheet
   thingmap.get(Tid).o.msaveLocation();
-  thingmap.get(Tid).o.tkeypress = (function(keycode) {
-      keychar=String.fromCharCode(keycode);
-      if (keychar=='S') {
-          thingmap.get(thing_selected).o.sleepnow(); // When S key is pressed the selected schplagen will sleep
-      }
-      console.log(" b3 sleep ");
-      if (keychar=='W') {
-        thingmap.get(thing_selected).o.wakenow(); // When W key is pressed the selected schplagen will awaken
-      }
-      console.log(" b3 wake");
-  });
-  console.log('b3 made '+Tid);
 }
 function onload_b3() { //this function is called in the onload.js file
     console.log('from onload_b3');

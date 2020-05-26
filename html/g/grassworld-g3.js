@@ -20,9 +20,6 @@ function shoot() {
 
   bullet = new MovingThing(null, 'stevemcqueen', null, 29, 1);
   bullet.tcreate(FireBullet);
-  bullet.left_destination = 500;
-  bullet.top_destination = 500;
-
   console.log("I'm shooting!");
 }
 function FireBullet(r) {

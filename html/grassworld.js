@@ -11,7 +11,6 @@
 var field, menu;
 let thingmap= new Map();
 
-
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -81,4 +80,4 @@ async function grassworld() {
   game('grassworld');
 }
 
-grassworld();
+
