@@ -49,9 +49,8 @@
 //      console.log(" b2 wake")
 //  });
 //   }		
-//  function onload_b2() { // When page reloads it creates a new schplagen.
+  //function onload_b2() { // When page reloads it creates a new schplagen.
 //        console.log('b2');
 //        MySchplágen_B2= new MovingThing(null,addnames, null, 1); // 12 = genus from classes.js which is my penguin.
 //    	MySchplágen_B2.tcreate(next_execute);
 //    }
-

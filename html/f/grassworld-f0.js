@@ -56,21 +56,45 @@ function run_this_next(r) {
           the behaviour immediately. I have yet to work out why that is.
    NOTE:  If you don't want to use ticks, there's an example shown also of that
   */
+  
+   var experimental_interactcode=`
+    if (thingmap.get(myId).o.Tgenus != thingmap.get(otherId).o.Tgenus){
+       thingmap.get(myId).sprite.heading='default';
+    }
+    else {
+          if (!thingmap.get(myId).sprite.isfighting) {
+              thingmap.get(myId).sprite.heading='fight';
+              thingmap.get(myId).sprite.mycoin=grandom(100);
+              thingmap.get(myId).sprite.isfighting=true;
+          }
+          else {
+              if (thingmap.get(myId).sprite.mycoin==grandom(100)) {
+                 // charactersprite.pffft(otherId);
+                  thingmap.get(myId).sprite.heading='fight';
+                  thingmap.get(otherId).o.Tgenus=27;
+                  thingmap.get(otherId).o.tput(thisthingplf);
+                  thingmap.get(myId).sprite.isfighting=false;
+                  thingmap.get(otherId).o.tget();
+
+              }
+              else {
+              }
+          }
+    }
+  `;
+  
   var myinteractcode=`
     if (thingmap.get(myId).o.Tgenus != thingmap.get(otherId).o.Tgenus){
-      // console.log('na na na na na batmaaan');
       thingmap.get(myId).sprite.heading='default';
     }
     else {
-      //    console.log("You're not batman; I'm batman!");
       thingmap.get(myId).sprite.heading='fight';
-//       thingmap.get(otherId).sprite.heading='sleep';
     }
   `;
   // or this:
 //   myinteractcode="if (thingmap.get(myId).o.Tgenus != thingmap.get(otherId).o.Tgenus){\n  console.log('na na na na na batmaaan');\n}\nelse {\n  console.log('You\\'re not batman; I\\'m batman!');\n} ";
 
-  thingmap.get(myTid).o.tinteract = new Function('myId', 'otherId', myinteractcode);
+  thingmap.get(myTid).o.tinteract = new Function('myId', 'otherId', experimental_interactcode);
   thingmap.get(myTid).o.tsaveinteract(aftersavinginteract);
   // experiments with the 'nearest' function
   /* using a line like this:
@@ -83,16 +107,23 @@ function run_this_next(r) {
    */
   var nearestOfMyTribe=nearest(myTid, 28);
   if (isdefined(nearestOfMyTribe)) {
-    console.log('NEAREST '+nearestOfMyTribe);
-    console.log('Going: '+(thingmap.get(nearestOfMyTribe).sprite.left)+', '+(thingmap.get(nearestOfMyTribe).sprite.top));
+//     console.log('Going: '+(thingmap.get(nearestOfMyTribe).sprite.left)+', '+(thingmap.get(nearestOfMyTribe).sprite.top));
+//     let x =(grandomrange(60)-30);
+//     if (abs(
+//       (thingmap.get(nearestOfMyTribe).sprite.left)) - (thingmap.get(nearestOfMyTribe).sprite.left + x)
+//        < 51)
+//     {
+//       x=x+51;
+//     }
      thingmap.get(myTid).sprite.setdestination(
        myTid,
        (thingmap.get(nearestOfMyTribe).sprite.left + (grandomrange(60)-30)),
        (thingmap.get(nearestOfMyTribe).sprite.top + (grandomrange(60)-30))
+//        (thingmap.get(nearestOfMyTribe).sprite.left + x),
+//        (thingmap.get(nearestOfMyTribe).sprite.top + (grandomrange(60)-30))
     );
   }
   else {
-    console.log('ALONE ');
   }
 }
 

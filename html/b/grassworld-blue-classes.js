@@ -131,9 +131,11 @@ function next_execute(r) {          // next executable to give schplagen propert
     });
   thingmap.get(myTid).o.tsavekeypress();  */
 
+  
+
   var samuraiinteractioncode=`
     if (thingmap.get(myId).o.Tgenus != thingmap.get(otherId).o.Tgenus){
-        console.log("NOT ONE OF US");
+        // console.log("NOT ONE OF US");
        thingmap.get(myId).sprite.heading='default';
     }
     else {
@@ -141,6 +143,7 @@ function next_execute(r) {          // next executable to give schplagen propert
               thingmap.get(myId).sprite.heading='fight';
               thingmap.get(myId).sprite.mycoin=grandom(100);
               thingmap.get(myId).sprite.isfighting=true;
+            // thingmap.get(myId).sprite.somearbitraryvalue=51;
           }
           else {
               if (thingmap.get(myId).sprite.mycoin==grandom(100)) {
@@ -175,6 +178,22 @@ function next_execute(r) {          // next executable to give schplagen propert
   console.log(samuraiinteractioncode);
   thingmap.get(myTid).o.tinteract = new Function('myId', 'otherId', samuraiinteractioncode);
   thingmap.get(myTid).o.tsaveinteract();
+
+    var nearestOfMyTribe=nearest(myTid, 25);
+  if (isdefined(nearestOfMyTribe)) {
+    console.log('NEAREST '+nearestOfMyTribe);
+    console.log('Going: '+(thingmap.get(nearestOfMyTribe).sprite.left)+', '+(thingmap.get(nearestOfMyTribe).sprite.top));
+     thingmap.get(myTid).sprite.setdestination(
+       myTid,
+       (thingmap.get(nearestOfMyTribe).sprite.left + (grandomrange(77)-35)), //77 -35
+       (thingmap.get(nearestOfMyTribe).sprite.top + (grandomrange(70)-35)) //60 -40
+       // (thingmap.get(nearestOfMyTribe).sprite + (interaction_decider(somearbitraryvalue=51)))
+      //console.log('Arbitrary: '+(thingmap.get(nearestOfMyTribe).sprite+ (interaction_decider(somearbitraryvalue))))
+    );
+  }
+  else {
+    console.log('ALONE ');
+  }
 }
 
 function onload_b2() { // When page reloads it creates a new schplagen.

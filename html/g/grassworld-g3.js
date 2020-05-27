@@ -55,8 +55,12 @@ function FireBullet(r) {
   //allowing the sprite to move and allows to animate it.
   thingmap.get(Tid).o.Gcanmove = true;
   thingmap.get(Tid).o.Ganimated = true;
+  
   //If browser is refreshed it will save the location of all the objects.
   thingmap.get(Tid).o.msaveLocation();
+  thingmap.get(Tid).sprite.left_destination=1000;
+  //thingmap.get(Tid).sprite.top_destination=100;
+  thingmap.get(Tid).sprite.ttl=500;
   console.log('New bullet made ' + Tid + 'cb');
 }
 //Gives the schplágen properties.
@@ -97,7 +101,7 @@ function DoThisNext(r) {
   //If browser is refreshed it will save the location of all the objects.
   thingmap.get(Tid).o.msaveLocation();
   thingmap.get(Tid).o.tkeypress = (function (keycode) {
-    keychar = String.fromCharCode(keycode);
+  keychar = String.fromCharCode(keycode);
     // If 'S' is pressed on the keyboard the sphlagen will go to sleep and they turn into a bush.
     if (keychar == 'S') {
       thingmap.get(Tid).o.sleepnow()
@@ -113,5 +117,6 @@ function DoThisNext(r) {
       console.log("Pew Pew");
     }
   });
+  thingmap.get(Tid).o.tsavekeypress();
   console.log('New creature made ' + Tid + 'cb');
 }

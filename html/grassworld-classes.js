@@ -198,7 +198,7 @@ class Yoke {
         }
       };
       xhr.onerror = function() {
-        Yoke.parentUpdate(myparent, "Error c71");
+        Yoke.parentUpdate(myparent, "Error c72");
       };
     };
 }
@@ -654,6 +654,7 @@ class charactersprite {
       }
       this.mycoin=0;
       this.isfighting=false;
+      this.ttl=undefined;
     }
     get sprite_width(){
       return (
@@ -717,6 +718,10 @@ class charactersprite {
     }
 
     interaction_decider(key){
+//       var somearbitraryvalue;
+//       if (!isdefined(somearbitraryvalue)) {
+//         somearbitraryvalue=51;
+//       }
       if (thingmap.get(this.Tid).o.Ginteracts) {
          let somearbitraryvalue=51;
          var otherkey=0;
@@ -765,6 +770,15 @@ class charactersprite {
       // if this not an animated sprite, return
       if (!thingmap.get(this.Tid).o.Ganimated) {
         return;
+      }
+      if (isdefined(this.ttl)) {
+        if (this.ttl>0) {
+          this.ttl--;
+        }
+        else {
+          charactersprite.pffft(this.Tid)
+          return;
+        }
       }
       // are we moving on X axis
       if (this.left != this.left_destination) {

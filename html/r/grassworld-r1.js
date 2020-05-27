@@ -69,5 +69,5 @@ function onload_r1() {
       MySchplágen_r1= new MovingThing(null,newBirdName, null, 15, 1);
        //calls tcreate method and passes runNextForBird
       MySchplágen_r1.tcreate(runNextForBird);
-       onload_red_classes();
+       // onload_red_classes();
 }

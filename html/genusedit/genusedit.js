@@ -150,6 +150,8 @@ function ThingDataToForm(){
   // document.getElementById('Gliving').value = '';
    document.getElementById('editform').style.visibility = 'visible';
   document.getElementById('editform').style.height = 'auto';
+  document.getElementById('spritestable').style.visibility= 'visible';
+  document.getElementById('GimagesJSON').style.visibility = 'visible';
 
   // document.getElementById('POSTorPUTflag').value='1';
   console.log("test");

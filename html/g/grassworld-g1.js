@@ -72,27 +72,28 @@ function g1randomrange(upper){
   //Saves Schplagens location.
   thingmap.get(g1Tid).o.msaveLocation();
   //Function that makes the Schplagen sleep or wake up.
-  thingmap.get(g1Tid).o.tkeypress = (function(keycode) {
-    keychar=String.fromCharCode(keycode);
-// Click 'S' to make Schplágen sleep.
-    if (keychar=='S') {
-        thingmap.get(g1Tid).o.sleepnow();}
+//   thingmap.get(g1Tid).o.tkeypress = (function(keycode) {
+//     keychar=String.fromCharCode(keycode);
+// // Click 'S' to make Schplágen sleep.
+//     if (keychar=='S') {
+//         thingmap.get(g1Tid).o.sleepnow();}
 
-        console.log("I'm Asleep");
+//         console.log("I'm Asleep");
 
-// Click 'W' to make Schplágen wake up.
-    if (keychar=='W') {
-        thingmap.get(g1Tid).o.wakenow();}
-        console.log("I'm Awake")
-      });
-    }
+// // Click 'W' to make Schplágen wake up.
+//     if (keychar=='W') {
+//         thingmap.get(g1Tid).o.wakenow();}
+//         console.log("I'm Awake")
+//       });
+//     }
 
 //Creates the Schplágen.
 // 7 is Greeny's Genus.
+  }
 function onload_g1() {
   console.log('He is Alive');
   //Instantiate Greeny as MovingThing object.
   Greeny_G1= new MovingThing(null,g1newname, null, 7, 1);
   //Calls tcreate method and passes it After.
-  Greeny_G1.tcreate(After);
+  Greeny_G1.tcreate(After); 
 }

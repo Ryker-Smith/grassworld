@@ -67,9 +67,13 @@ function keypress(event) {
     ESC = 27;
 
   if (thing_selected < 0) return;
+//   if (thingmap.get(thing_selected).sprite.heading) == 'left') {
+//     
+//   }
   switch (event.keyCode) {
     case key_left:
       if (thingmap.get(thing_selected).o.Gcanmove) {
+        thingmap.get(thing_selected).sprite.heading='left';
         if (thingmap.get(thing_selected).sprite.left > 0) {
           thingmap.get(thing_selected).sprite.left_destination =
             thingmap.get(thing_selected).sprite.left - thingstep;
@@ -78,6 +82,7 @@ function keypress(event) {
       break;
     case key_right:
       if (thingmap.get(thing_selected).o.Gcanmove) {
+        thingmap.get(thing_selected).sprite.heading='right';
         if (
           thingmap.get(thing_selected).sprite.left <
           canvas.width - thingmap.get(thing_selected).sprite.sprite_width
@@ -89,6 +94,7 @@ function keypress(event) {
       break;
     case key_up:
       if (thingmap.get(thing_selected).o.Gcanmove) {
+        thingmap.get(thing_selected).sprite.heading='up';
         if (thingmap.get(thing_selected).sprite.top > 0) {
           thingmap.get(thing_selected).sprite.top_destination =
             thingmap.get(thing_selected).sprite.top - thingstep;
@@ -97,6 +103,7 @@ function keypress(event) {
       break;
     case key_down:
       if (thingmap.get(thing_selected).o.Gcanmove) {
+        thingmap.get(thing_selected).sprite.heading='down';
         if (
           thingmap.get(thing_selected).sprite.top <
           canvas.height - thingmap.get(thing_selected).sprite.sprite_height
@@ -111,6 +118,7 @@ function keypress(event) {
         thingmap.get(thing_selected).sprite.top <
         canvas.height - thingmap.get(thing_selected).sprite.sprite_height
       ) {
+        thingmap.get(thing_selected).sprite.heading='default';
         thingmap.get(thing_selected).selected = false;
         thing_selected = -1;
       }
@@ -322,22 +330,24 @@ function game(game_canvas) {
       if ((thingmap.get(key).ready == 0) && (thingmap.get(key).o.Tstatus != 'html')) {
         if (thingmap.get(key).sprite.visible) {
           thingmap.get(key).sprite.update();
-          thingmap.get(key).sprite.render();
-          try {
-              thingmap.get(key).sprite.interaction_decider(key);
-          }
-          catch(e) {
-            if (isdefined(key)) {
-              console.log('GLOOP ERR: '+key + ' ~> '+e);
+          if (isdefined(thingmap.get(key))) {
+            thingmap.get(key).sprite.render();
+            try {
+                thingmap.get(key).sprite.interaction_decider(key);
             }
-            else {
-              console.log('GLOOP ERR ~> '+e);
+            catch(e) {
+              if (isdefined(key)) {
+                console.log('GLOOP ERR: '+key + ' ~> '+e);
+              }
+              else {
+                console.log('GLOOP ERR ~> '+e);
+              }
             }
-          }
-          // save to back end?
-          if ((thingmap.get(key).o.Gcanmove) && (!thingmap.get(key).o.locationCurrent)) {
-            thingmap.get(key).o.msaveLocation();
-            thingmap.get(key).o.locationCurrent=true;
+            // save to back end?
+            if ((thingmap.get(key).o.Gcanmove) && (!thingmap.get(key).o.locationCurrent)) {
+              thingmap.get(key).o.msaveLocation();
+              thingmap.get(key).o.locationCurrent=true;
+            }
           }
         }
         sleep(1);

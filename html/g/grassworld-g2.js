@@ -47,16 +47,16 @@ function DoThisNext(r) {
   thingmap.get(Tid).o.Ganimated=true;
 //If browser is refreshed it will save to location of all the objects.
   thingmap.get(Tid).o.msaveLocation();
-  thingmap.get(Tid).o.tkeypress = (function(keycode) {
-      keychar=String.fromCharCode(keycode);
-// If 'S' is pressed on the keyboard the sphlagen will go to sleep and they turn into a bush.
-      if (keychar=='S') {
-          thingmap.get(Tid).o.sleepnow()
-      console.log("g2 I'm sleeping")}
-// If 'W' is pressed on the keyboard the schplagen will wake up and start moving again.
-      else if (keychar=='W'){
-            thingmap.get(Tid).o.wakenow()
-      console.log("g2 I'm awake")}
-  });
-  console.log('Newcreature made '+Tid+'g2');
+ // thingmap.get(Tid).o.tkeypress = (function(keycode) {
+//       keychar=String.fromCharCode(keycode);
+// // If 'S' is pressed on the keyboard the sphlagen will go to sleep and they turn into a bush.
+//       if (keychar=='S') {
+//           thingmap.get(Tid).o.sleepnow()
+//       console.log("g2 I'm sleeping")}
+// // If 'W' is pressed on the keyboard the schplagen will wake up and start moving again.
+//       else if (keychar=='W'){
+//             thingmap.get(Tid).o.wakenow()
+//       console.log("g2 I'm awake")}
+//   });
+//   console.log('Newcreature made '+Tid+'g2');
 }

@@ -25,8 +25,8 @@ class BelieverSchplágen extends Schplágen {
     if(!((TheX == thingmap.get(lsId).o.Tx) && (TheY == thingmap.get(lsId).o.Ty))) {
       TheX = thingmap.get(lsId).o.Tx;
       TheY = thingmap.get(lsId).o.Ty;
-      let poopi = placePointer();
-      console.log(poopi);
+      // let poopi = placePointer();
+      // console.log(poopi);
     }
     else{
 //       console.log("SamePositionMate");
@@ -44,7 +44,7 @@ class BelieverSchplágen extends Schplágen {
           for (var i=0; i< r.length; i++) {
             let  n = r[i];
             if(n.Tgenus==8){
-//             thingmap.get(n.Tid).sprite.setdestination(n.Tid, TheX, TheY);
+            // thingmap.get(n.Tid).sprite.setdestination(n.Tid, TheX, TheY); lots of errors
             }
           }
         }
@@ -287,33 +287,35 @@ function followPointFunc(RedOne,xPos,yPos) {
         //If S key is pressed Schplágen will 'sleep' with sleepnow() function
         case 'S':
           thingmap.get(followPointTid).o.sleepnow();
-          console.log("r1: Bird- " + followPointName + " Is Asleep");
+          console.log("r1: follower- " + followPointName + " Is Asleep");
           break;
         //If W key is pressed Schplágen will 'Awake' with wakenow() function
         case 'W':
           thingmap.get(followPointTid).o.wakenow();
-          console.log("r1: Bird- " + followPointName + " Is Awake");
+          console.log("r1: follower- " + followPointName + " Is Awake");
           break;
       }
   });
 }
 function onload_red_classes() {
-//     console.log("Red Team Classes loaded");
+  //do if statement then pick one- cj=change
+    console.log("Red Team Classes loaded");
   // make 1 leader of cultists
-    let url = grassworld_db+'a=get&t=thing'+redToken();
-    var req = new XMLHttpRequest();
-    req.open('GET', url);
-    req.send();
-
-    req.onload = function() {
-         if (req.status == 200) {
-          let r=req.response;
-          r=JSON.parse(r);
-          console.log( r.length);
-          var leadercount = 0;
-          for (var i=0; i< r.length; i++) {
-            let  n = r[i];
-            if(n.Tgenus==20){
+  // console.log("Red Classes Loaded");
+    // let url = grassworld_db+'a=get&t=thing'+redToken();
+    // var req = new XMLHttpRequest();
+    // req.open('GET', url);
+    // req.send();
+    //
+    // req.onload = function() {
+    //      if (req.status == 200) {
+    //       let r=req.response;
+    //       r=JSON.parse(r);
+    //       console.log( r.length);
+    //       var leadercount = 0;
+    //       for (var i=0; i< r.length; i++) {
+    //         let  n = r[i];
+    //         if(n.Tgenus==20){
                 //save name position then delete and create same but with new genus
 //                 console.log("ChIcky Check this out------>>>>> "+n.Tname+" //also this>> "+leadercount);
                 //step 1 save data
@@ -330,31 +332,31 @@ function onload_red_classes() {
                 // let keypressfunc = n.Tkeypressfunc;
 
                 //step 2 delete  old LeaderSchplagen
-                let url=grassworld_db+'t=thing&Tid='+n.Tid + redToken();
-                let xhr = new XMLHttpRequest();
-                xhr.open('DELETE', url);
-                xhr.send();
+                // let url=grassworld_db+'t=thing&Tid='+n.Tid + redToken();
+                // let xhr = new XMLHttpRequest();
+                // xhr.open('DELETE', url);
+                // xhr.send();
 
                 //step 3 create new cultistschplagen in same position with new genus
-                cultFollower = new BelieverSchplágen(null,n.Tname,0, 8, 1);
-                cultFollower.tcreate(replaceWithCultist,leadercount,n);
-                leadercount++;
-              }
+              //   cultFollower = new BelieverSchplágen(null,n.Tname,0, 8, 1);
+              //   cultFollower.tcreate(replaceWithCultist,leadercount,n);
+              //   leadercount++;
+              // }
               // genuspick = 20;
-            }
-          console.log("LS: "+ leadercount);
-
-        }
-        else {
+        //     }
+        //   console.log("LS count: "+ leadercount);
+        //
+        // }
+        // else {
 //             console.log(req.response);
-          console.log('Error c187');
-          genuspick = 8;
-        }
+        //   console.log('Error c187');
+        //   genuspick = 8;
+        // }
         // console.log("147 "+genuspick);
-        LeaderSchplagen= new BelieverSchplágen(null,lsnewname,0, 20, 1);
-        LeaderSchplagen.tcreate(RedClassFunc);
+        // LeaderSchplagen= new BelieverSchplágen(null,lsnewname,0, 20, 1);
+        // LeaderSchplagen.tcreate(RedClassFunc);
 
         // window.setInterval(LeaderSchplagen.testo, 1000);
-        window.setInterval(LeaderSchplagen.followMe, 2500);
-      };
+        // window.setInterval(LeaderSchplagen.followMe, 2500); -breaks grassworld
+      // };
   }
