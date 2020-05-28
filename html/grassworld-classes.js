@@ -76,7 +76,7 @@ default_keypress_function = (function(keycode) {
     }
   }
   else {
-    console.log('<KeyCode: ' + keychar + ' does nothing>');
+    console.log('<<KeyCode: ' + keychar + ' does nothing>>');
   }
 });
 
@@ -243,13 +243,16 @@ class Thing extends Yoke {
       let url=grassworld_db+'t=thing&a=mk&name='+this.Tname + '&g='+this.Tgenus + token();
       let xhr = new XMLHttpRequest();
       // the next function to develop should be for: ('POST',url)
+//       console.log('DD> '+url);
       xhr.open('POST', url);
       xhr.send();
       xhr.onload = function() {
+//         console.log('FFF: '+xhr.status);
         if (xhr.status == 200) { // OK?
           try {
+//             console.log('SUCCESS');
             postloadfunc(JSON.parse(xhr.response));  
-            console.log(xhr.response);
+//             console.log(xhr.response);
           }
           catch(e){}
         }
@@ -693,6 +696,12 @@ class charactersprite {
 //       console.log('Id: '+t+' ('+dx+', '+dy+')');
 //       console.log(']> '+thingmap.get(t).sprite.sprite_width);
       thingmap.get(t).sprite.left_destination= dx;// - Math.floor(thingmap.get(t).sprite.sprite_width.valueOf()*0.5);
+      if (thingmap.get(t).sprite.left_destination < thingmap.get(t).sprite.left) {
+        thingmap.get(t).sprite.heading='left';
+      }
+      else {
+        thingmap.get(t).sprite.heading='right';
+      }
 //       console.log('Dst: ('+thingmap.get(t).sprite.left_destination+', '+dy+')');
       if (thingmap.get(t).sprite.left_destination < 0) {
         thingmap.get(t).sprite.left_destination = 0;
@@ -752,9 +761,9 @@ class charactersprite {
              }
            }
         }
-        if (isnearby==0) {
-          thingmap.get(key).sprite.heading='default'; 
-        }
+//         if (isnearby==0) {
+//           thingmap.get(key).sprite.heading='default'; 
+//         }
       }  
     }
     static pffft(Tid) {
@@ -846,6 +855,7 @@ class charactersprite {
 //         }
         // end of random actions
       }
+      // arrival after moving
       if (
         thingmap.get(this.Tid).o.Gcanmove &&
         thingmap.get(this.Tid).o.ismoving &&
@@ -854,6 +864,7 @@ class charactersprite {
       ) {
         if (thingmap.get(this.Tid).o.Gcanmove) {
           thingmap.get(this.Tid).o.msaveLocation();
+          thingmap.get(this.Tid).sprite.heading='default';
           thingmap.get(this.Tid).o.ismoving = false;
         }
       }

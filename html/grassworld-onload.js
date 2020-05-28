@@ -1,10 +1,9 @@
 
 window.onload=(async function(){
   // this is a messy way to do things, but it works
-  await onload_r1();
-  await onload_red_classes()
-//   onload_r2();
   await grassworld();
+  
+//   onload_r2();
   await onload_g1();
   await onload_g2();
   await onload_g3();
@@ -12,6 +11,8 @@ window.onload=(async function(){
   await onload_b2();
   await onload_b3();
   await onload_f0();
+  await onload_r1();
+  await onload_red_classes();
 });
 
 window.onresize=(function(){

@@ -1,4 +1,5 @@
-//Names of the schplagens.
+/*
+ * //Names of the schplagens.
 var g2names = ["El Sheriffo ", "Mr Steal Your Gun ", "Gunna ", "Glock ", "ZorroKiller ", "Muzzle ", "Rusty ", "Bo ", "Twin1 ", "Twin2 "];
 //Picks a random name from the list.
 var cbnewname = g2names[grandom(g2names.length) - 1] + grandom(1000);
@@ -62,3 +63,4 @@ function DoThisNext(r) {
   });
   console.log('Newcreature made ' + Tid + 'cb');
 }
+*/

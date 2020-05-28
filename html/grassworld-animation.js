@@ -65,11 +65,15 @@ function keypress(event) {
     key_right = 39,
     key_down = 40,
     ESC = 27;
+    key_I=73;
+    key_J=74;
+    key_S=83;
+    key_V=86;
+    key_W=87;
+    key_X=88;
 
   if (thing_selected < 0) return;
-//   if (thingmap.get(thing_selected).sprite.heading) == 'left') {
-//     
-//   }
+
   switch (event.keyCode) {
     case key_left:
       if (thingmap.get(thing_selected).o.Gcanmove) {
@@ -113,6 +117,34 @@ function keypress(event) {
         }
       }
       break;
+    case key_I:
+      console.log( spriteInfoDump(thing_selected) );
+      break;
+    case key_J:
+      thingmap.get(thing_selected).sprite.imagesJSON ;
+    break;
+    case key_S:
+      thingmap.get(thing_selected).o.sleepnow();
+      break;
+    case key_V:
+      let thisthingtype=thingmap.get(thing_selected).o.constructor.name;
+      if (thisthingtype == 'MovingThing') {
+        thingmap.get(thing_selected).o.msaveLocation();
+      }
+    break;
+    case key_W:
+      thingmap.get(thing_selected).o.wakenow();
+      break;
+    case key_X:
+      console.log('MAINDELETE');
+      if (thingmap.get(thing_selected).o.Tstatus != 'p') {
+        thingmap.get(thing_selected).o.tdelete();
+        thingmap.delete(thing_selected);
+      }
+      else {
+        console.log('PERMTHING');
+      }
+      break;
     case ESC:
       if (
         thingmap.get(thing_selected).sprite.top <
@@ -124,10 +156,18 @@ function keypress(event) {
       }
       break;
     default: {
+//       console.log(event.keyCode);
 //       thingmap.get(thing_selected).o.gkeypress(event.keyCode);
-      if (isdefined(thingmap.get(thing_selected).o)) {
+//       if (isdefined(thingmap.get(thing_selected).o)) {
+//         thingmap.get(thing_selected).o.tkeypress(event.keyCode);
+//       }
+    }
+    console.log('User: '+event.keyCode);
+    if (isdefined(thingmap.get(thing_selected).o)) {
         thingmap.get(thing_selected).o.tkeypress(event.keyCode);
-      }
+    }
+    else {
+      
     }
   }
 }
@@ -432,7 +472,7 @@ function game(game_canvas) {
       fting.o.tsavekeys();
     }
     else if ((field.all[j].Tkeypressfunc != null)) {
-      fting.o.tkeypress=new Function("keycode",innerbit); 
+      fting.o.tkeypress=new Function("keycode",innerbit);
     }
     else {
         console.log("Problem: None of the above");

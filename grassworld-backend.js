@@ -467,8 +467,9 @@ async function db_post(request, response) {
     async function newThing(Tname, Tgenus) {
         var r;
         var x=0,y=0,z=0;
+        // defaults.keypress_behaviour
         await dbms.query(
-            "INSERT INTO things (Tname, Tgenus, Tkeypressfunc, Tinteractfunc) VALUES ("+dbms.escape(Tname)+","+dbms.escape(Tgenus)+","+dbms.escape(defaults.keypress_behaviour)+","+dbms.escape(defaults.interact_behaviour)+")")
+            "INSERT INTO things (Tname, Tgenus, Tkeypressfunc, Tinteractfunc) VALUES ("+dbms.escape(Tname)+","+dbms.escape(Tgenus)+","+dbms.escape('')+","+dbms.escape(defaults.interact_behaviour)+")")
           .then( results => {
             r=JSON.stringify(results);
             if (r.insertId > 0) {
